@@ -1,9 +1,10 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 export const IndustryPartnerships = () => {
   const paymentPartners = [
-    "Stripe", "Square", "PayPal", "Sumup"
+    "Stripe", "Square", "PayPal", "SumUp"
   ];
 
   const integrationPartners = [

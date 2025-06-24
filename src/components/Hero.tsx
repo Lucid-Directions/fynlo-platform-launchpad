@@ -55,7 +55,7 @@ export const Hero = () => {
             <div className="bg-blue-50 rounded-lg p-6 mb-8 border-l-4 border-blue-600">
               <div className="flex items-center space-x-4">
                 <div>
-                  <div className="text-3xl font-bold text-blue-600">2.9%</div>
+                  <div className="text-3xl font-bold text-blue-600">1.5%</div>
                   <div className="text-sm text-gray-600">per transaction</div>
                 </div>
                 <div className="text-gray-400">+</div>

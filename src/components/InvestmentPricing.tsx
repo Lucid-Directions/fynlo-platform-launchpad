@@ -7,7 +7,7 @@ import { Check, ArrowRight, Users, TrendingUp, Zap } from "lucide-react";
 export const InvestmentPricing = () => {
   const pricingTiers = [
     {
-      name: "Starter",
+      name: "Alpha α",
       price: "£89",
       period: "/month",
       description: "Perfect for new restaurants getting started",
@@ -24,13 +24,13 @@ export const InvestmentPricing = () => {
       icon: <Zap className="h-6 w-6 text-blue-600" />
     },
     {
-      name: "Professional",
+      name: "Beta β",
       price: "£159",
       period: "/month",
       description: "Ideal for growing restaurant businesses",
       restaurants: "Up to 3 locations",
       features: [
-        "Everything in Starter",
+        "Everything in Alpha",
         "Advanced analytics",
         "Inventory management",
         "Online ordering integration",
@@ -42,13 +42,13 @@ export const InvestmentPricing = () => {
       icon: <TrendingUp className="h-6 w-6 text-emerald-600" />
     },
     {
-      name: "Enterprise",
+      name: "Omega Ω",
       price: "Custom",
       period: "",
       description: "For restaurant groups and franchises",
       restaurants: "Unlimited locations",
       features: [
-        "Everything in Professional",
+        "Everything in Beta",
         "Dedicated account manager",
         "Custom integrations",
         "Advanced API access",
