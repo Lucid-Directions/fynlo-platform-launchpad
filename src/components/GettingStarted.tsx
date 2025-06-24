@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, Calendar, MessageSquare, PresentationChart, Handshake } from "lucide-react";
+import { ArrowRight, Calendar, MessageSquare, Presentation, Handshake } from "lucide-react";
 
 export const GettingStarted = () => {
   const engagementProcess = [
@@ -24,7 +24,7 @@ export const GettingStarted = () => {
     },
     {
       step: "2",
-      icon: <PresentationChart className="h-8 w-8 text-emerald-600" />,
+      icon: <Presentation className="h-8 w-8 text-emerald-600" />,
       title: "Platform Demonstration",
       duration: "90 minutes",
       description: "Comprehensive platform overview with technical review and customization options",
