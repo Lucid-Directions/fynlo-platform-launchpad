@@ -10,25 +10,30 @@ export const Hero = () => {
       
       {/* Content */}
       <div className="relative max-w-6xl mx-auto px-6 pt-8 pb-20">
-        {/* Logo - Fixed the src path */}
+        {/* Logo - Try different path */}
         <div className="mb-16">
           <img 
-            src="/logo.png" 
+            src="/fynlo-logo.png" 
             alt="Fynlo Logo" 
             className="h-10 w-auto"
+            onError={(e) => {
+              // Fallback if logo doesn't load
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling.style.display = 'block';
+            }}
           />
+          <div className="text-2xl font-bold text-blue-600" style={{display: 'none'}}>Fynlo</div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[70vh]">
-          {/* Left Content - Much cleaner and simpler */}
+          {/* Left Content */}
           <div className="space-y-8">
             <h1 className="text-5xl lg:text-6xl font-bold text-slate-900 leading-tight">
-              Everything your restaurant needs to succeed
+              Your business. Your payments. Simplified.
             </h1>
             
             <p className="text-xl text-slate-600 leading-relaxed max-w-lg">
-              The complete POS system trusted by restaurants across the UK. 
-              Simple, reliable, and built for your business.
+              The smart payment app that works for every business. No hardware needed – just download, set up, and start selling.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -50,17 +55,17 @@ export const Hero = () => {
             {/* Simple pricing highlight */}
             <div className="pt-8">
               <p className="text-slate-500 text-sm mb-2">Starting from</p>
-              <div className="text-3xl font-bold text-slate-900">£89<span className="text-lg font-normal text-slate-500">/month</span></div>
+              <div className="text-3xl font-bold text-slate-900">£29<span className="text-lg font-normal text-slate-500">/month</span></div>
               <p className="text-slate-500 text-sm">All inclusive • No setup fees</p>
             </div>
           </div>
 
-          {/* Right Content - Clean hero image */}
+          {/* Right Content - Better image for payment systems */}
           <div className="relative">
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
               <img 
-                src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=800&q=80" 
-                alt="Restaurant owner using Fynlo POS system" 
+                src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80" 
+                alt="Business owner using mobile payment system" 
                 className="w-full h-auto"
               />
             </div>

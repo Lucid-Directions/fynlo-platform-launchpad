@@ -6,15 +6,15 @@ export const PlatformBusinessModel = () => {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Clean hero section with real person */}
+        {/* Clean hero section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20">
           <div>
             <h2 className="text-4xl font-bold text-slate-900 mb-6">
-              Built by restaurant people, for restaurant people
+              Built for every business
             </h2>
             <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-              We know what it's like to run a busy restaurant. That's why Fynlo is designed 
-              to handle the real challenges you face every day.
+              Whether you're running a coffee shop, retail store, or service business, 
+              Fynlo adapts to how you work.
             </p>
             <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
               See how it works
@@ -23,37 +23,36 @@ export const PlatformBusinessModel = () => {
           </div>
           <div>
             <img 
-              src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80" 
-              alt="Restaurant team working together" 
+              src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=800&q=80" 
+              alt="Various businesses using payment solutions" 
               className="w-full h-auto rounded-2xl shadow-lg"
             />
           </div>
         </div>
 
-        {/* Simple success story */}
+        {/* Simple business types showcase */}
         <div className="bg-slate-50 rounded-2xl p-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <img 
-                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80" 
-                alt="Sarah, restaurant owner" 
-                className="w-full h-auto rounded-xl"
-              />
+          <h3 className="text-3xl font-bold text-slate-900 text-center mb-12">Perfect for any business</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center p-6 bg-white rounded-lg">
+              <div className="text-4xl mb-4">☕</div>
+              <h4 className="font-semibold text-slate-900 mb-2">Cafés & Food</h4>
+              <p className="text-slate-600 text-sm">Quick service and takeaways</p>
             </div>
-            <div>
-              <blockquote className="text-2xl text-slate-700 mb-6 italic">
-                "Fynlo helped us increase our revenue by 30% in just 3 months. 
-                The team actually understands restaurants."
-              </blockquote>
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="font-semibold text-blue-600">SC</span>
-                </div>
-                <div>
-                  <div className="font-semibold text-slate-900">Sarah Chen</div>
-                  <div className="text-slate-600">The Spice Garden, London</div>
-                </div>
-              </div>
+            <div className="text-center p-6 bg-white rounded-lg">
+              <div className="text-4xl mb-4">🛍️</div>
+              <h4 className="font-semibold text-slate-900 mb-2">Retail</h4>
+              <p className="text-slate-600 text-sm">Shops and boutiques</p>
+            </div>
+            <div className="text-center p-6 bg-white rounded-lg">
+              <div className="text-4xl mb-4">✂️</div>
+              <h4 className="font-semibold text-slate-900 mb-2">Services</h4>
+              <p className="text-slate-600 text-sm">Salons, repairs, and more</p>
+            </div>
+            <div className="text-center p-6 bg-white rounded-lg">
+              <div className="text-4xl mb-4">🏪</div>
+              <h4 className="font-semibold text-slate-900 mb-2">Markets</h4>
+              <p className="text-slate-600 text-sm">Stalls and pop-ups</p>
             </div>
           </div>
         </div>
