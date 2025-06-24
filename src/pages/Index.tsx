@@ -1,6 +1,8 @@
 
 import { Hero } from "@/components/Hero";
 import { MarketOpportunity } from "@/components/MarketOpportunity";
+import { ProductShowcase } from "@/components/ProductShowcase";
+import { BusinessSolutions } from "@/components/BusinessSolutions";
 import { PlatformBusinessModel } from "@/components/PlatformBusinessModel";
 import { TechnologyOverview } from "@/components/TechnologyOverview";
 import { ProductDemo } from "@/components/ProductDemo";
@@ -14,9 +16,11 @@ import { ResourceCenter } from "@/components/ResourceCenter";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-white">
       <Hero />
       <MarketOpportunity />
+      <ProductShowcase />
+      <BusinessSolutions />
       <PlatformBusinessModel />
       <TechnologyOverview />
       <ProductDemo />
