@@ -3,6 +3,14 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 
 export const Hero = () => {
+  const handleLogoError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.style.display = 'none';
+    const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+    if (fallback) {
+      fallback.style.display = 'block';
+    }
+  };
+
   return (
     <section className="relative min-h-screen bg-white overflow-hidden">
       {/* Clean background with subtle gradient */}
@@ -10,17 +18,13 @@ export const Hero = () => {
       
       {/* Content */}
       <div className="relative max-w-6xl mx-auto px-6 pt-8 pb-20">
-        {/* Logo - Try different path */}
+        {/* Logo */}
         <div className="mb-16">
           <img 
-            src="/fynlo-logo.png" 
+            src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
             alt="Fynlo Logo" 
             className="h-10 w-auto"
-            onError={(e) => {
-              // Fallback if logo doesn't load
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.nextElementSibling.style.display = 'block';
-            }}
+            onError={handleLogoError}
           />
           <div className="text-2xl font-bold text-blue-600" style={{display: 'none'}}>Fynlo</div>
         </div>
