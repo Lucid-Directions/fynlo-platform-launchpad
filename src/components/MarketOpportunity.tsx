@@ -1,11 +1,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Users, DollarSign, Globe } from "lucide-react";
+import { TrendingUp, Users, PoundSterling, Globe } from "lucide-react";
 
 export const MarketOpportunity = () => {
   return (
-    <section className="py-24 bg-gradient-to-br from-blue-50 to-emerald-50">
+    <section id="market-opportunity" className="py-24 bg-gradient-to-br from-blue-50 to-emerald-50">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -44,7 +44,7 @@ export const MarketOpportunity = () => {
           <Card className="text-center p-6 hover:shadow-lg transition-all duration-300">
             <CardContent className="p-0">
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="h-8 w-8 text-purple-600" />
+                <PoundSterling className="h-8 w-8 text-purple-600" />
               </div>
               <div className="text-3xl font-bold text-purple-600 mb-2">£12B</div>
               <div className="text-slate-600">Digital payment market value</div>

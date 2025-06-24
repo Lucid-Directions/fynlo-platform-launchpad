@@ -1,13 +1,23 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Zap, Users, Check } from "lucide-react";
+import { useState } from "react";
 
 export const Hero = () => {
+  const [selectedPlan, setSelectedPlan] = useState('beta'); // Default to beta (most popular)
+
   const handleLogoError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     e.currentTarget.style.display = 'none';
     const fallback = e.currentTarget.nextElementSibling as HTMLElement;
     if (fallback) {
       fallback.style.display = 'block';
+    }
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -22,17 +32,37 @@ export const Hero = () => {
                 src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
                 alt="Fynlo Logo" 
                 className="w-auto"
-                style={{ height: '150px' }}
+                style={{ height: '175px' }}
                 onError={handleLogoError}
               />
               <div className="text-3xl font-bold text-blue-600" style={{display: 'none'}}>Fynlo</div>
             </div>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#solutions" className="text-gray-700 hover:text-blue-600 font-medium hover:scale-110 transition-all duration-300">Solutions</a>
-              <a href="#business" className="text-gray-700 hover:text-blue-600 font-medium hover:scale-110 transition-all duration-300">Business Types</a>
-              <a href="#resources" className="text-gray-700 hover:text-blue-600 font-medium hover:scale-110 transition-all duration-300">Resources</a>
-              <a href="#about" className="text-gray-700 hover:text-blue-600 font-medium hover:scale-110 transition-all duration-300">About</a>
+              <button 
+                onClick={() => scrollToSection('product-showcase')} 
+                className="text-gray-700 hover:text-blue-600 font-medium hover:scale-110 transition-all duration-300"
+              >
+                Solutions
+              </button>
+              <button 
+                onClick={() => scrollToSection('business-solutions')} 
+                className="text-gray-700 hover:text-blue-600 font-medium hover:scale-110 transition-all duration-300"
+              >
+                Business Types
+              </button>
+              <button 
+                onClick={() => scrollToSection('resource-center')} 
+                className="text-gray-700 hover:text-blue-600 font-medium hover:scale-110 transition-all duration-300"
+              >
+                Resources
+              </button>
+              <button 
+                onClick={() => scrollToSection('market-opportunity')} 
+                className="text-gray-700 hover:text-blue-600 font-medium hover:scale-110 transition-all duration-300"
+              >
+                About
+              </button>
             </nav>
             
             <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 hover:scale-110 hover:shadow-xl transition-all duration-300">
@@ -75,24 +105,59 @@ export const Hero = () => {
             <div className="mb-8">
               <h3 className="text-lg font-semibold text-slate-900 mb-4">Choose Your Plan:</h3>
               <div className="flex flex-wrap gap-4">
-                <div className="bg-white border-2 border-blue-200 rounded-lg px-4 py-3 text-center min-w-[120px] hover:border-blue-400 hover:shadow-lg hover:scale-110 hover:-rotate-1 transition-all duration-300 cursor-pointer group">
-                  <div className="text-2xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors duration-300">
-                    Alph<span className="text-orange-500 group-hover:animate-pulse">α</span>
+                <div 
+                  className={`bg-white border-2 rounded-lg px-4 py-3 text-center min-w-[120px] cursor-pointer group transition-all duration-300 ${
+                    selectedPlan === 'alpha' 
+                      ? 'border-blue-500 shadow-lg ring-2 ring-blue-300 animate-pulse' 
+                      : 'border-blue-200 hover:border-blue-400 hover:shadow-lg'
+                  } hover:scale-110 hover:-rotate-1`}
+                  onClick={() => setSelectedPlan('alpha')}
+                >
+                  <div className={`text-2xl font-bold transition-colors duration-300 ${
+                    selectedPlan === 'alpha' ? 'text-blue-600 animate-bounce' : 'text-slate-900 group-hover:text-blue-600'
+                  }`}>
+                    Alph<span className={`transition-all duration-300 ${
+                      selectedPlan === 'alpha' ? 'text-orange-500 animate-pulse' : 'text-orange-500 group-hover:animate-pulse'
+                    }`}>α</span>
                   </div>
                   <div className="text-sm text-blue-600">£89/month</div>
                 </div>
-                <div className="bg-blue-50 border-2 border-blue-500 rounded-lg px-4 py-3 text-center min-w-[120px] relative hover:border-blue-600 hover:shadow-xl hover:scale-110 hover:rotate-1 transition-all duration-300 cursor-pointer group">
+                <div 
+                  className={`bg-blue-50 border-2 rounded-lg px-4 py-3 text-center min-w-[120px] relative cursor-pointer group transition-all duration-300 ${
+                    selectedPlan === 'beta' 
+                      ? 'border-emerald-500 shadow-xl ring-2 ring-emerald-300 animate-pulse' 
+                      : 'border-blue-500 hover:border-blue-600 hover:shadow-xl'
+                  } hover:scale-110 hover:rotate-1`}
+                  onClick={() => setSelectedPlan('beta')}
+                >
                   <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded group-hover:bg-blue-700 group-hover:animate-bounce transition-all duration-300">Popular</span>
+                    <span className={`bg-blue-600 text-white text-xs px-2 py-1 rounded transition-all duration-300 ${
+                      selectedPlan === 'beta' ? 'animate-bounce bg-emerald-600' : 'group-hover:bg-blue-700 group-hover:animate-bounce'
+                    }`}>Popular</span>
                   </div>
-                  <div className="text-2xl font-bold text-slate-900 group-hover:text-emerald-600 transition-colors duration-300">
-                    Bet<span className="text-orange-500 group-hover:animate-spin">β</span>
+                  <div className={`text-2xl font-bold transition-colors duration-300 ${
+                    selectedPlan === 'beta' ? 'text-emerald-600 animate-bounce' : 'text-slate-900 group-hover:text-emerald-600'
+                  }`}>
+                    Bet<span className={`transition-all duration-300 ${
+                      selectedPlan === 'beta' ? 'text-orange-500 animate-spin' : 'text-orange-500 group-hover:animate-spin'
+                    }`}>β</span>
                   </div>
                   <div className="text-sm text-emerald-600">£159/month</div>
                 </div>
-                <div className="bg-white border-2 border-purple-200 rounded-lg px-4 py-3 text-center min-w-[120px] hover:border-purple-400 hover:shadow-lg hover:scale-110 hover:-rotate-1 transition-all duration-300 cursor-pointer group">
-                  <div className="text-2xl font-bold text-slate-900 group-hover:text-purple-600 transition-colors duration-300">
-                    Omeg<span className="text-orange-500 group-hover:animate-bounce">Ω</span>
+                <div 
+                  className={`bg-white border-2 rounded-lg px-4 py-3 text-center min-w-[120px] cursor-pointer group transition-all duration-300 ${
+                    selectedPlan === 'omega' 
+                      ? 'border-purple-500 shadow-lg ring-2 ring-purple-300 animate-pulse' 
+                      : 'border-purple-200 hover:border-purple-400 hover:shadow-lg'
+                  } hover:scale-110 hover:-rotate-1`}
+                  onClick={() => setSelectedPlan('omega')}
+                >
+                  <div className={`text-2xl font-bold transition-colors duration-300 ${
+                    selectedPlan === 'omega' ? 'text-purple-600 animate-bounce' : 'text-slate-900 group-hover:text-purple-600'
+                  }`}>
+                    Omeg<span className={`transition-all duration-300 ${
+                      selectedPlan === 'omega' ? 'text-orange-500 animate-bounce' : 'text-orange-500 group-hover:animate-bounce'
+                    }`}>Ω</span>
                   </div>
                   <div className="text-sm text-purple-600">Custom</div>
                 </div>

@@ -2,8 +2,11 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useState } from "react";
 
 export const ProductShowcase = () => {
+  const [selectedPlan, setSelectedPlan] = useState('beta'); // Default to beta (most popular)
+
   const products = [
     {
       name: "Alpha",
@@ -12,7 +15,8 @@ export const ProductShowcase = () => {
       description: "Perfect for small businesses getting started with comprehensive payment processing and basic management tools.",
       features: ["Employee Management", "QR Scanner for inventory", "Basic Reports", "No hardware required"],
       image: "📱",
-      highlighted: false
+      highlighted: false,
+      planKey: 'alpha'
     },
     {
       name: "Beta",
@@ -21,7 +25,8 @@ export const ProductShowcase = () => {
       description: "Complete business solution with advanced features for growing restaurants and retail businesses.",
       features: ["Everything in Alpha", "Advanced Inventory management", "Employee Scheduling system", "Advanced Reports & analytics"],
       image: "💻",
-      highlighted: true
+      highlighted: true,
+      planKey: 'beta'
     },
     {
       name: "Omega",
@@ -30,24 +35,55 @@ export const ProductShowcase = () => {
       description: "Full-featured business management with custom integrations and dedicated support for large operations.",
       features: ["Everything in Beta", "Xero integration", "Custom integrations", "Priority support"],
       image: "🖥️",
-      highlighted: false
+      highlighted: false,
+      planKey: 'omega'
     }
   ];
 
+  const handlePlanClick = (planKey: string) => {
+    setSelectedPlan(planKey);
+    // Scroll to hero section to show the updated selection
+    const heroElement = document.querySelector('.hero-section');
+    if (heroElement) {
+      heroElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section className="py-20 bg-white">
+    <section id="product-showcase" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header with Interactive Animation */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            <span className="text-emerald-600 hover:scale-110 transition-all duration-300 cursor-pointer inline-block hover:text-emerald-700">
-              Alph<span className="text-orange-500 animate-pulse">α</span>
+            <span className={`transition-all duration-500 cursor-pointer inline-block ${
+              selectedPlan === 'alpha' 
+                ? 'text-emerald-600 scale-110 animate-pulse' 
+                : 'text-emerald-600 hover:scale-110 hover:text-emerald-700'
+            }`}
+            onClick={() => handlePlanClick('alpha')}>
+              Alph<span className={`transition-all duration-300 ${
+                selectedPlan === 'alpha' ? 'text-orange-500 animate-bounce' : 'text-orange-500 animate-pulse'
+              }`}>α</span>
             </span>
-            <span className="text-gray-300 mx-8 hover:text-gray-600 hover:scale-110 transition-all duration-300 cursor-pointer inline-block">
-              Bet<span className="text-orange-500 hover:animate-bounce">β</span>
+            <span className={`mx-8 transition-all duration-500 cursor-pointer inline-block ${
+              selectedPlan === 'beta' 
+                ? 'text-emerald-600 scale-110 animate-pulse' 
+                : 'text-gray-300 hover:text-gray-600 hover:scale-110'
+            }`}
+            onClick={() => handlePlanClick('beta')}>
+              Bet<span className={`transition-all duration-300 ${
+                selectedPlan === 'beta' ? 'text-orange-500 animate-spin' : 'text-orange-500 hover:animate-bounce'
+              }`}>β</span>
             </span>
-            <span className="text-gray-300 hover:text-gray-600 hover:scale-110 transition-all duration-300 cursor-pointer inline-block">
-              Omeg<span className="text-orange-500 hover:animate-spin">Ω</span>
+            <span className={`transition-all duration-500 cursor-pointer inline-block ${
+              selectedPlan === 'omega' 
+                ? 'text-purple-600 scale-110 animate-pulse' 
+                : 'text-gray-300 hover:text-gray-600 hover:scale-110'
+            }`}
+            onClick={() => handlePlanClick('omega')}>
+              Omeg<span className={`transition-all duration-300 ${
+                selectedPlan === 'omega' ? 'text-orange-500 animate-bounce' : 'text-orange-500 hover:animate-spin'
+              }`}>Ω</span>
             </span>
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto animate-fade-in">
@@ -60,35 +96,62 @@ export const ProductShowcase = () => {
           {products.map((product, index) => (
             <Card 
               key={index} 
-              className={`relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-3 hover:rotate-1 group cursor-pointer ${
-                product.highlighted 
-                  ? 'ring-2 ring-emerald-500 shadow-lg animate-pulse hover:ring-4 hover:ring-emerald-400' 
-                  : 'hover:shadow-xl hover:ring-2 hover:ring-blue-300'
+              className={`relative overflow-hidden transition-all duration-500 cursor-pointer group ${
+                selectedPlan === product.planKey
+                  ? 'ring-4 ring-emerald-400 shadow-2xl -translate-y-3 rotate-1 animate-pulse'
+                  : product.highlighted 
+                    ? 'ring-2 ring-emerald-500 shadow-lg hover:shadow-2xl hover:-translate-y-3 hover:rotate-1 hover:ring-4 hover:ring-emerald-400' 
+                    : 'hover:shadow-xl hover:ring-2 hover:ring-blue-300 hover:-translate-y-3 hover:rotate-1'
               }`}
               style={{
                 animationDelay: `${index * 0.2}s`
               }}
+              onClick={() => handlePlanClick(product.planKey)}
             >
-              {product.highlighted && (
-                <div className="absolute top-0 right-0 bg-emerald-500 text-white px-3 py-1 text-sm font-semibold animate-bounce">
-                  Most Popular
+              {(product.highlighted || selectedPlan === product.planKey) && (
+                <div className={`absolute top-0 right-0 px-3 py-1 text-sm font-semibold ${
+                  selectedPlan === product.planKey 
+                    ? 'bg-emerald-500 text-white animate-bounce' 
+                    : 'bg-emerald-500 text-white animate-bounce'
+                }`}>
+                  {selectedPlan === product.planKey ? 'Selected' : 'Most Popular'}
                 </div>
               )}
               
               <CardContent className="p-8">
                 <div className="text-center mb-6">
-                  <div className="text-6xl mb-4 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
+                  <div className={`text-6xl mb-4 transition-all duration-300 ${
+                    selectedPlan === product.planKey 
+                      ? 'scale-125 rotate-12 animate-bounce' 
+                      : 'group-hover:scale-125 group-hover:rotate-12'
+                  }`}>
                     {product.image}
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors duration-300">
-                    {product.name}<span className="text-orange-500 group-hover:animate-pulse">{product.symbol}</span>
+                  <h3 className={`text-2xl font-bold mb-2 transition-colors duration-300 ${
+                    selectedPlan === product.planKey 
+                      ? 'text-emerald-600' 
+                      : 'text-slate-900 group-hover:text-blue-600'
+                  }`}>
+                    {product.name}<span className={`transition-all duration-300 ${
+                      selectedPlan === product.planKey 
+                        ? 'text-orange-500 animate-pulse' 
+                        : 'text-orange-500 group-hover:animate-pulse'
+                    }`}>{product.symbol}</span>
                   </h3>
-                  <p className="text-lg text-slate-600 mb-4 group-hover:text-slate-800 transition-colors duration-300">
+                  <p className={`text-lg mb-4 transition-colors duration-300 ${
+                    selectedPlan === product.planKey 
+                      ? 'text-slate-800' 
+                      : 'text-slate-600 group-hover:text-slate-800'
+                  }`}>
                     {product.subtitle}
                   </p>
                 </div>
 
-                <p className="text-slate-600 mb-6 text-center group-hover:text-slate-800 transition-colors duration-300">
+                <p className={`mb-6 text-center transition-colors duration-300 ${
+                  selectedPlan === product.planKey 
+                    ? 'text-slate-800' 
+                    : 'text-slate-600 group-hover:text-slate-800'
+                }`}>
                   {product.description}
                 </p>
 
@@ -96,23 +159,33 @@ export const ProductShowcase = () => {
                   {product.features.map((feature, idx) => (
                     <div 
                       key={idx} 
-                      className="flex items-center text-sm text-slate-600 group-hover:text-slate-800 transition-all duration-300 hover:translate-x-2"
+                      className={`flex items-center text-sm transition-all duration-300 ${
+                        selectedPlan === product.planKey 
+                          ? 'text-slate-800 translate-x-2' 
+                          : 'text-slate-600 group-hover:text-slate-800 hover:translate-x-2'
+                      }`}
                       style={{
                         animationDelay: `${idx * 0.1}s`
                       }}
                     >
-                      <div className="w-2 h-2 bg-emerald-500 rounded-full mr-3 group-hover:bg-emerald-600 group-hover:scale-150 transition-all duration-300"></div>
+                      <div className={`w-2 h-2 rounded-full mr-3 transition-all duration-300 ${
+                        selectedPlan === product.planKey 
+                          ? 'bg-emerald-600 scale-150' 
+                          : 'bg-emerald-500 group-hover:bg-emerald-600 group-hover:scale-150'
+                      }`}></div>
                       {feature}
                     </div>
                   ))}
                 </div>
 
                 <Button 
-                  variant={product.highlighted ? "default" : "outline"} 
-                  className={`w-full group-hover:scale-105 transition-all duration-300 ${
-                    product.highlighted 
-                      ? 'bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg' 
-                      : 'hover:bg-blue-50 hover:border-blue-300'
+                  variant={product.highlighted || selectedPlan === product.planKey ? "default" : "outline"} 
+                  className={`w-full transition-all duration-300 ${
+                    selectedPlan === product.planKey 
+                      ? 'bg-emerald-600 hover:bg-emerald-700 shadow-lg scale-105' 
+                      : product.highlighted 
+                        ? 'bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg group-hover:scale-105' 
+                        : 'hover:bg-blue-50 hover:border-blue-300 group-hover:scale-105'
                   }`}
                 >
                   Learn More
