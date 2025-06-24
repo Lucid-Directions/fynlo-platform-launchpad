@@ -1,0 +1,149 @@
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Shield, Cloud, Zap, Globe } from "lucide-react";
+
+export const TechnologyOverview = () => {
+  const architectureFeatures = [
+    {
+      icon: <Cloud className="h-8 w-8 text-blue-600" />,
+      title: "Cloud-Native Architecture",
+      description: "Built on enterprise-grade cloud infrastructure with automatic scaling and 99.9% uptime guarantee",
+      specs: ["Auto-scaling", "Multi-region deployment", "Real-time sync"]
+    },
+    {
+      icon: <Shield className="h-8 w-8 text-emerald-600" />,
+      title: "Enterprise Security",
+      description: "Bank-grade security with PCI DSS Level 1 compliance and end-to-end encryption",
+      specs: ["PCI DSS Level 1", "SOX Compliance", "GDPR Ready"]
+    },
+    {
+      icon: <Zap className="h-8 w-8 text-purple-600" />,
+      title: "High Performance",
+      description: "Sub-second transaction processing with advanced caching and optimization",
+      specs: ["<100ms response", "Real-time analytics", "Edge computing"]
+    },
+    {
+      icon: <Globe className="h-8 w-8 text-orange-600" />,
+      title: "Global Scalability",
+      description: "Multi-tenant platform serving thousands of restaurants from a single instance",
+      specs: ["Multi-tenant", "Global CDN", "API-first design"]
+    }
+  ];
+
+  const performanceMetrics = [
+    { metric: "99.9%", label: "Platform Uptime", description: "Guaranteed SLA" },
+    { metric: "<100ms", label: "Transaction Speed", description: "Average processing time" },
+    { metric: "10K+", label: "Concurrent Users", description: "Per platform instance" },
+    { metric: "24/7", label: "Monitoring", description: "Proactive system health" }
+  ];
+
+  const integrationPartners = [
+    "QuickBooks", "Xero", "Toast", "Square", "Stripe", "PayPal", 
+    "DoorDash", "Uber Eats", "Grubhub", "OpenTable", "Yelp", "Google"
+  ];
+
+  return (
+    <section className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <Badge variant="secondary" className="mb-4">Technology Platform</Badge>
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+            Enterprise-Grade Restaurant
+            <span className="block text-blue-600">Technology Infrastructure</span>
+          </h2>
+          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+            Built for scale, security, and performance. Our platform delivers the reliability and features that enterprise restaurants demand.
+          </p>
+        </div>
+
+        {/* Architecture Features */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+          {architectureFeatures.map((feature, index) => (
+            <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300 border-l-4 border-l-blue-500">
+              <CardHeader className="pb-4 px-0">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-slate-50 rounded-lg">
+                    {feature.icon}
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-xl mb-2">{feature.title}</CardTitle>
+                    <p className="text-slate-600">{feature.description}</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="px-0 pt-4">
+                <div className="flex flex-wrap gap-2">
+                  {feature.specs.map((spec, specIndex) => (
+                    <Badge key={specIndex} variant="outline" className="text-blue-600 border-blue-200">
+                      {spec}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Performance Metrics */}
+        <div className="mb-20">
+          <h3 className="text-3xl font-bold text-slate-900 text-center mb-12">Platform Performance Metrics</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {performanceMetrics.map((metric, index) => (
+              <Card key={index} className="text-center p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                <CardContent className="p-0">
+                  <div className="text-4xl font-bold text-blue-600 mb-2">{metric.metric}</div>
+                  <div className="text-lg font-semibold text-slate-900 mb-1">{metric.label}</div>
+                  <div className="text-slate-600 text-sm">{metric.description}</div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Integration Ecosystem */}
+        <div className="p-8 bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl">
+          <h3 className="text-3xl font-bold text-slate-900 text-center mb-8">Integration Ecosystem</h3>
+          <p className="text-center text-slate-600 mb-8 max-w-2xl mx-auto">
+            Seamlessly connect with leading business applications and services through our comprehensive API ecosystem.
+          </p>
+          
+          {/* Integration Partners Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+            {integrationPartners.map((partner, index) => (
+              <div key={index} className="bg-white p-4 rounded-lg text-center font-semibold text-slate-700 hover:shadow-md transition-all duration-300">
+                {partner}
+              </div>
+            ))}
+          </div>
+
+          {/* API Features */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="text-2xl">🔗</div>
+              </div>
+              <h4 className="font-semibold text-slate-900 mb-2">RESTful APIs</h4>
+              <p className="text-slate-600">Comprehensive API documentation and SDKs</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="text-2xl">⚡</div>
+              </div>
+              <h4 className="font-semibold text-slate-900 mb-2">Real-time Webhooks</h4>
+              <p className="text-slate-600">Instant data synchronization across systems</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="text-2xl">🛡️</div>
+              </div>
+              <h4 className="font-semibold text-slate-900 mb-2">Secure Authentication</h4>
+              <p className="text-slate-600">OAuth 2.0 and API key management</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
