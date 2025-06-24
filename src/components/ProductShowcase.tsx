@@ -6,26 +6,29 @@ import { ArrowRight } from "lucide-react";
 export const ProductShowcase = () => {
   const products = [
     {
-      name: "Flex",
-      subtitle: "Portable card machine",
-      description: "Take your business mobile with our handheld POS solution. Perfect for businesses on the go.",
-      features: ["Portable", "All-day battery", "4G connectivity", "Receipt printer"],
+      name: "Alpha",
+      symbol: "α",
+      subtitle: "Essential business solution",
+      description: "Perfect for small businesses getting started with comprehensive payment processing and basic management tools.",
+      features: ["Employee Management", "QR Scanner for inventory", "Basic Reports", "No hardware required"],
       image: "📱",
-      highlighted: true
-    },
-    {
-      name: "Mini",
-      subtitle: "Compact countertop solution",
-      description: "Small POS for your countertop that doesn't need much space but delivers full functionality.",
-      features: ["Compact design", "WiFi enabled", "Touch screen", "Card reader"],
-      image: "💻",
       highlighted: false
     },
     {
-      name: "Duo",
-      subtitle: "Full-featured POS system",
-      description: "Complete business management with advanced reporting and inventory tracking.",
-      features: ["Full POS", "Inventory management", "Staff management", "Analytics"],
+      name: "Beta",
+      symbol: "β",
+      subtitle: "Advanced business management",
+      description: "Complete business solution with advanced features for growing restaurants and retail businesses.",
+      features: ["Everything in Alpha", "Advanced Inventory management", "Employee Scheduling system", "Advanced Reports & analytics"],
+      image: "💻",
+      highlighted: true
+    },
+    {
+      name: "Omega",
+      symbol: "Ω",
+      subtitle: "Enterprise solution",
+      description: "Full-featured business management with custom integrations and dedicated support for large operations.",
+      features: ["Everything in Beta", "Xero integration", "Custom integrations", "Priority support"],
       image: "🖥️",
       highlighted: false
     }
@@ -37,9 +40,9 @@ export const ProductShowcase = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            <span className="text-emerald-600">Flex</span>
-            <span className="text-gray-300 mx-8">Mini</span>
-            <span className="text-gray-300">Duo</span>
+            <span className="text-emerald-600">Alph<span className="text-orange-500">α</span></span>
+            <span className="text-gray-300 mx-8">Bet<span className="text-orange-500">β</span></span>
+            <span className="text-gray-300">Omeg<span className="text-orange-500">Ω</span></span>
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
             Choose the perfect payment solution for your business needs
@@ -61,7 +64,9 @@ export const ProductShowcase = () => {
               <CardContent className="p-8">
                 <div className="text-center mb-6">
                   <div className="text-6xl mb-4">{product.image}</div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">{product.name}</h3>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">
+                    {product.name}<span className="text-orange-500">{product.symbol}</span>
+                  </h3>
                   <p className="text-lg text-slate-600 mb-4">{product.subtitle}</p>
                 </div>
 
