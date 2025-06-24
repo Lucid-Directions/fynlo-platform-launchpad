@@ -13,6 +13,7 @@ export const ProductDemo = () => {
       icon: <BarChart3 className="h-5 w-5" />,
       title: "Multi-Location Dashboard",
       description: "Comprehensive oversight and analytics across all restaurant locations",
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
       features: [
         "Real-time performance monitoring",
         "Cross-location analytics and reporting",
@@ -27,6 +28,7 @@ export const ProductDemo = () => {
       icon: <CreditCard className="h-5 w-5" />,
       title: "Advanced Point-of-Sale",
       description: "Intuitive POS system designed for high-volume restaurant operations",
+      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
       features: [
         "Lightning-fast order processing",
         "Split payments and custom modifications",
@@ -41,6 +43,7 @@ export const ProductDemo = () => {
       icon: <CreditCard className="h-5 w-5" />,
       title: "Integrated Payment Solutions",
       description: "Secure, low-cost payment processing with multiple payment options",
+      image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80",
       features: [
         "1.2% processing rates (vs 2.9% industry standard)",
         "Contactless and mobile payments",
@@ -55,6 +58,7 @@ export const ProductDemo = () => {
       icon: <BarChart3 className="h-5 w-5" />,
       title: "Advanced Analytics Suite",
       description: "Data-driven insights to optimize restaurant performance and profitability",
+      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
       features: [
         "Real-time sales and performance metrics",
         "Customer behavior analysis",
@@ -122,17 +126,13 @@ export const ProductDemo = () => {
                       </div>
                     </div>
                     
-                    {/* Demo Interface Mockup */}
+                    {/* Demo Interface with actual images */}
                     <div className="bg-white p-6 rounded-xl shadow-lg border">
-                      <div className="bg-slate-100 h-64 rounded-lg flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            {feature.icon}
-                          </div>
-                          <div className="text-slate-600">Interactive Demo</div>
-                          <div className="text-sm text-slate-500 mt-1">{feature.title}</div>
-                        </div>
-                      </div>
+                      <img 
+                        src={feature.image} 
+                        alt={`${feature.title} Demo`}
+                        className="w-full h-64 object-cover rounded-lg"
+                      />
                     </div>
                   </div>
                 </Card>

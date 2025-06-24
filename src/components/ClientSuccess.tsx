@@ -45,7 +45,7 @@ export const ClientSuccess = () => {
 
   const caseStudyMetrics = [
     { value: "500+", label: "Restaurant Partners", description: "Active on platform" },
-    { value: "$2.3B", label: "Transaction Volume", description: "Processed annually" },
+    { value: "£1.8B", label: "Transaction Volume", description: "Processed annually" },
     { value: "99.9%", label: "Customer Satisfaction", description: "Retention rate" },
     { value: "18 months", label: "Average ROI", description: "Payback period" }
   ];
