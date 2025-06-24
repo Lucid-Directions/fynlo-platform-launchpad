@@ -1,147 +1,149 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Star } from "lucide-react";
 
 export const ClientSuccess = () => {
-  const successStories = [
+  const testimonials = [
     {
-      name: "Maria Rodriguez",
-      title: "CEO, Urban Bistro Group",
-      company: "12 Locations",
-      testimonial: "Fynlo transformed our operations. We reduced processing costs by 45% and increased efficiency across all locations. The platform pays for itself.",
-      metrics: {
-        savings: "45%",
-        efficiency: "60%",
-        growth: "23%"
-      },
-      avatar: "MR"
+      name: "Sarah Chen",
+      role: "Owner, The Golden Spoon Restaurant",
+      image: "👩‍🍳",
+      quote: "Fynlo transformed our payment process completely. We went from juggling multiple systems to having everything integrated seamlessly. Our staff loves how easy it is to use.",
+      rating: 5,
+      metrics: "Increased efficiency by 40%"
     },
     {
-      name: "James Chen",
-      title: "Founder, FastCasual Concepts",
-      company: "8 Locations",
-      testimonial: "The multi-tenant architecture allowed us to scale rapidly without technical headaches. Revenue per location increased 23% in the first year.",
-      metrics: {
-        savings: "38%",
-        efficiency: "55%",
-        growth: "31%"
-      },
-      avatar: "JC"
+      name: "Marcus Rodriguez",
+      role: "General Manager, Fresh Market Bistro",
+      image: "👨‍💼",
+      quote: "The real-time reporting and inventory management features have been game-changers. We can now make data-driven decisions on the fly.",
+      rating: 5,
+      metrics: "Reduced food waste by 25%"
     },
     {
-      name: "Sarah Johnson",
-      title: "Operations Director, Premium Dining",
-      company: "15 Locations",
-      testimonial: "Real-time analytics and centralized management gave us unprecedented visibility. We optimized our entire operation based on data insights.",
-      metrics: {
-        savings: "42%",
-        efficiency: "67%",
-        growth: "28%"
-      },
-      avatar: "SJ"
+      name: "Emma Thompson",
+      role: "Co-owner, Artisan Coffee House",
+      image: "👩‍💻",
+      quote: "Setting up was incredibly simple, and the customer support is outstanding. We were up and running in less than an hour with no technical hassles.",
+      rating: 5,
+      metrics: "Setup completed in under 1 hour"
     }
   ];
 
-  const caseStudyMetrics = [
-    { value: "500+", label: "Restaurant Partners", description: "Active on platform" },
-    { value: "£1.8B", label: "Transaction Volume", description: "Processed annually" },
-    { value: "99.9%", label: "Customer Satisfaction", description: "Retention rate" },
-    { value: "18 months", label: "Average ROI", description: "Payback period" }
+  const successMetrics = [
+    { metric: "99.9%", label: "Uptime Guarantee", description: "Reliable service you can count on" },
+    { metric: "< 2s", label: "Transaction Speed", description: "Lightning-fast payment processing" },
+    { metric: "24/7", label: "Support Available", description: "Always here when you need us" },
+    { metric: "500+", label: "Happy Businesses", description: "Trusted by restaurants nationwide" }
+  ];
+
+  const caseStudies = [
+    {
+      business: "Pizza Corner",
+      challenge: "Managing multiple locations with inconsistent reporting",
+      solution: "Implemented Fynlo's multi-location dashboard with unified reporting",
+      result: "30% improvement in operational efficiency across all locations"
+    },
+    {
+      business: "Healthy Bites Cafe",
+      challenge: "High transaction fees eating into profit margins", 
+      solution: "Switched to Fynlo's transparent 1.5% flat rate pricing",
+      result: "Saved £2,400 annually in processing fees"
+    },
+    {
+      business: "The Burger Joint",
+      challenge: "Time-consuming manual inventory management",
+      solution: "Automated inventory tracking with QR scanner integration",
+      result: "Reduced inventory management time by 60%"
+    }
   ];
 
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4">Client Success</Badge>
+          <Badge variant="secondary" className="mb-4 bg-emerald-100 text-emerald-800">Client Success</Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            Proven Results Across
-            <span className="block text-blue-600">Restaurant Segments</span>
+            What our customers say
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            See how restaurant leaders are transforming their operations and building scalable technology businesses with our platform.
+            Real stories from restaurant owners who've transformed their business operations with Fynlo.
           </p>
         </div>
 
-        {/* Success Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-          {caseStudyMetrics.map((metric, index) => (
-            <Card key={index} className="text-center p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+        {/* Testimonials */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+          {testimonials.map((testimonial, index) => (
+            <Card key={index} className="p-6 hover:shadow-xl transition-all duration-300">
               <CardContent className="p-0">
-                <div className="text-3xl font-bold text-blue-600 mb-2">{metric.value}</div>
-                <div className="text-lg font-semibold text-slate-900 mb-1">{metric.label}</div>
-                <div className="text-slate-600 text-sm">{metric.description}</div>
+                {/* Rating */}
+                <div className="flex items-center mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                
+                {/* Quote */}
+                <blockquote className="text-slate-700 mb-6 italic">
+                  "{testimonial.quote}"
+                </blockquote>
+                
+                {/* Customer Info with Image */}
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4 text-2xl">
+                    {testimonial.image}
+                  </div>
+                  <div>
+                    <div className="font-semibold text-slate-900">{testimonial.name}</div>
+                    <div className="text-slate-600 text-sm">{testimonial.role}</div>
+                  </div>
+                </div>
+                
+                {/* Metrics */}
+                <div className="bg-emerald-50 rounded-lg p-3 text-center">
+                  <div className="text-emerald-800 font-semibold text-sm">{testimonial.metrics}</div>
+                </div>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* Client Testimonials */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
-          {successStories.map((story, index) => (
-            <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300 h-full">
-              <div className="flex items-center mb-6">
-                <Avatar className="h-12 w-12 mr-4">
-                  <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
-                    {story.avatar}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h4 className="font-semibold text-slate-900">{story.name}</h4>
-                  <p className="text-slate-600 text-sm">{story.title}</p>
-                  <Badge variant="outline" className="mt-1">{story.company}</Badge>
-                </div>
-              </div>
-              
-              <blockquote className="text-slate-700 mb-6 italic">
-                "{story.testimonial}"
-              </blockquote>
-              
-              {/* Results Metrics */}
-              <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-100">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-emerald-600">{story.metrics.savings}</div>
-                  <div className="text-sm text-slate-600">Cost Savings</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">{story.metrics.efficiency}</div>
-                  <div className="text-sm text-slate-600">Efficiency Gain</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">{story.metrics.growth}</div>
-                  <div className="text-sm text-slate-600">Revenue Growth</div>
-                </div>
-              </div>
-            </Card>
+        {/* Success Metrics */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          {successMetrics.map((item, index) => (
+            <div key={index} className="text-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="text-4xl font-bold text-blue-600 mb-2">{item.metric}</div>
+              <div className="text-lg font-semibold text-slate-900 mb-1">{item.label}</div>
+              <div className="text-slate-600 text-sm">{item.description}</div>
+            </div>
           ))}
         </div>
 
-        {/* Industry Segments */}
-        <div className="p-8 bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl">
-          <h3 className="text-3xl font-bold text-slate-900 text-center mb-8">Serving All Restaurant Segments</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="text-center p-6 bg-white rounded-lg">
-              <div className="text-3xl mb-4">🍕</div>
-              <h4 className="font-semibold text-slate-900 mb-2">Quick Service</h4>
-              <p className="text-slate-600 text-sm">Fast-casual and counter service restaurants</p>
-            </div>
-            <div className="text-center p-6 bg-white rounded-lg">
-              <div className="text-3xl mb-4">🍽️</div>
-              <h4 className="font-semibold text-slate-900 mb-2">Full Service</h4>
-              <p className="text-slate-600 text-sm">Traditional dine-in restaurants and cafes</p>
-            </div>
-            <div className="text-center p-6 bg-white rounded-lg">
-              <div className="text-3xl mb-4">🥂</div>
-              <h4 className="font-semibold text-slate-900 mb-2">Fine Dining</h4>
-              <p className="text-slate-600 text-sm">Premium restaurants and hospitality</p>
-            </div>
-            <div className="text-center p-6 bg-white rounded-lg">
-              <div className="text-3xl mb-4">🚚</div>
-              <h4 className="font-semibold text-slate-900 mb-2">Food Trucks</h4>
-              <p className="text-slate-600 text-sm">Mobile and pop-up dining concepts</p>
-            </div>
+        {/* Case Studies */}
+        <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <h3 className="text-3xl font-bold text-slate-900 text-center mb-8">Success Stories</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {caseStudies.map((study, index) => (
+              <div key={index} className="border-l-4 border-blue-500 pl-6">
+                <h4 className="text-xl font-bold text-slate-900 mb-3">{study.business}</h4>
+                <div className="space-y-3">
+                  <div>
+                    <span className="font-semibold text-red-600">Challenge: </span>
+                    <span className="text-slate-700">{study.challenge}</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-blue-600">Solution: </span>
+                    <span className="text-slate-700">{study.solution}</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-emerald-600">Result: </span>
+                    <span className="text-slate-700">{study.result}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

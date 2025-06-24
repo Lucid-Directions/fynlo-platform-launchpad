@@ -57,7 +57,7 @@ export const ProductShowcase = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
             <span className={`transition-all duration-300 cursor-pointer inline-block ${
               selectedPlan === 'alpha' 
-                ? 'text-slate-900 animate-[shake_0.5s_ease-in-out]' 
+                ? 'text-slate-900 animate-shake' 
                 : 'text-slate-900 hover:scale-105'
             }`}
             onClick={() => handlePlanClick('alpha')}>
@@ -65,7 +65,7 @@ export const ProductShowcase = () => {
             </span>
             <span className={`mx-8 transition-all duration-300 cursor-pointer inline-block ${
               selectedPlan === 'beta' 
-                ? 'text-slate-900 animate-[shake_0.5s_ease-in-out]' 
+                ? 'text-slate-900 animate-shake' 
                 : 'text-slate-900 hover:scale-105'
             }`}
             onClick={() => handlePlanClick('beta')}>
@@ -73,7 +73,7 @@ export const ProductShowcase = () => {
             </span>
             <span className={`transition-all duration-300 cursor-pointer inline-block ${
               selectedPlan === 'omega' 
-                ? 'text-slate-900 animate-[shake_0.5s_ease-in-out]' 
+                ? 'text-slate-900 animate-shake' 
                 : 'text-slate-900 hover:scale-105'
             }`}
             onClick={() => handlePlanClick('omega')}>
@@ -93,19 +93,19 @@ export const ProductShowcase = () => {
               className={`relative overflow-hidden transition-all duration-300 cursor-pointer group ${
                 selectedPlan === product.planKey
                   ? 'ring-4 ring-emerald-400 shadow-xl'
-                  : product.highlighted 
-                    ? 'ring-2 ring-emerald-500 shadow-lg hover:shadow-xl hover:ring-4 hover:ring-emerald-400' 
-                    : 'hover:shadow-lg hover:ring-2 hover:ring-blue-300'
+                  : 'hover:shadow-lg hover:ring-2 hover:ring-blue-300'
               }`}
               onClick={() => handlePlanClick(product.planKey)}
             >
-              {(product.highlighted || selectedPlan === product.planKey) && (
-                <div className={`absolute top-0 right-0 px-3 py-1 text-sm font-semibold ${
-                  selectedPlan === product.planKey 
-                    ? 'bg-emerald-500 text-white' 
-                    : 'bg-emerald-500 text-white'
-                }`}>
-                  {selectedPlan === product.planKey ? 'Selected' : 'Most Popular'}
+              {selectedPlan === product.planKey && (
+                <div className="absolute top-0 right-0 px-3 py-1 text-sm font-semibold bg-emerald-500 text-white">
+                  Selected
+                </div>
+              )}
+              
+              {product.highlighted && selectedPlan !== product.planKey && (
+                <div className="absolute top-0 right-0 px-3 py-1 text-sm font-semibold bg-blue-500 text-white">
+                  Most Popular
                 </div>
               )}
               
@@ -123,7 +123,7 @@ export const ProductShowcase = () => {
                       ? 'text-slate-900' 
                       : 'text-slate-900 group-hover:text-blue-600'
                   }`}>
-                    {product.name}<span className="text-orange-500">{product.symbol}</span>
+                    <span className="text-slate-900">{product.name}</span><span className="text-orange-500">{product.symbol}</span>
                   </h3>
                   <p className={`text-lg mb-4 transition-colors duration-300 ${
                     selectedPlan === product.planKey 
@@ -163,13 +163,11 @@ export const ProductShowcase = () => {
                 </div>
 
                 <Button 
-                  variant={product.highlighted || selectedPlan === product.planKey ? "default" : "outline"} 
+                  variant={selectedPlan === product.planKey ? "default" : "outline"} 
                   className={`w-full transition-all duration-300 ${
                     selectedPlan === product.planKey 
                       ? 'bg-emerald-600 hover:bg-emerald-700 shadow-lg' 
-                      : product.highlighted 
-                        ? 'bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg' 
-                        : 'hover:bg-blue-50 hover:border-blue-300'
+                      : 'hover:bg-blue-50 hover:border-blue-300'
                   }`}
                 >
                   Learn More
