@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 
@@ -23,7 +22,7 @@ export const Hero = () => {
           <img 
             src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
             alt="Fynlo Logo" 
-            className="h-16 w-auto"
+            className="h-25 w-auto"
             onError={handleLogoError}
           />
           <div className="text-2xl font-bold text-blue-600" style={{display: 'none'}}>Fynlo</div>
