@@ -71,6 +71,34 @@ export const Hero = () => {
               no hardware required, and bank-level security.
             </p>
 
+            {/* Pricing Tiers Preview */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">Choose Your Plan:</h3>
+              <div className="flex flex-wrap gap-4">
+                <div className="bg-white border-2 border-blue-200 rounded-lg px-4 py-3 text-center min-w-[120px]">
+                  <div className="text-2xl font-bold text-slate-900">
+                    Alph<span className="text-orange-500">α</span>
+                  </div>
+                  <div className="text-sm text-blue-600">£89/month</div>
+                </div>
+                <div className="bg-blue-50 border-2 border-blue-500 rounded-lg px-4 py-3 text-center min-w-[120px] relative">
+                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded">Popular</span>
+                  </div>
+                  <div className="text-2xl font-bold text-slate-900">
+                    Bet<span className="text-orange-500">β</span>
+                  </div>
+                  <div className="text-sm text-emerald-600">£159/month</div>
+                </div>
+                <div className="bg-white border-2 border-purple-200 rounded-lg px-4 py-3 text-center min-w-[120px]">
+                  <div className="text-2xl font-bold text-slate-900">
+                    Omeg<span className="text-orange-500">Ω</span>
+                  </div>
+                  <div className="text-sm text-purple-600">Custom</div>
+                </div>
+              </div>
+            </div>
+
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg">
