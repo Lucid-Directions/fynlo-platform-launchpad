@@ -14,7 +14,6 @@ export const ProductShowcase = () => {
       subtitle: "Essential business solution",
       description: "Perfect for small businesses getting started with comprehensive payment processing and basic management tools.",
       features: ["Employee Management", "QR Scanner for inventory", "Basic Reports", "No hardware required"],
-      image: "📱",
       highlighted: false,
       planKey: 'alpha'
     },
@@ -24,7 +23,6 @@ export const ProductShowcase = () => {
       subtitle: "Advanced business management",
       description: "Complete business solution with advanced features for growing restaurants and retail businesses.",
       features: ["Everything in Alpha", "Advanced Inventory management", "Employee Scheduling system", "Advanced Reports & analytics"],
-      image: "💻",
       highlighted: true,
       planKey: 'beta'
     },
@@ -34,7 +32,6 @@ export const ProductShowcase = () => {
       subtitle: "Enterprise solution",
       description: "Full-featured business management with custom integrations and dedicated support for large operations.",
       features: ["Everything in Beta", "Xero integration", "Custom integrations", "Priority support"],
-      image: "🖥️",
       highlighted: false,
       planKey: 'omega'
     }
@@ -70,7 +67,7 @@ export const ProductShowcase = () => {
                 : 'text-slate-900 hover:scale-105'
             }`}
             onClick={() => handlePlanClick('alpha')}>
-              <span className="text-slate-900">Alph</span><span className="text-orange-500">α</span>
+              <span className="text-slate-900">Alph</span><span className="text-orange-500">a</span>
             </span>
             <span className={`mx-8 transition-all duration-300 cursor-pointer inline-block ${
               selectedPlan === 'beta' 
@@ -78,7 +75,7 @@ export const ProductShowcase = () => {
                 : 'text-slate-900 hover:scale-105'
             }`}
             onClick={() => handlePlanClick('beta')}>
-              <span className="text-slate-900">Bet</span><span className="text-orange-500">β</span>
+              <span className="text-slate-900">Bet</span><span className="text-orange-500">a</span>
             </span>
             <span className={`transition-all duration-300 cursor-pointer inline-block ${
               selectedPlan === 'omega' 
@@ -86,7 +83,7 @@ export const ProductShowcase = () => {
                 : 'text-slate-900 hover:scale-105'
             }`}
             onClick={() => handlePlanClick('omega')}>
-              <span className="text-slate-900">Omeg</span><span className="text-orange-500">Ω</span>
+              <span className="text-slate-900">Omeg</span><span className="text-orange-500">a</span>
             </span>
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
@@ -120,19 +117,19 @@ export const ProductShowcase = () => {
               
               <CardContent className="p-8">
                 <div className="text-center mb-6">
-                  <div className={`text-6xl mb-4 transition-all duration-300 ${
+                  <div className={`text-8xl font-bold mb-4 transition-all duration-300 ${
                     selectedPlan === product.planKey 
-                      ? 'scale-110' 
-                      : 'group-hover:scale-110'
+                      ? 'scale-110 text-orange-500' 
+                      : 'group-hover:scale-110 text-slate-700'
                   }`}>
-                    {product.image}
+                    {product.symbol}
                   </div>
                   <h3 className={`text-2xl font-bold mb-2 transition-colors duration-300 ${
                     selectedPlan === product.planKey 
                       ? 'text-slate-900' 
                       : 'text-slate-900 group-hover:text-blue-600'
                   }`}>
-                    <span className="text-slate-900">{product.name}</span><span className="text-orange-500">{product.symbol}</span>
+                    <span className="text-slate-900">{product.name.slice(0, -1)}</span><span className="text-orange-500">{product.name.slice(-1)}</span>
                   </h3>
                   <p className={`text-lg mb-4 transition-colors duration-300 ${
                     selectedPlan === product.planKey 
