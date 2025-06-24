@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Zap, Users, Check } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const Hero = () => {
   const [selectedPlan, setSelectedPlan] = useState('beta'); // Default to beta (most popular)
@@ -19,6 +19,24 @@ export const Hero = () => {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  // Listen for plan selection changes from other components
+  useEffect(() => {
+    const handlePlanChange = (event: CustomEvent) => {
+      setSelectedPlan(event.detail.plan);
+    };
+
+    window.addEventListener('planSelected', handlePlanChange as EventListener);
+    return () => {
+      window.removeEventListener('planSelected', handlePlanChange as EventListener);
+    };
+  }, []);
+
+  const handlePlanSelect = (plan: string) => {
+    setSelectedPlan(plan);
+    // Dispatch event to sync with other components
+    window.dispatchEvent(new CustomEvent('planSelected', { detail: { plan } }));
   };
 
   return (
@@ -111,12 +129,12 @@ export const Hero = () => {
                       ? 'border-blue-500 shadow-lg ring-2 ring-blue-300' 
                       : 'border-blue-200 hover:border-blue-400 hover:shadow-lg'
                   } hover:scale-105`}
-                  onClick={() => setSelectedPlan('alpha')}
+                  onClick={() => handlePlanSelect('alpha')}
                 >
                   <div className={`text-2xl font-bold transition-colors duration-300 ${
-                    selectedPlan === 'alpha' ? 'text-slate-900 animate-[shake_0.5s_ease-in-out]' : 'text-slate-900 group-hover:text-blue-600'
+                    selectedPlan === 'alpha' ? 'text-slate-900 animate-shake' : 'text-slate-900 group-hover:text-blue-600'
                   }`}>
-                    Alph<span className="text-orange-500">α</span>
+                    <span className="text-slate-900">Alph</span><span className="text-orange-500">α</span>
                   </div>
                   <div className="text-sm text-blue-600">£89/month</div>
                 </div>
@@ -126,7 +144,7 @@ export const Hero = () => {
                       ? 'border-emerald-500 shadow-xl ring-2 ring-emerald-300' 
                       : 'border-blue-500 hover:border-blue-600 hover:shadow-xl'
                   } hover:scale-105`}
-                  onClick={() => setSelectedPlan('beta')}
+                  onClick={() => handlePlanSelect('beta')}
                 >
                   <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
                     <span className={`bg-blue-600 text-white text-xs px-2 py-1 rounded transition-all duration-300 ${
@@ -134,9 +152,9 @@ export const Hero = () => {
                     }`}>Popular</span>
                   </div>
                   <div className={`text-2xl font-bold transition-colors duration-300 ${
-                    selectedPlan === 'beta' ? 'text-slate-900 animate-[shake_0.5s_ease-in-out]' : 'text-slate-900 group-hover:text-emerald-600'
+                    selectedPlan === 'beta' ? 'text-slate-900 animate-shake' : 'text-slate-900 group-hover:text-emerald-600'
                   }`}>
-                    Bet<span className="text-orange-500">β</span>
+                    <span className="text-slate-900">Bet</span><span className="text-orange-500">β</span>
                   </div>
                   <div className="text-sm text-emerald-600">£159/month</div>
                 </div>
@@ -146,12 +164,12 @@ export const Hero = () => {
                       ? 'border-purple-500 shadow-lg ring-2 ring-purple-300' 
                       : 'border-purple-200 hover:border-purple-400 hover:shadow-lg'
                   } hover:scale-105`}
-                  onClick={() => setSelectedPlan('omega')}
+                  onClick={() => handlePlanSelect('omega')}
                 >
                   <div className={`text-2xl font-bold transition-colors duration-300 ${
-                    selectedPlan === 'omega' ? 'text-slate-900 animate-[shake_0.5s_ease-in-out]' : 'text-slate-900 group-hover:text-purple-600'
+                    selectedPlan === 'omega' ? 'text-slate-900 animate-shake' : 'text-slate-900 group-hover:text-purple-600'
                   }`}>
-                    Omeg<span className="text-orange-500">Ω</span>
+                    <span className="text-slate-900">Omeg</span><span className="text-orange-500">Ω</span>
                   </div>
                   <div className="text-sm text-purple-600">Custom</div>
                 </div>

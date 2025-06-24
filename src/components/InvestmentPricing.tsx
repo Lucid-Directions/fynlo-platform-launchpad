@@ -3,8 +3,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useState, useEffect } from "react";
 
 export const InvestmentPricing = () => {
+  const [selectedPlan, setSelectedPlan] = useState('beta'); // Default to beta (most popular)
+
   const pricingPlans = [
     {
       name: "Alpha",
@@ -21,7 +24,8 @@ export const InvestmentPricing = () => {
         "1.5% transaction fee"
       ],
       highlighted: false,
-      buttonText: "Get Started"
+      buttonText: "Get Started",
+      planKey: 'alpha'
     },
     {
       name: "Beta",
@@ -38,7 +42,8 @@ export const InvestmentPricing = () => {
         "1.5% transaction fee"
       ],
       highlighted: true,
-      buttonText: "Most Popular"
+      buttonText: "Most Popular",
+      planKey: 'beta'
     },
     {
       name: "Omega",
@@ -55,9 +60,28 @@ export const InvestmentPricing = () => {
         "Custom transaction rates"
       ],
       highlighted: false,
-      buttonText: "Contact Sales"
+      buttonText: "Contact Sales",
+      planKey: 'omega'
     }
   ];
+
+  // Listen for plan selection changes from other components
+  useEffect(() => {
+    const handlePlanChange = (event: CustomEvent) => {
+      setSelectedPlan(event.detail.plan);
+    };
+
+    window.addEventListener('planSelected', handlePlanChange as EventListener);
+    return () => {
+      window.removeEventListener('planSelected', handlePlanChange as EventListener);
+    };
+  }, []);
+
+  const handlePlanClick = (planKey: string) => {
+    setSelectedPlan(planKey);
+    // Dispatch event to sync with other components
+    window.dispatchEvent(new CustomEvent('planSelected', { detail: { plan: planKey } }));
+  };
 
   return (
     <section className="py-24 bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -79,19 +103,28 @@ export const InvestmentPricing = () => {
           {pricingPlans.map((plan, index) => (
             <Card 
               key={index}
-              className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl ${
-                plan.highlighted 
-                  ? 'ring-2 ring-blue-500 shadow-xl scale-105' 
-                  : 'hover:scale-105'
+              className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer ${
+                selectedPlan === plan.planKey
+                  ? 'ring-4 ring-emerald-400 shadow-xl scale-105' 
+                  : plan.highlighted 
+                    ? 'ring-2 ring-blue-500 shadow-xl scale-105' 
+                    : 'hover:scale-105'
               }`}
+              onClick={() => handlePlanClick(plan.planKey)}
             >
-              {plan.highlighted && (
+              {selectedPlan === plan.planKey && (
+                <div className="absolute top-0 left-0 right-0 bg-emerald-600 text-white text-center py-2 text-sm font-semibold">
+                  Selected
+                </div>
+              )}
+              
+              {plan.highlighted && selectedPlan !== plan.planKey && (
                 <div className="absolute top-0 left-0 right-0 bg-blue-600 text-white text-center py-2 text-sm font-semibold">
                   Most Popular
                 </div>
               )}
               
-              <CardContent className={`p-8 ${plan.highlighted ? 'pt-16' : ''}`}>
+              <CardContent className={`p-8 ${(plan.highlighted && selectedPlan !== plan.planKey) || selectedPlan === plan.planKey ? 'pt-16' : ''}`}>
                 <div className="text-center mb-8">
                   <h3 className="text-3xl font-bold text-slate-900 mb-2">
                     <span className="text-slate-900">{plan.name}</span><span className="text-orange-500">{plan.symbol}</span>
@@ -115,9 +148,11 @@ export const InvestmentPricing = () => {
                 <Button 
                   size="lg" 
                   className={`w-full ${
-                    plan.highlighted 
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                      : 'bg-slate-900 hover:bg-slate-800 text-white'
+                    selectedPlan === plan.planKey
+                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
+                      : plan.highlighted 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : 'bg-slate-900 hover:bg-slate-800 text-white'
                   }`}
                 >
                   {plan.buttonText}

@@ -2,7 +2,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const ProductShowcase = () => {
   const [selectedPlan, setSelectedPlan] = useState('beta'); // Default to beta (most popular)
@@ -40,13 +40,22 @@ export const ProductShowcase = () => {
     }
   ];
 
+  // Listen for plan selection changes from other components
+  useEffect(() => {
+    const handlePlanChange = (event: CustomEvent) => {
+      setSelectedPlan(event.detail.plan);
+    };
+
+    window.addEventListener('planSelected', handlePlanChange as EventListener);
+    return () => {
+      window.removeEventListener('planSelected', handlePlanChange as EventListener);
+    };
+  }, []);
+
   const handlePlanClick = (planKey: string) => {
     setSelectedPlan(planKey);
-    // Scroll to hero section to show the updated selection
-    const heroElement = document.querySelector('.hero-section');
-    if (heroElement) {
-      heroElement.scrollIntoView({ behavior: 'smooth' });
-    }
+    // Dispatch event to sync with other components
+    window.dispatchEvent(new CustomEvent('planSelected', { detail: { plan: planKey } }));
   };
 
   return (
@@ -61,7 +70,7 @@ export const ProductShowcase = () => {
                 : 'text-slate-900 hover:scale-105'
             }`}
             onClick={() => handlePlanClick('alpha')}>
-              Alph<span className="text-orange-500">α</span>
+              <span className="text-slate-900">Alph</span><span className="text-orange-500">α</span>
             </span>
             <span className={`mx-8 transition-all duration-300 cursor-pointer inline-block ${
               selectedPlan === 'beta' 
@@ -69,7 +78,7 @@ export const ProductShowcase = () => {
                 : 'text-slate-900 hover:scale-105'
             }`}
             onClick={() => handlePlanClick('beta')}>
-              Bet<span className="text-orange-500">β</span>
+              <span className="text-slate-900">Bet</span><span className="text-orange-500">β</span>
             </span>
             <span className={`transition-all duration-300 cursor-pointer inline-block ${
               selectedPlan === 'omega' 
@@ -77,7 +86,7 @@ export const ProductShowcase = () => {
                 : 'text-slate-900 hover:scale-105'
             }`}
             onClick={() => handlePlanClick('omega')}>
-              Omeg<span className="text-orange-500">Ω</span>
+              <span className="text-slate-900">Omeg</span><span className="text-orange-500">Ω</span>
             </span>
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
