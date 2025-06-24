@@ -22,7 +22,7 @@ export const Hero = () => {
   };
 
   return (
-    <section className="relative bg-white">
+    <section className="relative bg-white hero-section">
       {/* Header Navigation */}
       <div className="border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -81,7 +81,7 @@ export const Hero = () => {
               Your All-in-One Payment Solution
             </h1>
             
-            {/* Pricing Highlight with Enhanced Animation */}
+            {/* Pricing Highlight */}
             <div className="bg-blue-50 rounded-lg p-6 mb-8 border-l-4 border-blue-600 hover:bg-blue-100 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer">
               <div className="flex items-center space-x-4">
                 <div>
@@ -96,75 +96,69 @@ export const Hero = () => {
               </div>
             </div>
 
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed animate-fade-in">
+            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
               Find the right solution to power your business with instant payment processing, 
               no hardware required, and bank-level security.
             </p>
 
-            {/* Pricing Tiers Preview with Interactive Animations */}
+            {/* Pricing Tiers Preview with Subtle Animations */}
             <div className="mb-8">
               <h3 className="text-lg font-semibold text-slate-900 mb-4">Choose Your Plan:</h3>
               <div className="flex flex-wrap gap-4">
                 <div 
                   className={`bg-white border-2 rounded-lg px-4 py-3 text-center min-w-[120px] cursor-pointer group transition-all duration-300 ${
                     selectedPlan === 'alpha' 
-                      ? 'border-blue-500 shadow-lg ring-2 ring-blue-300 animate-pulse' 
+                      ? 'border-blue-500 shadow-lg ring-2 ring-blue-300' 
                       : 'border-blue-200 hover:border-blue-400 hover:shadow-lg'
-                  } hover:scale-110 hover:-rotate-1`}
+                  } hover:scale-105`}
                   onClick={() => setSelectedPlan('alpha')}
                 >
                   <div className={`text-2xl font-bold transition-colors duration-300 ${
-                    selectedPlan === 'alpha' ? 'text-blue-600 animate-bounce' : 'text-slate-900 group-hover:text-blue-600'
+                    selectedPlan === 'alpha' ? 'text-slate-900 animate-[shake_0.5s_ease-in-out]' : 'text-slate-900 group-hover:text-blue-600'
                   }`}>
-                    Alph<span className={`transition-all duration-300 ${
-                      selectedPlan === 'alpha' ? 'text-orange-500 animate-pulse' : 'text-orange-500 group-hover:animate-pulse'
-                    }`}>α</span>
+                    Alph<span className="text-orange-500">α</span>
                   </div>
                   <div className="text-sm text-blue-600">£89/month</div>
                 </div>
                 <div 
                   className={`bg-blue-50 border-2 rounded-lg px-4 py-3 text-center min-w-[120px] relative cursor-pointer group transition-all duration-300 ${
                     selectedPlan === 'beta' 
-                      ? 'border-emerald-500 shadow-xl ring-2 ring-emerald-300 animate-pulse' 
+                      ? 'border-emerald-500 shadow-xl ring-2 ring-emerald-300' 
                       : 'border-blue-500 hover:border-blue-600 hover:shadow-xl'
-                  } hover:scale-110 hover:rotate-1`}
+                  } hover:scale-105`}
                   onClick={() => setSelectedPlan('beta')}
                 >
                   <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
                     <span className={`bg-blue-600 text-white text-xs px-2 py-1 rounded transition-all duration-300 ${
-                      selectedPlan === 'beta' ? 'animate-bounce bg-emerald-600' : 'group-hover:bg-blue-700 group-hover:animate-bounce'
+                      selectedPlan === 'beta' ? 'bg-emerald-600' : 'group-hover:bg-blue-700'
                     }`}>Popular</span>
                   </div>
                   <div className={`text-2xl font-bold transition-colors duration-300 ${
-                    selectedPlan === 'beta' ? 'text-emerald-600 animate-bounce' : 'text-slate-900 group-hover:text-emerald-600'
+                    selectedPlan === 'beta' ? 'text-slate-900 animate-[shake_0.5s_ease-in-out]' : 'text-slate-900 group-hover:text-emerald-600'
                   }`}>
-                    Bet<span className={`transition-all duration-300 ${
-                      selectedPlan === 'beta' ? 'text-orange-500 animate-spin' : 'text-orange-500 group-hover:animate-spin'
-                    }`}>β</span>
+                    Bet<span className="text-orange-500">β</span>
                   </div>
                   <div className="text-sm text-emerald-600">£159/month</div>
                 </div>
                 <div 
                   className={`bg-white border-2 rounded-lg px-4 py-3 text-center min-w-[120px] cursor-pointer group transition-all duration-300 ${
                     selectedPlan === 'omega' 
-                      ? 'border-purple-500 shadow-lg ring-2 ring-purple-300 animate-pulse' 
+                      ? 'border-purple-500 shadow-lg ring-2 ring-purple-300' 
                       : 'border-purple-200 hover:border-purple-400 hover:shadow-lg'
-                  } hover:scale-110 hover:-rotate-1`}
+                  } hover:scale-105`}
                   onClick={() => setSelectedPlan('omega')}
                 >
                   <div className={`text-2xl font-bold transition-colors duration-300 ${
-                    selectedPlan === 'omega' ? 'text-purple-600 animate-bounce' : 'text-slate-900 group-hover:text-purple-600'
+                    selectedPlan === 'omega' ? 'text-slate-900 animate-[shake_0.5s_ease-in-out]' : 'text-slate-900 group-hover:text-purple-600'
                   }`}>
-                    Omeg<span className={`transition-all duration-300 ${
-                      selectedPlan === 'omega' ? 'text-orange-500 animate-bounce' : 'text-orange-500 group-hover:animate-bounce'
-                    }`}>Ω</span>
+                    Omeg<span className="text-orange-500">Ω</span>
                   </div>
                   <div className="text-sm text-purple-600">Custom</div>
                 </div>
               </div>
             </div>
 
-            {/* CTA Buttons with Enhanced Animations */}
+            {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg hover:scale-110 hover:shadow-xl transition-all duration-300 group">
                 Get Your Login
@@ -180,24 +174,24 @@ export const Hero = () => {
               </Button>
             </div>
 
-            {/* Quick Benefits with Animations */}
+            {/* Quick Benefits */}
             <div className="flex flex-wrap gap-6 text-sm text-gray-600">
               <div className="flex items-center hover:text-emerald-600 hover:scale-110 transition-all duration-300 cursor-pointer">
-                <Check className="w-4 h-4 text-emerald-600 mr-2 hover:animate-bounce" />
+                <Check className="w-4 h-4 text-emerald-600 mr-2" />
                 Accept all payment methods
               </div>
               <div className="flex items-center hover:text-emerald-600 hover:scale-110 transition-all duration-300 cursor-pointer">
-                <Check className="w-4 h-4 text-emerald-600 mr-2 hover:animate-bounce" />
+                <Check className="w-4 h-4 text-emerald-600 mr-2" />
                 Instant setup
               </div>
               <div className="flex items-center hover:text-emerald-600 hover:scale-110 transition-all duration-300 cursor-pointer">
-                <Check className="w-4 h-4 text-emerald-600 mr-2 hover:animate-bounce" />
+                <Check className="w-4 h-4 text-emerald-600 mr-2" />
                 24/7 support
               </div>
             </div>
           </div>
 
-          {/* Right Content - Payment Methods with Enhanced Animations */}
+          {/* Right Content - Payment Methods */}
           <div className="lg:pl-8">
             <div className="bg-gray-50 rounded-2xl p-8 hover:bg-gray-100 hover:shadow-xl transition-all duration-500">
               <div className="bg-white rounded-xl p-6 shadow-sm mb-6 hover:shadow-lg hover:scale-105 transition-all duration-300">
@@ -221,15 +215,15 @@ export const Hero = () => {
                 </div>
               </div>
               
-              {/* Payment Method Icons with Animations */}
+              {/* Payment Method Icons */}
               <div className="text-center">
                 <p className="text-sm text-gray-600 mb-4">Accept most popular payment methods</p>
                 <div className="flex justify-center space-x-4 opacity-60">
-                  <div className="w-8 h-8 bg-blue-100 rounded hover:bg-blue-200 hover:scale-125 hover:opacity-100 hover:rotate-12 transition-all duration-300 cursor-pointer"></div>
-                  <div className="w-8 h-8 bg-red-100 rounded hover:bg-red-200 hover:scale-125 hover:opacity-100 hover:rotate-12 transition-all duration-300 cursor-pointer"></div>
-                  <div className="w-8 h-8 bg-yellow-100 rounded hover:bg-yellow-200 hover:scale-125 hover:opacity-100 hover:rotate-12 transition-all duration-300 cursor-pointer"></div>
-                  <div className="w-8 h-8 bg-green-100 rounded hover:bg-green-200 hover:scale-125 hover:opacity-100 hover:rotate-12 transition-all duration-300 cursor-pointer"></div>
-                  <div className="w-8 h-8 bg-purple-100 rounded hover:bg-purple-200 hover:scale-125 hover:opacity-100 hover:rotate-12 transition-all duration-300 cursor-pointer"></div>
+                  <div className="w-8 h-8 bg-blue-100 rounded hover:bg-blue-200 hover:scale-125 hover:opacity-100 transition-all duration-300 cursor-pointer"></div>
+                  <div className="w-8 h-8 bg-red-100 rounded hover:bg-red-200 hover:scale-125 hover:opacity-100 transition-all duration-300 cursor-pointer"></div>
+                  <div className="w-8 h-8 bg-yellow-100 rounded hover:bg-yellow-200 hover:scale-125 hover:opacity-100 transition-all duration-300 cursor-pointer"></div>
+                  <div className="w-8 h-8 bg-green-100 rounded hover:bg-green-200 hover:scale-125 hover:opacity-100 transition-all duration-300 cursor-pointer"></div>
+                  <div className="w-8 h-8 bg-purple-100 rounded hover:bg-purple-200 hover:scale-125 hover:opacity-100 transition-all duration-300 cursor-pointer"></div>
                 </div>
               </div>
             </div>
