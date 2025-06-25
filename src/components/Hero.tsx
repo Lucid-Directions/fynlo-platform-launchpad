@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -56,7 +55,7 @@ export const Hero = () => {
               <div className="text-3xl font-bold text-blue-600" style={{display: 'none'}}>Fynlo</div>
             </div>
             
-            <nav className="hidden md:flex items-center space-x-8">
+            <nav className="flex items-center space-x-8">
               <button 
                 onClick={() => scrollToSection('product-showcase')} 
                 className="text-gray-700 hover:text-blue-600 font-medium hover:scale-110 transition-all duration-300"
@@ -82,6 +81,8 @@ export const Hero = () => {
                 About
               </button>
             </nav>
+
+            <div className="w-[175px]"></div> {/* Spacer to balance the logo on the left */}
           </div>
         </div>
       </div>

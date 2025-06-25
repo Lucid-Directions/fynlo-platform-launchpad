@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -117,11 +116,11 @@ export const ProductShowcase = () => {
               
               <CardContent className="p-8">
                 <div className="text-center mb-6">
-                  <div className={`text-8xl font-bold mb-4 transition-all duration-300 border-2 border-gray-300 rounded-lg w-24 h-24 flex items-center justify-center mx-auto ${
+                  <div className={`text-6xl font-bold mb-4 transition-all duration-300 border-2 border-gray-300 rounded-lg w-24 h-24 flex items-center justify-center mx-auto ${
                     selectedPlan === product.planKey 
                       ? 'scale-110 text-orange-500 border-orange-500' 
                       : 'group-hover:scale-110 text-slate-700 group-hover:border-blue-400'
-                  }`}>
+                  } ${product.planKey === 'beta' ? 'text-5xl' : ''}`}>
                     {product.symbol}
                   </div>
                   <h3 className={`text-2xl font-bold mb-2 transition-colors duration-300 ${
