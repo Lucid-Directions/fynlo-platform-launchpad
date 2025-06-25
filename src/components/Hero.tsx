@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Zap, Users, Check } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export const Hero = () => {
@@ -82,10 +82,6 @@ export const Hero = () => {
                 About
               </button>
             </nav>
-            
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 hover:scale-110 hover:shadow-xl transition-all duration-300">
-              Get Quote
-            </Button>
           </div>
         </div>
       </div>
@@ -134,7 +130,7 @@ export const Hero = () => {
                   <div className={`text-2xl font-bold transition-colors duration-300 ${
                     selectedPlan === 'alpha' ? 'text-slate-900 animate-shake' : 'text-slate-900 group-hover:text-blue-600'
                   }`}>
-                    <span className="text-slate-900">Alph</span><span className="text-orange-500">α</span>
+                    <span className="text-slate-900">Alph</span><span className="text-orange-500">a</span>
                   </div>
                   <div className="text-sm text-blue-600">£89/month</div>
                 </div>
@@ -154,7 +150,7 @@ export const Hero = () => {
                   <div className={`text-2xl font-bold transition-colors duration-300 ${
                     selectedPlan === 'beta' ? 'text-slate-900 animate-shake' : 'text-slate-900 group-hover:text-emerald-600'
                   }`}>
-                    <span className="text-slate-900">Bet</span><span className="text-orange-500">β</span>
+                    <span className="text-slate-900">Bet</span><span className="text-orange-500">a</span>
                   </div>
                   <div className="text-sm text-emerald-600">£159/month</div>
                 </div>
@@ -169,7 +165,7 @@ export const Hero = () => {
                   <div className={`text-2xl font-bold transition-colors duration-300 ${
                     selectedPlan === 'omega' ? 'text-slate-900 animate-shake' : 'text-slate-900 group-hover:text-purple-600'
                   }`}>
-                    <span className="text-slate-900">Omeg</span><span className="text-orange-500">Ω</span>
+                    <span className="text-slate-900">Omeg</span><span className="text-orange-500">a</span>
                   </div>
                   <div className="text-sm text-purple-600">Custom</div>
                 </div>

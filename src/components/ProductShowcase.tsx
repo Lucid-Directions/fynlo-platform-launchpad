@@ -67,7 +67,7 @@ export const ProductShowcase = () => {
                 : 'text-slate-900 hover:scale-105'
             }`}
             onClick={() => handlePlanClick('alpha')}>
-              <span className="text-slate-900">Alph</span><span className="inline-block bg-orange-500 text-white px-2 py-1 rounded text-lg font-bold ml-1">a</span>
+              <span className="text-slate-900">Alph</span><span className="text-orange-500">a</span>
             </span>
             <span className={`mx-8 transition-all duration-300 cursor-pointer inline-block ${
               selectedPlan === 'beta' 
@@ -75,7 +75,7 @@ export const ProductShowcase = () => {
                 : 'text-slate-900 hover:scale-105'
             }`}
             onClick={() => handlePlanClick('beta')}>
-              <span className="text-slate-900">Bet</span><span className="inline-block bg-orange-500 text-white px-2 py-1 rounded text-lg font-bold ml-1">a</span>
+              <span className="text-slate-900">Bet</span><span className="text-orange-500">a</span>
             </span>
             <span className={`transition-all duration-300 cursor-pointer inline-block ${
               selectedPlan === 'omega' 
@@ -83,7 +83,7 @@ export const ProductShowcase = () => {
                 : 'text-slate-900 hover:scale-105'
             }`}
             onClick={() => handlePlanClick('omega')}>
-              <span className="text-slate-900">Omeg</span><span className="inline-block bg-orange-500 text-white px-2 py-1 rounded text-lg font-bold ml-1">a</span>
+              <span className="text-slate-900">Omeg</span><span className="text-orange-500">a</span>
             </span>
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
@@ -117,10 +117,10 @@ export const ProductShowcase = () => {
               
               <CardContent className="p-8">
                 <div className="text-center mb-6">
-                  <div className={`text-8xl font-bold mb-4 transition-all duration-300 ${
+                  <div className={`text-8xl font-bold mb-4 transition-all duration-300 border-2 border-gray-300 rounded-lg w-24 h-24 flex items-center justify-center mx-auto ${
                     selectedPlan === product.planKey 
-                      ? 'scale-110 text-orange-500' 
-                      : 'group-hover:scale-110 text-slate-700'
+                      ? 'scale-110 text-orange-500 border-orange-500' 
+                      : 'group-hover:scale-110 text-slate-700 group-hover:border-blue-400'
                   }`}>
                     {product.symbol}
                   </div>
@@ -129,7 +129,7 @@ export const ProductShowcase = () => {
                       ? 'text-slate-900' 
                       : 'text-slate-900 group-hover:text-blue-600'
                   }`}>
-                    <span className="text-slate-900">{product.name.slice(0, -1)}</span><span className="inline-block bg-orange-500 text-white px-2 py-1 rounded text-lg font-bold ml-1">{product.name.slice(-1)}</span>
+                    <span className="text-slate-900">{product.name.slice(0, -1)}</span><span className="text-orange-500">{product.name.slice(-1)}</span>
                   </h3>
                   <p className={`text-lg mb-4 transition-colors duration-300 ${
                     selectedPlan === product.planKey 
