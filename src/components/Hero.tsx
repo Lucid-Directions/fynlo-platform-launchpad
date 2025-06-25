@@ -56,7 +56,7 @@ export const Hero = () => {
               <div className="text-3xl font-bold text-blue-600" style={{display: 'none'}}>Fynlo</div>
             </div>
             
-            <nav className="flex items-center space-x-8">
+            <nav className="flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
               <button 
                 onClick={() => scrollToSection('product-showcase')} 
                 className="text-gray-700 hover:text-blue-600 font-medium hover:scale-110 transition-all duration-300"
@@ -83,20 +83,27 @@ export const Hero = () => {
               </button>
             </nav>
 
-            <div className="w-[140px]"></div> {/* Spacer to balance the smaller logo */}
+            <div className="w-[140px]"></div> {/* Spacer to balance the logo */}
           </div>
         </div>
       </div>
 
       {/* Hero Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight mb-4 hover:text-blue-600 transition-colors duration-500">
+            Your All-in-One Payment Solution
+          </h1>
+          
+          <p className="text-lg text-gray-600 mb-6 leading-relaxed max-w-3xl mx-auto">
+            Find the right solution to power your business with instant payment processing, 
+            no hardware required, and bank-level security.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Left Content */}
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight mb-4 hover:text-blue-600 transition-colors duration-500">
-              Your All-in-One Payment Solution
-            </h1>
-            
             {/* Pricing Highlight */}
             <div className="bg-blue-50 rounded-lg p-5 mb-6 border-l-4 border-blue-600 hover:bg-blue-100 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer">
               <div className="flex items-center space-x-4">
@@ -111,11 +118,6 @@ export const Hero = () => {
                 </div>
               </div>
             </div>
-
-            <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-              Find the right solution to power your business with instant payment processing, 
-              no hardware required, and bank-level security.
-            </p>
 
             {/* Pricing Tiers Preview with Subtle Animations */}
             <div className="mb-6">
@@ -207,25 +209,25 @@ export const Hero = () => {
             </div>
           </div>
 
-          {/* Right Content - Payment Methods */}
+          {/* Right Content - Mobile Payment Methods */}
           <div className="lg:pl-6">
             <div className="bg-gray-50 rounded-2xl p-6 hover:bg-gray-100 hover:shadow-xl transition-all duration-500">
               <div className="bg-white rounded-xl p-5 shadow-sm mb-4 hover:shadow-lg hover:scale-105 transition-all duration-300">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-gray-900">Payment Terminal</h3>
+                  <h3 className="font-semibold text-gray-900">Mobile Payment Solution</h3>
                   <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center py-2 border-b border-gray-100 hover:bg-gray-50 hover:scale-105 transition-all duration-300 rounded px-2">
-                    <span className="text-gray-600">Card payments</span>
+                    <span className="text-gray-600">Phone-based payments</span>
                     <span className="font-semibold text-emerald-600 hover:scale-125 transition-transform duration-300">✓</span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-100 hover:bg-gray-50 hover:scale-105 transition-all duration-300 rounded px-2">
-                    <span className="text-gray-600">Contactless</span>
+                    <span className="text-gray-600">No hardware required</span>
                     <span className="font-semibold text-emerald-600 hover:scale-125 transition-transform duration-300">✓</span>
                   </div>
                   <div className="flex justify-between items-center py-2 hover:bg-gray-50 hover:scale-105 transition-all duration-300 rounded px-2">
-                    <span className="text-gray-600">Mobile wallets</span>
+                    <span className="text-gray-600">All payment methods</span>
                     <span className="font-semibold text-emerald-600 hover:scale-125 transition-transform duration-300">✓</span>
                   </div>
                 </div>
