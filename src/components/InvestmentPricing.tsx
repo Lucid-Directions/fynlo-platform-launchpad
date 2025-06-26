@@ -12,8 +12,8 @@ export const InvestmentPricing = () => {
     {
       name: "Alpha",
       symbol: "α",
-      price: "£89",
-      period: "per month",
+      price: "2%",
+      period: "per transaction",
       description: "Perfect for small businesses getting started",
       features: [
         "Employee Management",
@@ -21,7 +21,7 @@ export const InvestmentPricing = () => {
         "Basic Reports",
         "No hardware required",
         "Email support",
-        "1.5% transaction fee"
+        "No monthly fees - pay as you go"
       ],
       highlighted: false,
       buttonText: "Get Started",
@@ -30,8 +30,8 @@ export const InvestmentPricing = () => {
     {
       name: "Beta",
       symbol: "β", 
-      price: "£159",
-      period: "per month",
+      price: "£19",
+      period: "per month + 1.8%",
       description: "Complete business solution for growing operations",
       features: [
         "Everything in Alpha",
@@ -39,7 +39,7 @@ export const InvestmentPricing = () => {
         "Employee Scheduling system", 
         "Advanced Reports & analytics",
         "Priority support",
-        "1.5% transaction fee"
+        "1.8% transaction fee"
       ],
       highlighted: true,
       buttonText: "Most Popular",
@@ -48,8 +48,8 @@ export const InvestmentPricing = () => {
     {
       name: "Omega",
       symbol: "Ω",
-      price: "Custom",
-      period: "pricing",
+      price: "£30",
+      period: "per month + 1.5%",
       description: "Enterprise solution with dedicated support",
       features: [
         "Everything in Beta",
@@ -57,7 +57,7 @@ export const InvestmentPricing = () => {
         "Custom integrations",
         "Dedicated account manager",
         "24/7 phone support",
-        "Custom transaction rates"
+        "1.5% transaction fee"
       ],
       highlighted: false,
       buttonText: "Contact Sales",
@@ -94,7 +94,7 @@ export const InvestmentPricing = () => {
             <span className="block text-blue-600">for your business</span>
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Transparent pricing with no hidden fees. All plans include our core payment processing at 1.5% per transaction.
+            Transparent pricing with no hidden fees. Start with pay-as-you-go or choose a monthly plan for better rates.
           </p>
         </div>
 

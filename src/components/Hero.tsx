@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -108,13 +107,13 @@ export const Hero = () => {
             <div className="bg-blue-50 rounded-lg p-5 mb-6 border-l-4 border-blue-600 hover:bg-blue-100 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer">
               <div className="flex items-center space-x-4">
                 <div>
-                  <div className="text-2xl font-bold text-blue-600 hover:scale-110 transition-transform duration-300">1.5%</div>
+                  <div className="text-2xl font-bold text-blue-600 hover:scale-110 transition-transform duration-300">2%</div>
                   <div className="text-sm text-gray-600">per transaction</div>
                 </div>
                 <div className="text-gray-400">+</div>
                 <div>
                   <div className="text-lg font-semibold text-slate-900">No monthly fees</div>
-                  <div className="text-sm text-gray-600">No setup costs</div>
+                  <div className="text-sm text-gray-600">Pay as you go</div>
                 </div>
               </div>
             </div>
@@ -136,7 +135,7 @@ export const Hero = () => {
                   }`}>
                     <span className="text-slate-900">Alph</span><span className="text-orange-500">a</span>
                   </div>
-                  <div className="text-sm text-blue-600">£89/month</div>
+                  <div className="text-sm text-blue-600">2% per transaction</div>
                 </div>
                 <div 
                   className={`bg-blue-50 border-2 rounded-lg px-3 py-2 text-center min-w-[110px] relative cursor-pointer group transition-all duration-300 ${
@@ -156,7 +155,7 @@ export const Hero = () => {
                   }`}>
                     <span className="text-slate-900">Bet</span><span className="text-orange-500">a</span>
                   </div>
-                  <div className="text-sm text-emerald-600">£159/month</div>
+                  <div className="text-sm text-emerald-600">£19/month</div>
                 </div>
                 <div 
                   className={`bg-white border-2 rounded-lg px-3 py-2 text-center min-w-[110px] cursor-pointer group transition-all duration-300 ${
@@ -171,7 +170,7 @@ export const Hero = () => {
                   }`}>
                     <span className="text-slate-900">Omeg</span><span className="text-orange-500">a</span>
                   </div>
-                  <div className="text-sm text-purple-600">Custom</div>
+                  <div className="text-sm text-purple-600">£30/month</div>
                 </div>
               </div>
             </div>
