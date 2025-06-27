@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { UserButton } from "./UserButton";
 
 export const Hero = () => {
   const { user, loading } = useAuth();
@@ -16,11 +15,6 @@ export const Hero = () => {
     }
   }, [user, loading, navigate]);
 
-  // If user is authenticated and not loading, don't render hero (will redirect)
-  if (!loading && user) {
-    return null;
-  }
-
   const handleGetStarted = () => {
     if (user) {
       navigate('/dashboard');
@@ -29,37 +23,55 @@ export const Hero = () => {
     }
   };
 
+  const handleSignIn = () => {
+    navigate('/auth');
+  };
+
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-blue-800 text-white overflow-hidden">
+    <section className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="relative z-10 flex justify-between items-center p-6">
-        <div className="text-2xl font-bold">Fynlo</div>
-        <UserButton />
+      <nav className="flex justify-between items-center p-6 border-b">
+        <div className="flex items-center space-x-2">
+          <img 
+            src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
+            alt="Fynlo Logo" 
+            className="h-8 w-auto"
+          />
+          <span className="text-2xl font-bold text-gray-900">Fynlo</span>
+        </div>
+        <div className="flex items-center space-x-4">
+          {!user && (
+            <>
+              <Button variant="ghost" onClick={handleSignIn}>
+                Sign In
+              </Button>
+              <Button onClick={handleGetStarted}>
+                Get Started
+              </Button>
+            </>
+          )}
+        </div>
       </nav>
 
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-black/20"></div>
-      <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
-
-      {/* Main Content */}
-      <div className="relative z-10 container mx-auto px-6 pt-20 pb-32">
+      {/* Hero Content */}
+      <div className="container mx-auto px-6 py-20">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold mb-8 text-gray-900">
             The Future of
-            <span className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Mobile Payments
+            <span className="block text-blue-600">
+              Business Management
             </span>
           </h1>
           
-          <p className="text-xl md:text-2xl mb-12 text-gray-300 max-w-3xl mx-auto">
-            Revolutionizing how businesses handle transactions with our cutting-edge mobile payment platform. Secure, fast, and designed for the modern economy.
+          <p className="text-xl md:text-2xl mb-12 text-gray-600 max-w-3xl mx-auto">
+            Streamline your business operations with our comprehensive CRM platform. 
+            Manage customers, track sales, and grow your business efficiently.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Button 
               size="lg" 
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+              className="px-8 py-4 text-lg font-semibold"
               onClick={handleGetStarted}
             >
               {user ? 'Go to Dashboard' : 'Get Started'}
@@ -68,24 +80,24 @@ export const Hero = () => {
             <Button 
               variant="outline" 
               size="lg"
-              className="border-2 border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg font-semibold rounded-full backdrop-blur-sm"
+              className="px-8 py-4 text-lg font-semibold"
             >
               Watch Demo
             </Button>
           </div>
 
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-              <div className="text-3xl font-bold text-blue-400 mb-2">99.9%</div>
-              <div className="text-gray-300">Uptime Guarantee</div>
+            <div className="p-6 rounded-lg border bg-gray-50">
+              <div className="text-3xl font-bold text-blue-600 mb-2">99.9%</div>
+              <div className="text-gray-600">Uptime Guarantee</div>
             </div>
-            <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-              <div className="text-3xl font-bold text-purple-400 mb-2">&lt; 2s</div>
-              <div className="text-gray-300">Transaction Speed</div>
+            <div className="p-6 rounded-lg border bg-gray-50">
+              <div className="text-3xl font-bold text-green-600 mb-2">24/7</div>
+              <div className="text-gray-600">Customer Support</div>
             </div>
-            <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-              <div className="text-3xl font-bold text-green-400 mb-2">Bank-Grade</div>
-              <div className="text-gray-300">Security</div>
+            <div className="p-6 rounded-lg border bg-gray-50">
+              <div className="text-3xl font-bold text-purple-600 mb-2">Secure</div>
+              <div className="text-gray-600">Data Protection</div>
             </div>
           </div>
         </div>
