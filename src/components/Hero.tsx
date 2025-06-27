@@ -41,14 +41,9 @@ export const Hero = () => {
         </div>
         <div className="flex items-center space-x-4">
           {!user && (
-            <>
-              <Button variant="ghost" onClick={handleGetStarted}>
-                Sign In
-              </Button>
-              <Button onClick={handleRequestDemo}>
-                Request Demo
-              </Button>
-            </>
+            <Button variant="ghost" onClick={handleGetStarted}>
+              Sign In
+            </Button>
           )}
         </div>
       </nav>
