@@ -46,8 +46,8 @@ export const Hero = () => {
 
   const handleGetStarted = () => {
     if (user) {
-      // User is logged in, scroll to pricing or show dashboard
-      scrollToSection('investment-pricing');
+      // User is logged in, redirect to their dashboard
+      navigate('/dashboard');
     } else {
       // User is not logged in, redirect to auth page
       navigate('/auth');
