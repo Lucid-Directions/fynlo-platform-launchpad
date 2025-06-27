@@ -75,7 +75,7 @@ export const Hero = () => {
               <div className="text-gray-300">Uptime Guarantee</div>
             </div>
             <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-              <div className="text-3xl font-bold text-purple-400 mb-2">< 2s</div>
+              <div className="text-3xl font-bold text-purple-400 mb-2">&lt; 2s</div>
               <div className="text-gray-300">Transaction Speed</div>
             </div>
             <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
