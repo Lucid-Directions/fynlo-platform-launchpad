@@ -103,37 +103,61 @@ export const InvestmentPricing = () => {
           {pricingPlans.map((plan, index) => (
             <Card 
               key={index}
-              className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer ${
+              className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer group ${
                 selectedPlan === plan.planKey
-                  ? 'ring-4 ring-emerald-400 shadow-xl scale-105' 
+                  ? 'ring-4 ring-emerald-400 shadow-xl' 
                   : plan.highlighted 
-                    ? 'ring-2 ring-blue-500 shadow-xl scale-105' 
-                    : 'hover:scale-105'
+                    ? 'ring-2 ring-blue-500 shadow-xl' 
+                    : 'hover:shadow-lg hover:ring-2 hover:ring-blue-300'
               }`}
               onClick={() => handlePlanClick(plan.planKey)}
             >
               {selectedPlan === plan.planKey && (
-                <div className="absolute top-0 left-0 right-0 bg-emerald-600 text-white text-center py-2 text-sm font-semibold">
+                <div className="absolute top-0 right-0 px-3 py-1 text-sm font-semibold bg-emerald-500 text-white">
                   Selected
                 </div>
               )}
               
               {plan.highlighted && selectedPlan !== plan.planKey && (
-                <div className="absolute top-0 left-0 right-0 bg-blue-600 text-white text-center py-2 text-sm font-semibold">
+                <div className="absolute top-0 right-0 px-3 py-1 text-sm font-semibold bg-blue-500 text-white">
                   Most Popular
                 </div>
               )}
               
-              <CardContent className={`p-8 ${(plan.highlighted && selectedPlan !== plan.planKey) || selectedPlan === plan.planKey ? 'pt-16' : ''}`}>
-                <div className="text-center mb-8">
-                  <h3 className="text-3xl font-bold text-slate-900 mb-2">
-                    <span className="text-slate-900">{plan.name}</span><span className="text-orange-500">{plan.symbol}</span>
+              <CardContent className="p-8">
+                <div className="text-center mb-6">
+                  {/* Symbol in Box - matching ProductShowcase style */}
+                  <div className={`text-6xl font-bold mb-4 transition-all duration-300 border-2 border-gray-300 rounded-lg w-24 h-24 flex items-center justify-center mx-auto ${
+                    selectedPlan === plan.planKey 
+                      ? 'scale-110 text-orange-500 border-orange-500' 
+                      : 'group-hover:scale-110 text-slate-700 group-hover:border-blue-400'
+                  } ${plan.planKey === 'beta' ? 'text-5xl' : ''}`}>
+                    {plan.symbol}
+                  </div>
+                  
+                  {/* Plan Name */}
+                  <h3 className={`text-2xl font-bold mb-2 transition-colors duration-300 ${
+                    selectedPlan === plan.planKey 
+                      ? 'text-slate-900' 
+                      : 'text-slate-900 group-hover:text-blue-600'
+                  }`}>
+                    <span className="text-slate-900">{plan.name.slice(0, -1)}</span><span className="text-orange-500">{plan.name.slice(-1)}</span>
                   </h3>
+                  
+                  {/* Description */}
+                  <p className={`text-lg mb-4 transition-colors duration-300 ${
+                    selectedPlan === plan.planKey 
+                      ? 'text-slate-800' 
+                      : 'text-slate-600 group-hover:text-slate-800'
+                  }`}>
+                    {plan.description}
+                  </p>
+                  
+                  {/* Price */}
                   <div className="text-4xl font-bold text-slate-900 mb-2">
                     {plan.price}
                     <span className="text-lg font-normal text-slate-600">/{plan.period}</span>
                   </div>
-                  <p className="text-slate-600">{plan.description}</p>
                 </div>
 
                 <div className="space-y-4 mb-8">
@@ -147,16 +171,16 @@ export const InvestmentPricing = () => {
 
                 <Button 
                   size="lg" 
-                  className={`w-full ${
+                  className={`w-full transition-all duration-300 ${
                     selectedPlan === plan.planKey
-                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
+                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg' 
                       : plan.highlighted 
                         ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                        : 'bg-slate-900 hover:bg-slate-800 text-white'
+                        : 'bg-slate-900 hover:bg-slate-800 text-white hover:bg-blue-50 hover:border-blue-300'
                   }`}
                 >
                   {plan.buttonText}
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
               </CardContent>
             </Card>
