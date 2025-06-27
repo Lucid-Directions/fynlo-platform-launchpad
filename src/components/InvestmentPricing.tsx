@@ -84,7 +84,7 @@ export const InvestmentPricing = () => {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-br from-blue-50 to-indigo-100">
+    <section id="investment-pricing" className="py-24 bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-16">

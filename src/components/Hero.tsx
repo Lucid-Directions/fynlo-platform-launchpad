@@ -1,9 +1,15 @@
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useAuth } from '@/contexts/AuthContext';
+import { UserButton } from '@/components/UserButton';
+import { useNavigate } from 'react-router-dom';
 
 export const Hero = () => {
-  const [selectedPlan, setSelectedPlan] = useState('beta'); // Default to beta (most popular)
+  const [selectedPlan, setSelectedPlan] = useState('beta');
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogoError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     e.currentTarget.style.display = 'none';
@@ -36,6 +42,16 @@ export const Hero = () => {
     setSelectedPlan(plan);
     // Dispatch event to sync with other components
     window.dispatchEvent(new CustomEvent('planSelected', { detail: { plan } }));
+  };
+
+  const handleGetStarted = () => {
+    if (user) {
+      // User is logged in, scroll to pricing or show dashboard
+      scrollToSection('investment-pricing');
+    } else {
+      // User is not logged in, redirect to auth page
+      navigate('/auth');
+    }
   };
 
   return (
@@ -82,7 +98,19 @@ export const Hero = () => {
               </button>
             </nav>
 
-            <div className="w-[140px]"></div> {/* Spacer to balance the logo */}
+            <div className="flex items-center space-x-4">
+              {user ? (
+                <UserButton />
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={() => navigate('/auth')}
+                  className="hover:bg-blue-50 hover:border-blue-300"
+                >
+                  Sign In
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -177,8 +205,12 @@ export const Hero = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg hover:scale-110 hover:shadow-xl transition-all duration-300 group">
-                Get Your Login
+              <Button 
+                size="lg" 
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg hover:scale-110 hover:shadow-xl transition-all duration-300 group"
+                onClick={handleGetStarted}
+              >
+                {user ? 'Get Started' : 'Get Your Login'}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
               </Button>
               
