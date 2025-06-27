@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -31,13 +30,12 @@ export const Hero = () => {
     <section className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="flex justify-between items-center p-6 border-b">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center">
           <img 
             src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
             alt="Fynlo Logo" 
-            className="h-12 w-auto"
+            className="h-16 w-auto"
           />
-          <span className="text-2xl font-bold text-gray-900">Fynlo</span>
         </div>
         <div className="flex items-center space-x-4">
           {!user && (
