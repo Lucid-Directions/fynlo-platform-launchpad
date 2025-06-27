@@ -16,6 +16,11 @@ export const Hero = () => {
     }
   }, [user, loading, navigate]);
 
+  // If user is authenticated and not loading, don't render hero (will redirect)
+  if (!loading && user) {
+    return null;
+  }
+
   const handleGetStarted = () => {
     if (user) {
       navigate('/dashboard');
