@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -21,11 +20,6 @@ export const Hero = () => {
     } else {
       navigate('/auth');
     }
-  };
-
-  const handleRequestDemo = () => {
-    // For now, navigate to auth - can be updated to a dedicated demo request page later
-    navigate('/auth');
   };
 
   return (
@@ -67,9 +61,9 @@ export const Hero = () => {
             <Button 
               size="lg" 
               className="px-8 py-4 text-lg font-semibold"
-              onClick={handleRequestDemo}
+              onClick={handleGetStarted}
             >
-              Request Enterprise Demo
+              Get Started
             </Button>
             
             <Button 
