@@ -34,7 +34,7 @@ export const Hero = () => {
               <img 
                 src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
                 alt="Fynlo Logo" 
-                className="h-16 w-auto md:h-20"
+                className="h-20 w-auto md:h-24"
               />
             </div>
             
