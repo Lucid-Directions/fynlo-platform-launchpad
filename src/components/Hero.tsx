@@ -1,5 +1,3 @@
-
-
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +32,7 @@ export const Hero = () => {
               <img 
                 src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
                 alt="Fynlo Logo" 
-                className="h-20 w-auto md:h-24"
+                className="h-24 w-auto md:h-28"
               />
             </div>
             
@@ -137,4 +135,3 @@ export const Hero = () => {
     </section>
   );
 };
-
