@@ -1,4 +1,5 @@
 
+
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -25,21 +26,55 @@ export const Hero = () => {
 
   return (
     <section className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="flex justify-between items-center p-6 border-b">
-        <div className="flex items-center">
-          <img 
-            src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
-            alt="Fynlo Logo" 
-            className="h-24 w-auto md:h-32"
-          />
-        </div>
-        <div className="flex items-center space-x-4">
-          {!user && (
-            <Button variant="ghost" onClick={handleGetStarted}>
-              Sign In
-            </Button>
-          )}
+      {/* Enhanced Professional Navigation */}
+      <nav className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="container mx-auto px-6">
+          <div className="flex justify-between items-center h-20">
+            <div className="flex items-center">
+              <img 
+                src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
+                alt="Fynlo Logo" 
+                className="h-16 w-auto md:h-20"
+              />
+            </div>
+            
+            {/* Professional Navigation Links */}
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#platform" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                Platform
+              </a>
+              <a href="#solutions" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                Solutions
+              </a>
+              <a href="#pricing" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                Pricing
+              </a>
+              <a href="#resources" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                Resources
+              </a>
+            </div>
+
+            {/* Enhanced Sign In Button */}
+            <div className="flex items-center space-x-4">
+              {!user && (
+                <>
+                  <Button 
+                    variant="ghost" 
+                    onClick={handleGetStarted}
+                    className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium px-4 py-2 transition-all"
+                  >
+                    Sign In
+                  </Button>
+                  <Button 
+                    onClick={handleGetStarted}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 shadow-sm transition-all"
+                  >
+                    Get Started
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </nav>
 
@@ -102,3 +137,4 @@ export const Hero = () => {
     </section>
   );
 };
+
