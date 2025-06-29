@@ -89,7 +89,7 @@ export const Hero = () => {
           
           <p className="text-lg md:text-xl mb-12 text-brand-gray max-w-3xl mx-auto leading-relaxed">
             Empowering restaurant technology companies with enterprise-grade, multi-tenant POS infrastructure. 
-            Trusted by industry leaders with competitive 1.9% processing rates and zero hardware investment.
+            Trusted by industry leaders with competitive 1% processing rates and zero hardware investment.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
@@ -116,7 +116,7 @@ export const Hero = () => {
 
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="p-8 rounded-xl border border-gray-200 bg-gradient-to-b from-white to-gray-50 hover:shadow-lg transition-shadow duration-300">
-              <div className="text-4xl font-bold text-brand-orange mb-3">1.9%</div>
+              <div className="text-4xl font-bold text-brand-orange mb-3">1%</div>
               <div className="text-brand-black font-medium">Processing Rate</div>
               <div className="text-sm text-brand-gray mt-1">vs 2.9% Industry Standard</div>
             </div>
