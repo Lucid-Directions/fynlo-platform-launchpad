@@ -23,7 +23,7 @@ export const Navigation = () => {
       <div className="container mx-auto px-6">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
-            <Link to="/">
+            <Link to="/" className="hover:scale-105 transition-transform duration-300">
               <img 
                 src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
                 alt="Fynlo Logo" 
@@ -36,7 +36,7 @@ export const Navigation = () => {
           <div className="hidden md:flex items-center space-x-8">
             <Link 
               to="/" 
-              className={`font-medium transition-colors ${
+              className={`font-medium transition-all duration-300 hover:scale-105 hover:-rotate-1 ${
                 isActive('/') 
                   ? 'text-brand-orange' 
                   : 'text-brand-black hover:text-brand-orange'
@@ -46,7 +46,7 @@ export const Navigation = () => {
             </Link>
             <Link 
               to="/platform" 
-              className={`font-medium transition-colors ${
+              className={`font-medium transition-all duration-300 hover:scale-105 hover:-rotate-1 ${
                 isActive('/platform') 
                   ? 'text-brand-orange' 
                   : 'text-brand-black hover:text-brand-orange'
@@ -56,7 +56,7 @@ export const Navigation = () => {
             </Link>
             <Link 
               to="/solutions" 
-              className={`font-medium transition-colors ${
+              className={`font-medium transition-all duration-300 hover:scale-105 hover:-rotate-1 ${
                 isActive('/solutions') 
                   ? 'text-brand-orange' 
                   : 'text-brand-black hover:text-brand-orange'
@@ -66,7 +66,7 @@ export const Navigation = () => {
             </Link>
             <Link 
               to="/pricing" 
-              className={`font-medium transition-colors ${
+              className={`font-medium transition-all duration-300 hover:scale-105 hover:-rotate-1 ${
                 isActive('/pricing') 
                   ? 'text-brand-orange' 
                   : 'text-brand-black hover:text-brand-orange'
@@ -76,7 +76,7 @@ export const Navigation = () => {
             </Link>
             <Link 
               to="/resources" 
-              className={`font-medium transition-colors ${
+              className={`font-medium transition-all duration-300 hover:scale-105 hover:-rotate-1 ${
                 isActive('/resources') 
                   ? 'text-brand-orange' 
                   : 'text-brand-black hover:text-brand-orange'
@@ -93,13 +93,13 @@ export const Navigation = () => {
                 <Button 
                   variant="ghost" 
                   onClick={handleGetStarted}
-                  className="text-brand-black hover:text-brand-orange hover:bg-orange-50 font-medium px-4 py-2 transition-all"
+                  className="text-brand-black hover:text-brand-orange hover:bg-orange-50 font-medium px-4 py-2 transition-all duration-300 hover:scale-105"
                 >
                   Sign In
                 </Button>
                 <Button 
                   onClick={handleGetStarted}
-                  className="bg-brand-orange hover:bg-orange-600 text-white font-medium px-6 py-2 shadow-sm transition-all"
+                  className="bg-brand-orange hover:bg-orange-600 text-white font-medium px-6 py-2 shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-lg"
                 >
                   Get Started
                 </Button>

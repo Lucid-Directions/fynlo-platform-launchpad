@@ -25,7 +25,7 @@ export const BusinessSolutions = () => {
   ];
 
   return (
-    <section className="py-20 bg-slate-50">
+    <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -40,12 +40,12 @@ export const BusinessSolutions = () => {
         {/* Business Types Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {businessTypes.map((business, index) => (
-            <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-300 group">
+            <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-300 group hover:scale-105 hover:-rotate-1">
               <div className="aspect-video overflow-hidden">
                 <img 
                   src={business.image} 
                   alt={business.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
               </div>
               <CardContent className="p-6">
@@ -54,12 +54,12 @@ export const BusinessSolutions = () => {
                 <ul className="space-y-2 mb-6">
                   {business.features.map((feature, idx) => (
                     <li key={idx} className="flex items-center text-sm text-slate-600">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                      <div className="w-2 h-2 bg-brand-orange rounded-full mr-3"></div>
                       {feature}
                     </li>
                   ))}
                 </ul>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full border-brand-orange text-brand-orange hover:bg-brand-orange hover:text-white transition-all duration-300 hover:scale-105">
                   Learn More
                 </Button>
               </CardContent>
@@ -77,27 +77,27 @@ export const BusinessSolutions = () => {
               That's why we offer tailored solutions that grow with your business. From simple card readers to comprehensive POS systems, we have everything you need to succeed.
             </p>
             <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <div className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
+              <div className="flex items-start space-x-3 hover:transform hover:translate-x-2 transition-all duration-300">
+                <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-2 h-2 bg-brand-orange rounded-full"></div>
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-900">Scalable Solutions</h4>
                   <p className="text-slate-600">Start small and expand as your business grows</p>
                 </div>
               </div>
-              <div className="flex items-start space-x-3">
-                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+              <div className="flex items-start space-x-3 hover:transform hover:translate-x-2 transition-all duration-300">
+                <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-2 h-2 bg-brand-orange rounded-full"></div>
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-900">Expert Support</h4>
                   <p className="text-slate-600">Get help when you need it with our 24/7 support team</p>
                 </div>  
               </div>
-              <div className="flex items-start space-x-3">
-                <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
+              <div className="flex items-start space-x-3 hover:transform hover:translate-x-2 transition-all duration-300">
+                <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-2 h-2 bg-brand-orange rounded-full"></div>
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-900">Integrated Ecosystem</h4>
@@ -111,7 +111,7 @@ export const BusinessSolutions = () => {
             <img 
               src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80"
               alt="Business owner using payment system"
-              className="w-full h-auto rounded-2xl shadow-lg"
+              className="w-full h-auto rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-500"
             />
           </div>
         </div>

@@ -8,37 +8,37 @@ export const KeyFeatures = () => {
       title: "Multi-Tenant Architecture",
       description: "Serve multiple restaurant brands from a single platform with complete data isolation and customization capabilities.",
       icon: "🏢",
-      color: "bg-blue-50 text-blue-600"
+      color: "bg-orange-50 text-brand-orange"
     },
     {
       title: "1% Processing Rates",
       description: "Industry-leading payment processing rates that significantly reduce transaction costs compared to traditional providers.",
       icon: "💳",
-      color: "bg-green-50 text-green-600"
+      color: "bg-orange-50 text-brand-orange"
     },
     {
       title: "Zero Hardware Investment",
       description: "Cloud-based infrastructure eliminates the need for expensive hardware purchases and maintenance.",
       icon: "☁️",
-      color: "bg-purple-50 text-purple-600"
+      color: "bg-orange-50 text-brand-orange"
     },
     {
       title: "Enterprise Security",
       description: "Bank-level security with PCI DSS compliance, encryption, and comprehensive audit trails.",
       icon: "🔒",
-      color: "bg-red-50 text-red-600"
+      color: "bg-orange-50 text-brand-orange"
     },
     {
       title: "Real-Time Analytics",
       description: "Advanced reporting and analytics dashboards providing insights across all restaurant operations.",
       icon: "📊",
-      color: "bg-yellow-50 text-yellow-600"
+      color: "bg-orange-50 text-brand-orange"
     },
     {
       title: "Seamless Integrations",
       description: "Connect with leading restaurant technology partners through our comprehensive API ecosystem.",
       icon: "🔗",
-      color: "bg-indigo-50 text-indigo-600"
+      color: "bg-orange-50 text-brand-orange"
     }
   ];
 
@@ -58,12 +58,12 @@ export const KeyFeatures = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="p-6 hover:shadow-lg transition-all duration-300 bg-white border-0 shadow-sm">
+            <Card key={index} className="p-6 hover:shadow-lg transition-all duration-300 bg-white border-0 shadow-sm hover:scale-105 hover:-rotate-1 group">
               <CardContent className="p-0">
-                <div className={`w-12 h-12 rounded-lg ${feature.color} flex items-center justify-center text-2xl mb-4`}>
+                <div className={`w-12 h-12 rounded-lg ${feature.color} flex items-center justify-center text-2xl mb-4 group-hover:animate-pulse transition-all duration-300`}>
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900 mb-3">{feature.title}</h3>
+                <h3 className="text-xl font-semibold text-slate-900 mb-3 group-hover:text-brand-orange transition-colors duration-300">{feature.title}</h3>
                 <p className="text-slate-600 leading-relaxed">{feature.description}</p>
               </CardContent>
             </Card>
