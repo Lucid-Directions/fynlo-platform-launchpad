@@ -119,10 +119,22 @@ export const InvestmentPricing = () => {
           </p>
         </div>
 
-        {/* Killer Advantage Highlight */}
-        <div className="text-center mb-12 p-6 bg-gradient-to-r from-brand-orange to-orange-600 text-white rounded-2xl shadow-xl">
-          <h3 className="text-2xl font-bold mb-2">🎯 Your Killer Advantage</h3>
-          <p className="text-lg">Just 1% transaction fee across ALL tiers - while competitors charge 2.9%+</p>
+        {/* Competitive Advantage Highlight */}
+        <div className="text-center mb-12 p-8 bg-white rounded-2xl shadow-lg border border-gray-200">
+          <h3 className="text-2xl font-bold text-brand-black mb-4">Industry-Leading Transaction Rates</h3>
+          <p className="text-lg text-brand-gray mb-4">
+            Just 1% transaction fee across all tiers - while competitors charge 2.9%+
+          </p>
+          <div className="flex items-center justify-center space-x-8 text-sm">
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-brand-orange rounded-full"></div>
+              <span className="text-brand-black font-semibold">Fynlo: 1%</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+              <span className="text-brand-gray">Competitors: 2.9%+</span>
+            </div>
+          </div>
         </div>
 
         {/* Pricing Cards */}
