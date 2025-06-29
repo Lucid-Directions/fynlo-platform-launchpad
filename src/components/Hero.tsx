@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Navigation } from "@/components/Navigation";
 
 export const Hero = () => {
   const { user, loading } = useAuth();
@@ -25,57 +26,7 @@ export const Hero = () => {
 
   return (
     <section className="min-h-screen bg-white">
-      {/* Enhanced Professional Navigation with Brand Colors */}
-      <nav className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-6">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center">
-              <img 
-                src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
-                alt="Fynlo Logo" 
-                className="h-24 w-auto md:h-28"
-              />
-            </div>
-            
-            {/* Professional Navigation Links */}
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#platform" className="text-brand-black hover:text-brand-orange font-medium transition-colors">
-                Platform
-              </a>
-              <a href="#solutions" className="text-brand-black hover:text-brand-orange font-medium transition-colors">
-                Solutions
-              </a>
-              <a href="#pricing" className="text-brand-black hover:text-brand-orange font-medium transition-colors">
-                Pricing
-              </a>
-              <a href="#resources" className="text-brand-black hover:text-brand-orange font-medium transition-colors">
-                Resources
-              </a>
-            </div>
-
-            {/* Enhanced Sign In Button with Brand Colors */}
-            <div className="flex items-center space-x-4">
-              {!user && (
-                <>
-                  <Button 
-                    variant="ghost" 
-                    onClick={handleGetStarted}
-                    className="text-brand-black hover:text-brand-orange hover:bg-orange-50 font-medium px-4 py-2 transition-all"
-                  >
-                    Sign In
-                  </Button>
-                  <Button 
-                    onClick={handleGetStarted}
-                    className="bg-brand-orange hover:bg-orange-600 text-white font-medium px-6 py-2 shadow-sm transition-all"
-                  >
-                    Get Started
-                  </Button>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       {/* Hero Content with Brand Colors */}
       <div className="container mx-auto px-6 py-20">
@@ -105,6 +56,7 @@ export const Hero = () => {
               variant="outline" 
               size="lg"
               className="px-8 py-4 text-lg font-semibold border-2 border-brand-black hover:border-brand-orange hover:text-brand-orange text-brand-black"
+              onClick={() => navigate('/platform')}
             >
               Platform Overview
             </Button>
