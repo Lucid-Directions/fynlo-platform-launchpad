@@ -10,7 +10,7 @@ export const InvestmentPricing = () => {
 
   const pricingPlans = [
     {
-      name: "Starter Alpha",
+      name: "Alpha",
       symbol: "α",
       price: "£0",
       period: "per month + 1%",
@@ -39,7 +39,7 @@ export const InvestmentPricing = () => {
       features: [
         "All transactions at 1% (paid by customer)",
         "Unlimited transactions",
-        "Everything in Starter PLUS:",
+        "Everything in Alpha PLUS:",
         "Full kitchen display system",
         "Station-based order routing",
         "Up to 5 staff accounts",
@@ -64,7 +64,7 @@ export const InvestmentPricing = () => {
       features: [
         "All transactions at 1% (paid by customer)",
         "Unlimited everything",
-        "Everything in Professional PLUS:",
+        "Everything in Beta PLUS:",
         "Unlimited staff accounts",
         "Unlimited locations",
         "White-label options",
