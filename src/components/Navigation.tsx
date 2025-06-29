@@ -35,6 +35,16 @@ export const Navigation = () => {
           {/* Professional Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
             <Link 
+              to="/" 
+              className={`font-medium transition-colors ${
+                isActive('/') 
+                  ? 'text-brand-orange' 
+                  : 'text-brand-black hover:text-brand-orange'
+              }`}
+            >
+              Home
+            </Link>
+            <Link 
               to="/platform" 
               className={`font-medium transition-colors ${
                 isActive('/platform') 
