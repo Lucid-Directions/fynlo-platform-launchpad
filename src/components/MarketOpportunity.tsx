@@ -1,122 +1,87 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Users, PoundSterling, Globe } from "lucide-react";
+import { TrendingUp, Users, DollarSign } from "lucide-react";
 
 export const MarketOpportunity = () => {
+  const opportunities = [
+    {
+      icon: <TrendingUp className="h-8 w-8" />,
+      title: "Growing Market",
+      value: "$45B",
+      description: "Global POS market expected to reach $45 billion by 2027",
+      color: "bg-orange-100 text-brand-orange"
+    },
+    {
+      icon: <Users className="h-8 w-8" />,
+      title: "Small Businesses",
+      value: "33M",
+      description: "Small businesses in the US need modern payment solutions",
+      color: "bg-slate-100 text-brand-black"
+    },
+    {
+      icon: <DollarSign className="h-8 w-8" />,
+      title: "Cost Savings",
+      value: "40%",
+      description: "Average cost reduction with integrated solutions",
+      color: "bg-orange-100 text-brand-orange"
+    }
+  ];
+
   return (
-    <section id="market-opportunity" className="py-24 bg-gradient-to-br from-blue-50 to-emerald-50">
+    <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4 bg-blue-100 text-blue-800">Market Opportunity</Badge>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            Growing Payment Solutions
-            <span className="block text-blue-600">Market</span>
+          <Badge variant="secondary" className="mb-4 bg-orange-100 text-brand-orange hover:bg-orange-200 hover:scale-105 transition-all duration-300">
+            Market Opportunity
+          </Badge>
+          <h2 className="text-4xl md:text-5xl font-bold text-brand-black mb-6 hover:text-brand-orange transition-colors duration-500">
+            The Future of Business
+            <span className="block text-brand-orange hover:text-orange-600 hover:scale-105 transition-all duration-300">
+              Payments is Here
+            </span>
           </h2>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            The digital payment industry continues to expand rapidly, creating significant opportunities for innovative solutions.
+          <p className="text-xl text-brand-gray max-w-3xl mx-auto">
+            Join the revolution in payment processing and business management solutions
           </p>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          <Card className="text-center p-6 hover:shadow-lg transition-all duration-300">
-            <CardContent className="p-0">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="h-8 w-8 text-blue-600" />
-              </div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">85%</div>
-              <div className="text-slate-600">Businesses prefer digital payments</div>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center p-6 hover:shadow-lg transition-all duration-300">
-            <CardContent className="p-0">
-              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="h-8 w-8 text-emerald-600" />
-              </div>
-              <div className="text-3xl font-bold text-emerald-600 mb-2">2M+</div>
-              <div className="text-slate-600">Small businesses need payment solutions</div>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center p-6 hover:shadow-lg transition-all duration-300">
-            <CardContent className="p-0">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <PoundSterling className="h-8 w-8 text-purple-600" />
-              </div>
-              <div className="text-3xl font-bold text-purple-600 mb-2">£12B</div>
-              <div className="text-slate-600">Digital payment market value</div>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center p-6 hover:shadow-lg transition-all duration-300">
-            <CardContent className="p-0">
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Globe className="h-8 w-8 text-orange-600" />
-              </div>
-              <div className="text-3xl font-bold text-orange-600 mb-2">24/7</div>
-              <div className="text-slate-600">Always-on payment processing</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Key Benefits */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h3 className="text-3xl font-bold text-slate-900 mb-6">Why Businesses Choose Fynlo</h3>
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-slate-900 mb-2">Instant Activation</h4>
-                  <p className="text-slate-600">Sign up today, start accepting payments immediately. No waiting for hardware or complex setup processes.</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <div className="w-3 h-3 bg-emerald-600 rounded-full"></div>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-slate-900 mb-2">Competitive Rates</h4>
-                  <p className="text-slate-600">1.5% per transaction with no monthly fees or hidden costs. Transparent pricing that grows with your business.</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <div className="w-3 h-3 bg-purple-600 rounded-full"></div>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-slate-900 mb-2">Complete Solution</h4>
-                  <p className="text-slate-600">Everything you need in one platform: payments, reporting, customer management, and business insights.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="lg:pl-8">
-            <Card className="p-8 bg-gradient-to-br from-blue-600 to-emerald-600 text-white">
-              <CardHeader className="p-0 mb-6">
-                <CardTitle className="text-2xl">Ready to Get Started?</CardTitle>
-              </CardHeader>
+        {/* Opportunity Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {opportunities.map((opportunity, index) => (
+            <Card 
+              key={index} 
+              className="p-8 text-center hover:shadow-xl hover:-translate-y-3 hover:rotate-1 transition-all duration-500 group cursor-pointer"
+              style={{
+                animationDelay: `${index * 0.1}s`
+              }}
+            >
               <CardContent className="p-0">
-                <p className="text-blue-100 mb-6">
-                  Join thousands of businesses already using Fynlo to streamline their payment processing and grow their revenue.
-                </p>
-                <div className="bg-white/10 rounded-lg p-4 mb-6">
-                  <div className="text-sm text-blue-100 mb-1">Average setup time</div>
-                  <div className="text-2xl font-bold">5 minutes</div>
+                <div className={`w-16 h-16 ${opportunity.color} rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300`}>
+                  <span className="group-hover:animate-pulse">{opportunity.icon}</span>
                 </div>
-                <button className="bg-white text-blue-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-semibold transition-colors">
-                  Start Your Free Trial
-                </button>
+                <h3 className="text-lg font-semibold text-brand-gray mb-2 group-hover:text-brand-black transition-colors duration-300">
+                  {opportunity.title}
+                </h3>
+                <div className="text-3xl font-bold text-brand-black mb-3 group-hover:text-brand-orange transition-colors duration-300">
+                  {opportunity.value}
+                </div>
+                <p className="text-brand-gray group-hover:text-brand-black transition-colors duration-300">
+                  {opportunity.description}
+                </p>
               </CardContent>
             </Card>
+          ))}
+        </div>
+
+        {/* Call to Action */}
+        <div className="text-center mt-16">
+          <div className="bg-gradient-to-r from-brand-orange to-orange-600 rounded-2xl p-12 text-white hover:shadow-2xl hover:scale-105 transition-all duration-500">
+            <h3 className="text-3xl font-bold mb-4">Ready to capture this opportunity?</h3>
+            <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto">
+              Don't let your competitors get ahead. Start building your competitive advantage today.
+            </p>
           </div>
         </div>
       </div>

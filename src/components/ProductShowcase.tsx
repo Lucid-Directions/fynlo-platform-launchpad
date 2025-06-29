@@ -1,179 +1,102 @@
+
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { ArrowRight, Smartphone, CreditCard, BarChart3, Users } from "lucide-react";
 
 export const ProductShowcase = () => {
-  const [selectedPlan, setSelectedPlan] = useState('beta'); // Default to beta (most popular)
-
   const products = [
     {
-      name: "Alpha",
-      symbol: "α",
-      subtitle: "Essential business solution",
-      description: "Perfect for small businesses getting started with comprehensive payment processing and basic management tools.",
-      features: ["Employee Management", "QR Scanner for inventory", "Basic Reports", "No hardware required"],
-      highlighted: false,
-      planKey: 'alpha'
+      icon: <Smartphone className="h-8 w-8" />,
+      title: "Mobile POS",
+      description: "Take payments anywhere with our mobile-first approach",
+      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80",
+      features: ["Contactless payments", "Inventory sync", "Real-time reporting"]
     },
     {
-      name: "Beta",
-      symbol: "β",
-      subtitle: "Advanced business management",
-      description: "Complete business solution with advanced features for growing restaurants and retail businesses.",
-      features: ["Everything in Alpha", "Advanced Inventory management", "Employee Scheduling system", "Advanced Reports & analytics"],
-      highlighted: true,
-      planKey: 'beta'
+      icon: <CreditCard className="h-8 w-8" />,
+      title: "Payment Terminal",
+      description: "Professional-grade hardware for high-volume businesses",
+      image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=600&q=80",
+      features: ["EMV compliant", "NFC enabled", "Receipt printing"]
     },
     {
-      name: "Omega",
-      symbol: "Ω",
-      subtitle: "Enterprise solution",
-      description: "Full-featured business management with custom integrations and dedicated support for large operations.",
-      features: ["Everything in Beta", "Xero integration", "Custom integrations", "Priority support"],
-      highlighted: false,
-      planKey: 'omega'
+      icon: <BarChart3 className="h-8 w-8" />,
+      title: "Analytics Dashboard",
+      description: "Comprehensive insights to grow your business",
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
+      features: ["Sales analytics", "Customer insights", "Trend analysis"]
+    },
+    {
+      icon: <Users className="h-8 w-8" />,
+      title: "Staff Management",
+      description: "Manage your team with integrated scheduling tools",
+      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80",
+      features: ["Time tracking", "Performance metrics", "Payroll integration"]
     }
   ];
 
-  // Listen for plan selection changes from other components
-  useEffect(() => {
-    const handlePlanChange = (event: CustomEvent) => {
-      setSelectedPlan(event.detail.plan);
-    };
-
-    window.addEventListener('planSelected', handlePlanChange as EventListener);
-    return () => {
-      window.removeEventListener('planSelected', handlePlanChange as EventListener);
-    };
-  }, []);
-
-  const handlePlanClick = (planKey: string) => {
-    setSelectedPlan(planKey);
-    // Dispatch event to sync with other components
-    window.dispatchEvent(new CustomEvent('planSelected', { detail: { plan: planKey } }));
-  };
-
   return (
-    <section id="product-showcase" className="py-20 bg-white">
+    <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Section Header with Subtle Animations */}
+        {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            <span className={`transition-all duration-300 cursor-pointer inline-block ${
-              selectedPlan === 'alpha' 
-                ? 'text-slate-900 animate-shake' 
-                : 'text-slate-900 hover:scale-105'
-            }`}
-            onClick={() => handlePlanClick('alpha')}>
-              <span className="text-slate-900">Alph</span><span className="text-orange-500">a</span>
-            </span>
-            <span className={`mx-8 transition-all duration-300 cursor-pointer inline-block ${
-              selectedPlan === 'beta' 
-                ? 'text-slate-900 animate-shake' 
-                : 'text-slate-900 hover:scale-105'
-            }`}
-            onClick={() => handlePlanClick('beta')}>
-              <span className="text-slate-900">Bet</span><span className="text-orange-500">a</span>
-            </span>
-            <span className={`transition-all duration-300 cursor-pointer inline-block ${
-              selectedPlan === 'omega' 
-                ? 'text-slate-900 animate-shake' 
-                : 'text-slate-900 hover:scale-105'
-            }`}
-            onClick={() => handlePlanClick('omega')}>
-              <span className="text-slate-900">Omeg</span><span className="text-orange-500">a</span>
+          <Badge variant="secondary" className="mb-4 bg-orange-100 text-brand-orange hover:bg-orange-200 hover:scale-105 transition-all duration-300">
+            Product Showcase
+          </Badge>
+          <h2 className="text-4xl md:text-5xl font-bold text-brand-black mb-6 hover:text-brand-orange transition-colors duration-500">
+            Everything You Need
+            <span className="block text-brand-orange hover:text-orange-600 hover:scale-105 transition-all duration-300">
+              In One Platform
             </span>
           </h2>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Choose the perfect payment solution for your business needs
+          <p className="text-xl text-brand-gray max-w-3xl mx-auto">
+            Discover our comprehensive suite of business solutions designed to streamline your operations
           </p>
         </div>
 
-        {/* Products Grid with Subtle Animations */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           {products.map((product, index) => (
             <Card 
               key={index} 
-              className={`relative overflow-hidden transition-all duration-300 cursor-pointer group ${
-                selectedPlan === product.planKey
-                  ? 'ring-4 ring-emerald-400 shadow-xl'
-                  : 'hover:shadow-lg hover:ring-2 hover:ring-blue-300'
-              }`}
-              onClick={() => handlePlanClick(product.planKey)}
+              className="overflow-hidden hover:shadow-xl hover:-translate-y-2 hover:rotate-1 transition-all duration-500 group"
+              style={{
+                animationDelay: `${index * 0.1}s`
+              }}
             >
-              {selectedPlan === product.planKey && (
-                <div className="absolute top-0 right-0 px-3 py-1 text-sm font-semibold bg-emerald-500 text-white">
-                  Selected
-                </div>
-              )}
-              
-              {product.highlighted && selectedPlan !== product.planKey && (
-                <div className="absolute top-0 right-0 px-3 py-1 text-sm font-semibold bg-blue-500 text-white">
-                  Most Popular
-                </div>
-              )}
-              
-              <CardContent className="p-8">
-                <div className="text-center mb-6">
-                  <div className={`text-6xl font-bold mb-4 transition-all duration-300 border-2 border-gray-300 rounded-lg w-24 h-24 flex items-center justify-center mx-auto ${
-                    selectedPlan === product.planKey 
-                      ? 'scale-110 text-orange-500 border-orange-500' 
-                      : 'group-hover:scale-110 text-slate-700 group-hover:border-blue-400'
-                  } ${product.planKey === 'beta' ? 'text-5xl' : ''}`}>
-                    {product.symbol}
+              <div className="aspect-video overflow-hidden">
+                <img 
+                  src={product.image} 
+                  alt={product.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+              </div>
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-4 group-hover:bg-brand-orange group-hover:text-white group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                    <span className="text-brand-orange group-hover:text-white group-hover:animate-pulse">
+                      {product.icon}
+                    </span>
                   </div>
-                  <h3 className={`text-2xl font-bold mb-2 transition-colors duration-300 ${
-                    selectedPlan === product.planKey 
-                      ? 'text-slate-900' 
-                      : 'text-slate-900 group-hover:text-blue-600'
-                  }`}>
-                    <span className="text-slate-900">{product.name.slice(0, -1)}</span><span className="text-orange-500">{product.name.slice(-1)}</span>
+                  <h3 className="text-xl font-bold text-brand-black group-hover:text-brand-orange transition-colors duration-300">
+                    {product.title}
                   </h3>
-                  <p className={`text-lg mb-4 transition-colors duration-300 ${
-                    selectedPlan === product.planKey 
-                      ? 'text-slate-800' 
-                      : 'text-slate-600 group-hover:text-slate-800'
-                  }`}>
-                    {product.subtitle}
-                  </p>
                 </div>
-
-                <p className={`mb-6 text-center transition-colors duration-300 ${
-                  selectedPlan === product.planKey 
-                    ? 'text-slate-800' 
-                    : 'text-slate-600 group-hover:text-slate-800'
-                }`}>
+                <p className="text-brand-gray mb-4 group-hover:text-brand-black transition-colors duration-300">
                   {product.description}
                 </p>
-
-                <div className="space-y-3 mb-8">
+                <div className="space-y-2 mb-6">
                   {product.features.map((feature, idx) => (
-                    <div 
-                      key={idx} 
-                      className={`flex items-center text-sm transition-all duration-300 ${
-                        selectedPlan === product.planKey 
-                          ? 'text-slate-800' 
-                          : 'text-slate-600 group-hover:text-slate-800'
-                      }`}
-                    >
-                      <div className={`w-2 h-2 rounded-full mr-3 transition-all duration-300 ${
-                        selectedPlan === product.planKey 
-                          ? 'bg-emerald-600' 
-                          : 'bg-emerald-500 group-hover:bg-emerald-600'
-                      }`}></div>
-                      {feature}
+                    <div key={idx} className="flex items-center text-sm text-brand-gray hover:transform hover:translate-x-2 transition-all duration-300 group/item">
+                      <div className="w-2 h-2 bg-brand-orange rounded-full mr-3 group-hover/item:bg-orange-600 group-hover/item:scale-125 transition-all duration-300"></div>
+                      <span className="group-hover/item:text-brand-black transition-colors duration-300">{feature}</span>
                     </div>
                   ))}
                 </div>
-
                 <Button 
-                  variant={selectedPlan === product.planKey ? "default" : "outline"} 
-                  className={`w-full transition-all duration-300 ${
-                    selectedPlan === product.planKey 
-                      ? 'bg-emerald-600 hover:bg-emerald-700 shadow-lg' 
-                      : 'hover:bg-blue-50 hover:border-blue-300'
-                  }`}
+                  variant="outline" 
+                  className="w-full border-brand-orange text-brand-orange hover:bg-brand-orange hover:text-white transition-all duration-300 hover:scale-105 group-hover:shadow-lg"
                 >
                   Learn More
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
@@ -183,42 +106,20 @@ export const ProductShowcase = () => {
           ))}
         </div>
 
-        {/* Payment Methods Section */}
+        {/* Bottom CTA */}
         <div className="text-center">
-          <h3 className="text-2xl font-bold text-slate-900 mb-8 hover:text-blue-600 transition-colors duration-300">
-            Accept most popular payment methods
-          </h3>
-          <div className="flex justify-center items-center space-x-8 opacity-60">
-            <div className="flex items-center space-x-2 hover:scale-110 hover:opacity-100 transition-all duration-300 cursor-pointer">
-              <div className="w-12 h-8 bg-blue-600 rounded text-white text-xs flex items-center justify-center font-bold hover:bg-blue-700 hover:shadow-lg transition-all duration-300">
-                VISA
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 hover:scale-110 hover:opacity-100 transition-all duration-300 cursor-pointer">
-              <div className="w-12 h-8 bg-red-500 rounded text-white text-xs flex items-center justify-center font-bold hover:bg-red-600 hover:shadow-lg transition-all duration-300">
-                MC
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 hover:scale-110 hover:opacity-100 transition-all duration-300 cursor-pointer">  
-              <div className="w-12 h-8 bg-blue-400 rounded text-white text-xs flex items-center justify-center font-bold hover:bg-blue-500 hover:shadow-lg transition-all duration-300">
-                AMEX
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 hover:scale-110 hover:opacity-100 transition-all duration-300 cursor-pointer">
-              <div className="w-12 h-8 bg-gray-600 rounded text-white text-xs flex items-center justify-center font-bold hover:bg-gray-700 hover:shadow-lg transition-all duration-300">
-                DISC
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 hover:scale-110 hover:opacity-100 transition-all duration-300 cursor-pointer">
-              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center hover:bg-blue-200 hover:shadow-lg transition-all duration-300">
-                📱
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 hover:scale-110 hover:opacity-100 transition-all duration-300 cursor-pointer">
-              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 hover:shadow-lg transition-all duration-300">
-                💳
-              </div>
-            </div>
+          <div className="bg-gradient-to-r from-brand-black to-slate-800 rounded-2xl p-12 text-white hover:shadow-2xl hover:scale-105 transition-all duration-500">
+            <h3 className="text-3xl font-bold mb-4">See our products in action</h3>
+            <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+              Schedule a personalized demo to discover how our solutions can transform your business
+            </p>
+            <Button 
+              size="lg" 
+              className="bg-brand-orange hover:bg-orange-600 text-white px-8 py-4 hover:scale-105 transition-all duration-300"
+            >
+              Schedule Demo
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
           </div>
         </div>
       </div>
