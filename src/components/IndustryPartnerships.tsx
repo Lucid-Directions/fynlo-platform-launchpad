@@ -1,10 +1,9 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 export const IndustryPartnerships = () => {
   const paymentPartners = [
-    "Stripe", "Square", "PayPal", "SumUp"
+    "Stripe", "Square", "SumUp"
   ];
 
   const technologyStack = [
@@ -41,7 +40,7 @@ export const IndustryPartnerships = () => {
         {/* Payment Partners */}
         <div className="mb-16">
           <h3 className="text-2xl font-bold text-slate-900 text-center mb-8">Payment Processing Partners</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {paymentPartners.map((partner, index) => (
               <Card key={index} className="p-4 text-center hover:shadow-md transition-all duration-300">
                 <CardContent className="p-0">

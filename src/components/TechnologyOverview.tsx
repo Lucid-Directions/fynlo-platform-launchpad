@@ -39,8 +39,7 @@ export const TechnologyOverview = () => {
   ];
 
   const integrationPartners = [
-    "QuickBooks", "Xero", "Toast", "Square", "Stripe", "PayPal", 
-    "DoorDash", "Uber Eats", "Grubhub", "OpenTable", "Yelp", "Google"
+    "Xero", "Square", "Stripe", "SumUp"
   ];
 
   return (
@@ -110,7 +109,7 @@ export const TechnologyOverview = () => {
           </p>
           
           {/* Integration Partners Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {integrationPartners.map((partner, index) => (
               <div key={index} className="bg-white p-4 rounded-lg text-center font-semibold text-slate-700 hover:shadow-md transition-all duration-300">
                 {partner}
