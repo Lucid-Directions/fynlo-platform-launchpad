@@ -46,12 +46,12 @@ export const KeyFeatures = () => {
     <section className="py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4">Key Features</Badge>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+          <Badge variant="secondary" className="mb-4 bg-orange-100 text-brand-orange hover:bg-orange-200 hover:scale-105 transition-all duration-300">Key Features</Badge>
+          <h2 className="text-4xl md:text-5xl font-bold text-brand-black mb-6 hover:text-brand-orange transition-colors duration-500">
             Why Choose Fynlo
-            <span className="block text-brand-orange">Platform Solutions</span>
+            <span className="block text-brand-orange hover:text-orange-600 hover:scale-105 transition-all duration-300">Platform Solutions</span>
           </h2>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+          <p className="text-xl text-brand-gray max-w-3xl mx-auto">
             Built specifically for restaurant technology companies, our platform delivers enterprise-grade capabilities with the flexibility to scale your business.
           </p>
         </div>
@@ -63,8 +63,8 @@ export const KeyFeatures = () => {
                 <div className={`w-12 h-12 rounded-lg ${feature.color} flex items-center justify-center text-2xl mb-4 group-hover:animate-pulse transition-all duration-300`}>
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900 mb-3 group-hover:text-brand-orange transition-colors duration-300">{feature.title}</h3>
-                <p className="text-slate-600 leading-relaxed">{feature.description}</p>
+                <h3 className="text-xl font-semibold text-brand-black mb-3 group-hover:text-brand-orange transition-colors duration-300">{feature.title}</h3>
+                <p className="text-brand-gray leading-relaxed group-hover:text-brand-black transition-colors duration-300">{feature.description}</p>
               </CardContent>
             </Card>
           ))}
