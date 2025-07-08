@@ -64,14 +64,14 @@ export const GettingStarted = () => {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white">
+    <section className="py-24 bg-gradient-to-br from-brand-black via-gray-900 to-slate-800 text-white">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4 bg-white/10 text-white border-white/20">Getting Started</Badge>
+          <Badge variant="secondary" className="mb-4 bg-orange-100 text-brand-orange hover:bg-orange-200 hover:scale-105 transition-all duration-300">Getting Started</Badge>
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Begin Your Platform
-            <span className="block text-blue-400">Partnership Journey</span>
+            <span className="block text-brand-orange">Partnership Journey</span>
           </h2>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
             From initial consultation to successful market launch, our structured engagement process ensures your platform success from day one.
@@ -86,7 +86,7 @@ export const GettingStarted = () => {
               <Card key={index} className="bg-white/5 backdrop-blur-sm border-white/10 hover:bg-white/10 transition-all duration-300">
                 <CardHeader>
                   <div className="flex items-center space-x-4 mb-4">
-                    <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center font-bold text-lg">
+                    <div className="w-12 h-12 bg-brand-orange rounded-full flex items-center justify-center font-bold text-lg">
                       {process.step}
                     </div>
                     <div className="flex-1">
@@ -106,7 +106,7 @@ export const GettingStarted = () => {
                   <ul className="space-y-2">
                     {process.deliverables.map((deliverable, deliverableIndex) => (
                       <li key={deliverableIndex} className="flex items-start space-x-2">
-                        <div className="w-4 h-4 bg-blue-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <div className="w-4 h-4 bg-brand-orange rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                           <div className="w-2 h-2 bg-white rounded-full"></div>
                         </div>
                         <span className="text-slate-300 text-sm">{deliverable}</span>
@@ -180,7 +180,7 @@ export const GettingStarted = () => {
                 />
               </div>
               
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold">
+              <Button className="w-full bg-brand-orange hover:bg-orange-600 text-white py-3 text-lg font-semibold hover:scale-105 transition-all duration-300">
                 Schedule Discovery Call
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -197,7 +197,7 @@ export const GettingStarted = () => {
               
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-brand-orange rounded-lg flex items-center justify-center">
                     <MessageSquare className="h-6 w-6 text-white" />
                   </div>
                   <div>
@@ -207,7 +207,7 @@ export const GettingStarted = () => {
                 </div>
                 
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center">
                     <Calendar className="h-6 w-6 text-white" />
                   </div>
                   <div>
@@ -222,25 +222,25 @@ export const GettingStarted = () => {
               <h4 className="text-lg font-semibold text-white mb-4">What to Expect</h4>
               <ul className="space-y-2 text-slate-300">
                 <li className="flex items-start space-x-2">
-                  <div className="w-4 h-4 bg-blue-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-4 h-4 bg-brand-orange rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                     <div className="w-2 h-2 bg-white rounded-full"></div>
                   </div>
                   <span>Comprehensive market analysis for your region</span>
                 </li>
                 <li className="flex items-start space-x-2">
-                  <div className="w-4 h-4 bg-blue-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-4 h-4 bg-brand-orange rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                     <div className="w-2 h-2 bg-white rounded-full"></div>
                   </div>
                   <span>Revenue projection modeling and ROI analysis</span>
                 </li>
                 <li className="flex items-start space-x-2">
-                  <div className="w-4 h-4 bg-blue-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-4 h-4 bg-brand-orange rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                     <div className="w-2 h-2 bg-white rounded-full"></div>
                   </div>
                   <span>Platform demonstration and technical overview</span>
                 </li>
                 <li className="flex items-start space-x-2">
-                  <div className="w-4 h-4 bg-blue-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-4 h-4 bg-brand-orange rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                     <div className="w-2 h-2 bg-white rounded-full"></div>
                   </div>
                   <span>Customized implementation strategy</span>

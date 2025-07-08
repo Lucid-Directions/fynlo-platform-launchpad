@@ -3,6 +3,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Smartphone, CreditCard, BarChart3, Users } from "lucide-react";
+import mobilePosImage from "@/assets/mobile-pos-professional.jpg";
+import paymentTerminalImage from "@/assets/payment-terminal-professional.jpg";
+import analyticsDashboardImage from "@/assets/analytics-dashboard-professional.jpg";
+import staffManagementImage from "@/assets/staff-management-professional.jpg";
 
 export const ProductShowcase = () => {
   const products = [
@@ -10,28 +14,28 @@ export const ProductShowcase = () => {
       icon: <Smartphone className="h-8 w-8" />,
       title: "Mobile POS",
       description: "Take payments anywhere with our mobile-first approach",
-      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80",
+      image: mobilePosImage,
       features: ["Contactless payments", "Inventory sync", "Real-time reporting"]
     },
     {
       icon: <CreditCard className="h-8 w-8" />,
       title: "Payment Terminal",
       description: "Professional-grade hardware for high-volume businesses",
-      image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=600&q=80",
+      image: paymentTerminalImage,
       features: ["EMV compliant", "NFC enabled", "Receipt printing"]
     },
     {
       icon: <BarChart3 className="h-8 w-8" />,
       title: "Analytics Dashboard",
       description: "Comprehensive insights to grow your business",
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
+      image: analyticsDashboardImage,
       features: ["Sales analytics", "Customer insights", "Trend analysis"]
     },
     {
       icon: <Users className="h-8 w-8" />,
       title: "Staff Management",
       description: "Manage your team with integrated scheduling tools",
-      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80",
+      image: staffManagementImage,
       features: ["Time tracking", "Performance metrics", "Payroll integration"]
     }
   ];
