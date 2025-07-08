@@ -11,7 +11,7 @@ export const GettingStarted = () => {
   const engagementProcess = [
     {
       step: "1",
-      icon: <MessageSquare className="h-8 w-8 text-blue-600" />,
+      icon: <MessageSquare className="h-8 w-8 text-brand-orange" />,
       title: "Discovery Consultation",
       duration: "60 minutes",
       description: "Market assessment and opportunity analysis with our business development team",
@@ -24,7 +24,7 @@ export const GettingStarted = () => {
     },
     {
       step: "2",
-      icon: <Presentation className="h-8 w-8 text-emerald-600" />,
+      icon: <Presentation className="h-8 w-8 text-brand-orange" />,
       title: "Platform Demonstration",
       duration: "90 minutes",
       description: "Comprehensive platform overview with technical review and customization options",
@@ -37,7 +37,7 @@ export const GettingStarted = () => {
     },
     {
       step: "3",
-      icon: <Calendar className="h-8 w-8 text-purple-600" />,
+      icon: <Calendar className="h-8 w-8 text-brand-orange" />,
       title: "Business Planning",
       duration: "2-3 weeks",
       description: "Market strategy development and implementation planning with financial modeling",
@@ -207,7 +207,7 @@ export const GettingStarted = () => {
                 </div>
                 
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-brand-orange rounded-lg flex items-center justify-center">
                     <Calendar className="h-6 w-6 text-white" />
                   </div>
                   <div>
