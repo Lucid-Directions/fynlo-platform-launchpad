@@ -121,8 +121,8 @@ export const Navigation = () => {
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-brand-black hover:text-brand-orange">
-                  <Menu className="h-6 w-6" />
+                <Button variant="ghost" size="icon" className="text-brand-black hover:text-brand-orange h-12 w-12">
+                  <Menu className="h-8 w-8" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
