@@ -1,15 +1,17 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useFeatureAccess } from '@/hooks/useFeatureAccess';
 import { AdminDashboard } from './AdminDashboard';
 import { CustomerDashboard } from './CustomerDashboard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 
 export const Dashboard = () => {
-  const { userRole, loading } = useAuth();
+  const { loading, fynloUserData } = useAuth();
+  const { isPlatformOwner, getRestaurantId } = useFeatureAccess();
 
-  if (loading) {
+  if (loading || !fynloUserData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card>
@@ -22,11 +24,13 @@ export const Dashboard = () => {
     );
   }
 
-  if (userRole === 'admin') {
+  // Platform owner gets admin dashboard
+  if (isPlatformOwner()) {
     return <AdminDashboard />;
   }
 
-  if (userRole === 'customer') {
+  // Restaurant users get customer dashboard
+  if (getRestaurantId()) {
     return <CustomerDashboard />;
   }
 
