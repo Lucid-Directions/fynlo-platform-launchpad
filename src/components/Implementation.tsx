@@ -17,7 +17,7 @@ export const Implementation = () => {
         "Basic configuration complete",
         "Ready to accept payments"
       ],
-      icon: <Zap className="h-8 w-8 text-blue-600" />
+      icon: <Zap className="h-8 w-8 text-brand-orange" />
     },
     {
       step: "2",
@@ -31,7 +31,7 @@ export const Implementation = () => {
         "Initial settings customization",
         "Quick tutorial completion"
       ],
-      icon: <Users className="h-8 w-8 text-emerald-600" />
+      icon: <Users className="h-8 w-8 text-brand-orange" />
     },
     {
       step: "3",
@@ -45,7 +45,7 @@ export const Implementation = () => {
         "Reporting and analytics available",
         "Full platform access"
       ],
-      icon: <CheckCircle className="h-8 w-8 text-purple-600" />
+      icon: <CheckCircle className="h-8 w-8 text-brand-orange" />
     }
   ];
 
@@ -96,14 +96,14 @@ export const Implementation = () => {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-slate-50 to-blue-50">
+    <section className="py-24 bg-gradient-to-br from-slate-50 to-orange-50">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4 bg-blue-100 text-blue-800">Getting Started & Support</Badge>
+          <Badge variant="secondary" className="mb-4 bg-orange-100 text-brand-orange">Getting Started & Support</Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
             Instant Setup,
-            <span className="block text-blue-600">Ongoing Support</span>
+            <span className="block text-brand-orange">Ongoing Support</span>
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
             Start accepting payments today with our streamlined signup process and comprehensive support services.
@@ -117,7 +117,7 @@ export const Implementation = () => {
             {implementationSteps.map((step, index) => (
               <Card key={index} className="relative hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <div className="absolute -top-4 left-6">
-                  <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                  <div className="w-8 h-8 bg-brand-orange text-white rounded-full flex items-center justify-center font-bold">
                     {step.step}
                   </div>
                 </div>
@@ -141,7 +141,7 @@ export const Implementation = () => {
                   <ul className="space-y-2">
                     {step.deliverables.map((deliverable, deliverableIndex) => (
                       <li key={deliverableIndex} className="flex items-start space-x-2">
-                        <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="h-4 w-4 text-brand-orange flex-shrink-0 mt-0.5" />
                         <span className="text-slate-700 text-sm">{deliverable}</span>
                       </li>
                     ))}
@@ -159,7 +159,7 @@ export const Implementation = () => {
             {serviceLevels.map((level, index) => (
               <Card key={index} className="text-center p-6 hover:shadow-lg transition-all duration-300">
                 <CardContent className="p-0">
-                  <div className="text-3xl font-bold text-blue-600 mb-2">{level.metric}</div>
+                  <div className="text-3xl font-bold text-brand-orange mb-2">{level.metric}</div>
                   <div className="text-lg font-semibold text-slate-900 mb-1">{level.label}</div>
                   <div className="text-slate-600 text-sm">{level.description}</div>
                 </CardContent>
@@ -186,7 +186,7 @@ export const Implementation = () => {
                   <ul className="space-y-3">
                     {tier.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-start space-x-3">
-                        <CheckCircle className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="h-5 w-5 text-brand-orange flex-shrink-0 mt-0.5" />
                         <span className="text-slate-700">{feature}</span>
                       </li>
                     ))}
