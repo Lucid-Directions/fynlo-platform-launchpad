@@ -35,13 +35,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
       
       if (!error && data) {
         setUserRole(data.role);
+      } else if (error) {
+        console.error('Error fetching user role:', error);
+        // Set default role if none exists
+        setUserRole('customer');
+      } else {
+        // No role found, set default
+        setUserRole('customer');
       }
     } catch (error) {
       console.error('Error fetching user role:', error);
+      setUserRole('customer');
     }
   };
 
