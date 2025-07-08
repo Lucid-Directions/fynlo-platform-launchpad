@@ -4,6 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Play, BarChart3, CreditCard, Users, Settings } from "lucide-react";
+import platformManagementDemo from "@/assets/platform-management-demo.jpg";
+import restaurantPosDemo from "@/assets/restaurant-pos-demo.jpg";
+import paymentProcessingDemo from "@/assets/payment-processing-demo.jpg";
+import businessIntelligenceDemo from "@/assets/business-intelligence-demo.jpg";
 
 export const ProductDemo = () => {
   const platformFeatures = [
@@ -13,7 +17,7 @@ export const ProductDemo = () => {
       icon: <BarChart3 className="h-5 w-5" />,
       title: "Multi-Location Dashboard",
       description: "Comprehensive oversight and analytics across all restaurant locations",
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+      image: platformManagementDemo,
       features: [
         "Real-time performance monitoring",
         "Cross-location analytics and reporting",
@@ -28,7 +32,7 @@ export const ProductDemo = () => {
       icon: <CreditCard className="h-5 w-5" />,
       title: "Advanced Point-of-Sale",
       description: "Intuitive POS system designed for high-volume restaurant operations",
-      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80",
+      image: restaurantPosDemo,
       features: [
         "Lightning-fast order processing",
         "Split payments and custom modifications",
@@ -43,7 +47,7 @@ export const ProductDemo = () => {
       icon: <CreditCard className="h-5 w-5" />,
       title: "Integrated Payment Solutions",
       description: "Secure, low-cost payment processing with multiple payment options",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+      image: paymentProcessingDemo,
       features: [
         "1% processing rates (vs 2.9% industry standard)",
         "Contactless and mobile payments",
@@ -58,7 +62,7 @@ export const ProductDemo = () => {
       icon: <BarChart3 className="h-5 w-5" />,
       title: "Advanced Analytics Suite",
       description: "Data-driven insights to optimize restaurant performance and profitability",
-      image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=800&q=80",
+      image: businessIntelligenceDemo,
       features: [
         "Real-time sales and performance metrics",
         "Customer behavior analysis",
