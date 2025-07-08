@@ -41,10 +41,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUserRole(data.role);
       } else if (error) {
         console.error('Error fetching user role:', error);
-        // Set default role if none exists
         setUserRole('customer');
       } else {
-        // No role found, set default
         setUserRole('customer');
       }
     } catch (error) {
@@ -56,12 +54,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          await fetchUserRole(session.user.id);
+          // Defer Supabase calls to prevent deadlocks
+          setTimeout(() => {
+            fetchUserRole(session.user.id);
+          }, 0);
         } else {
           setUserRole(null);
         }
@@ -71,12 +72,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 
     // Check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        await fetchUserRole(session.user.id);
+        setTimeout(() => {
+          fetchUserRole(session.user.id);
+        }, 0);
       }
       
       setLoading(false);

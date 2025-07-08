@@ -14,6 +14,7 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{email?: string; password?: string; fullName?: string}>({});
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
@@ -27,38 +28,101 @@ const Auth = () => {
     navigate('/');
   };
 
+  const validateForm = () => {
+    const newErrors: {email?: string; password?: string; fullName?: string} = {};
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+    
+    // Password validation
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long";
+    } else if (!isLogin && !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+      newErrors.password = "Password must contain at least one uppercase letter, one lowercase letter, and one number";
+    }
+    
+    // Full name validation for signup
+    if (!isLogin) {
+      if (!fullName) {
+        newErrors.fullName = "Full name is required";
+      } else if (fullName.trim().length < 2) {
+        newErrors.fullName = "Full name must be at least 2 characters long";
+      }
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
     setLoading(true);
+    setErrors({});
 
     try {
       if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {
-          toast({
-            title: "Login Failed",
-            description: error.message,
-            variant: "destructive",
-          });
+          if (error.message.includes("Invalid login credentials")) {
+            toast({
+              title: "Login Failed",
+              description: "Invalid email or password. Please check your credentials and try again.",
+              variant: "destructive",
+            });
+          } else if (error.message.includes("Email not confirmed")) {
+            toast({
+              title: "Email Not Verified",
+              description: "Please check your email and click the verification link before signing in.",
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Login Failed",
+              description: error.message,
+              variant: "destructive",
+            });
+          }
         } else {
           toast({
             title: "Welcome back!",
             description: "You have successfully logged in.",
           });
+          navigate('/dashboard');
         }
       } else {
         const { error } = await signUp(email, password, fullName);
         if (error) {
-          toast({
-            title: "Signup Failed",
-            description: error.message,
-            variant: "destructive",
-          });
+          if (error.message.includes("User already registered")) {
+            toast({
+              title: "Account Exists",
+              description: "An account with this email already exists. Please try signing in instead.",
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Signup Failed",
+              description: error.message,
+              variant: "destructive",
+            });
+          }
         } else {
           toast({
             title: "Account Created!",
-            description: "Please check your email to verify your account.",
+            description: "Please check your email to verify your account before signing in.",
           });
+          setIsLogin(true);
         }
       }
     } catch (error) {
@@ -111,7 +175,11 @@ const Auth = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required={!isLogin}
+                    className={errors.fullName ? 'border-red-500' : ''}
                   />
+                  {errors.fullName && (
+                    <p className="text-sm text-red-600">{errors.fullName}</p>
+                  )}
                 </div>
               )}
               
@@ -123,7 +191,11 @@ const Auth = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  className={errors.email ? 'border-red-500' : ''}
                 />
+                {errors.email && (
+                  <p className="text-sm text-red-600">{errors.email}</p>
+                )}
               </div>
               
               <div className="space-y-2">
@@ -134,7 +206,16 @@ const Auth = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  className={errors.password ? 'border-red-500' : ''}
                 />
+                {errors.password && (
+                  <p className="text-sm text-red-600">{errors.password}</p>
+                )}
+                {!isLogin && (
+                  <p className="text-xs text-gray-600">
+                    Password must be at least 8 characters with uppercase, lowercase, and number
+                  </p>
+                )}
               </div>
               
               <Button 
