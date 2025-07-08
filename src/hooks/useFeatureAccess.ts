@@ -24,7 +24,7 @@ export const useFeatureAccess = () => {
   };
 
   const isPlatformOwner = (): boolean => {
-    return fynloUserData?.is_platform_owner || false;
+    return fynloUserData?.is_platform_owner || isAdmin();
   };
 
   const getSubscriptionPlan = () => {
