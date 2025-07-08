@@ -2,11 +2,15 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, Link, useLocation } from "react-router-dom";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
+import { useState } from "react";
 
 export const Navigation = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleGetStarted = () => {
     if (user) {
@@ -90,8 +94,8 @@ export const Navigation = () => {
             </Link>
           </div>
 
-          {/* Enhanced Sign In Button with Brand Colors */}
-          <div className="flex items-center space-x-4">
+          {/* Desktop Sign In Buttons */}
+          <div className="hidden md:flex items-center space-x-4">
             {!user && (
               <>
                 <Button 
@@ -111,6 +115,100 @@ export const Navigation = () => {
                 </Button>
               </>
             )}
+          </div>
+
+          {/* Mobile Hamburger Menu */}
+          <div className="md:hidden">
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-brand-black hover:text-brand-orange">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <nav className="flex flex-col space-y-4 mt-8">
+                  <Link 
+                    to="/" 
+                    onClick={() => setIsOpen(false)}
+                    className={`text-lg font-medium transition-colors p-3 rounded-lg ${
+                      isActive('/') 
+                        ? 'text-brand-orange bg-orange-50' 
+                        : 'text-brand-black hover:text-brand-orange hover:bg-orange-50'
+                    }`}
+                  >
+                    Home
+                  </Link>
+                  <Link 
+                    to="/platform" 
+                    onClick={() => setIsOpen(false)}
+                    className={`text-lg font-medium transition-colors p-3 rounded-lg ${
+                      isActive('/platform') 
+                        ? 'text-brand-orange bg-orange-50' 
+                        : 'text-brand-black hover:text-brand-orange hover:bg-orange-50'
+                    }`}
+                  >
+                    Platform
+                  </Link>
+                  <Link 
+                    to="/solutions" 
+                    onClick={() => setIsOpen(false)}
+                    className={`text-lg font-medium transition-colors p-3 rounded-lg ${
+                      isActive('/solutions') 
+                        ? 'text-brand-orange bg-orange-50' 
+                        : 'text-brand-black hover:text-brand-orange hover:bg-orange-50'
+                    }`}
+                  >
+                    Solutions
+                  </Link>
+                  <Link 
+                    to="/pricing" 
+                    onClick={() => setIsOpen(false)}
+                    className={`text-lg font-medium transition-colors p-3 rounded-lg ${
+                      isActive('/pricing') 
+                        ? 'text-brand-orange bg-orange-50' 
+                        : 'text-brand-black hover:text-brand-orange hover:bg-orange-50'
+                    }`}
+                  >
+                    Pricing
+                  </Link>
+                  <Link 
+                    to="/resources" 
+                    onClick={() => setIsOpen(false)}
+                    className={`text-lg font-medium transition-colors p-3 rounded-lg ${
+                      isActive('/resources') 
+                        ? 'text-brand-orange bg-orange-50' 
+                        : 'text-brand-black hover:text-brand-orange hover:bg-orange-50'
+                    }`}
+                  >
+                    Resources
+                  </Link>
+                  
+                  {!user && (
+                    <div className="flex flex-col space-y-3 pt-6 border-t">
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => {
+                          handleGetStarted();
+                          setIsOpen(false);
+                        }}
+                        className="text-brand-black hover:text-brand-orange hover:bg-orange-50 font-medium justify-start"
+                      >
+                        Sign In
+                      </Button>
+                      <Button 
+                        onClick={() => {
+                          handleGetStarted();
+                          setIsOpen(false);
+                        }}
+                        className="bg-brand-orange hover:bg-orange-600 text-white font-medium"
+                      >
+                        Get Started
+                      </Button>
+                    </div>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>
