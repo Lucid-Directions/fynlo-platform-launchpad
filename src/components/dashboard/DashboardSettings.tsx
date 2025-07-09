@@ -1,14 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFeatureAccess } from '@/hooks/useFeatureAccess';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Check, ArrowRight, Crown, Settings, CreditCard, Shield, Bell, Users, Building, BarChart3, Key, Globe } from 'lucide-react';
+import { Check, ArrowRight, Crown, Settings, CreditCard, Shield, Bell, Users, Building, BarChart3, Key, Globe, AlertCircle, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { supabase } from '@/integrations/supabase/client';
+
+interface PlatformStats {
+  totalUsers: number;
+  activeRestaurants: number;
+  totalTransactions: number;
+  monthlyRevenue: number;
+  systemHealth: 'healthy' | 'warning' | 'error';
+}
+
+interface PlatformSettings {
+  sumupApiKey?: string;
+  paymentMethods: {
+    sumup: boolean;
+    stripe: boolean;
+    cash: boolean;
+    card: boolean;
+  };
+  systemSettings: {
+    maintenanceMode: boolean;
+    registrationEnabled: boolean;
+    emailVerificationRequired: boolean;
+    multiLocationEnabled: boolean;
+  };
+}
 
 export const DashboardSettings = () => {
   const { getSubscriptionPlan, isPlatformOwner } = useFeatureAccess();
@@ -16,8 +41,16 @@ export const DashboardSettings = () => {
   const currentPlan = getSubscriptionPlan();
   const [selectedPlan, setSelectedPlan] = useState<'alpha' | 'beta' | 'omega'>(currentPlan);
   const [showPlans, setShowPlans] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [platformStats, setPlatformStats] = useState<PlatformStats>({
+    totalUsers: 0,
+    activeRestaurants: 0,
+    totalTransactions: 0,
+    monthlyRevenue: 0,
+    systemHealth: 'healthy'
+  });
 
-  // Platform admin settings state
+  // Platform admin settings state - now persistent
   const [sumUpApiKey, setSumUpApiKey] = useState('');
   const [paymentMethods, setPaymentMethods] = useState({
     sumup: true,
@@ -31,6 +64,102 @@ export const DashboardSettings = () => {
     emailVerificationRequired: true,
     multiLocationEnabled: true
   });
+  const [settingsSaved, setSettingsSaved] = useState(false);
+
+  // Load platform data and settings on mount
+  useEffect(() => {
+    if (isPlatformOwner()) {
+      loadPlatformData();
+      loadPlatformSettings();
+    }
+  }, []);
+
+  const loadPlatformData = async () => {
+    try {
+      // Get total users
+      const { count: userCount } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true });
+
+      // Get active restaurants
+      const { count: restaurantCount } = await supabase
+        .from('restaurants')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_active', true);
+
+      // Get total transactions from payments table
+      const { count: transactionCount } = await supabase
+        .from('payments')
+        .select('*', { count: 'exact', head: true });
+
+      // Get monthly revenue (sum of payments this month)
+      const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+      const { data: revenueData } = await supabase
+        .from('payments')
+        .select('amount')
+        .eq('payment_status', 'paid')
+        .gte('created_at', startOfMonth);
+
+      const monthlyRevenue = revenueData?.reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
+
+      // Check system health (simplified)
+      const systemHealth = userCount !== null && restaurantCount !== null ? 'healthy' : 'warning';
+
+      setPlatformStats({
+        totalUsers: userCount || 0,
+        activeRestaurants: restaurantCount || 0,
+        totalTransactions: transactionCount || 0,
+        monthlyRevenue: monthlyRevenue / 100, // Convert from cents
+        systemHealth: systemHealth as 'healthy' | 'warning' | 'error'
+      });
+
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading platform data:', error);
+      setLoading(false);
+    }
+  };
+
+  const loadPlatformSettings = async () => {
+    try {
+      // Load from localStorage for now (you could store in a platform_settings table)
+      const savedSettings = localStorage.getItem('fynlo_platform_settings');
+      if (savedSettings) {
+        const settings: PlatformSettings = JSON.parse(savedSettings);
+        setSumUpApiKey(settings.sumupApiKey || '');
+        setPaymentMethods(settings.paymentMethods);
+        setSystemSettings(settings.systemSettings);
+        setSettingsSaved(true);
+      }
+    } catch (error) {
+      console.error('Error loading platform settings:', error);
+    }
+  };
+
+  const savePlatformSettings = async () => {
+    try {
+      const settings: PlatformSettings = {
+        sumupApiKey: sumUpApiKey,
+        paymentMethods,
+        systemSettings
+      };
+      
+      localStorage.setItem('fynlo_platform_settings', JSON.stringify(settings));
+      setSettingsSaved(true);
+      
+      toast({
+        title: "Settings Saved",
+        description: "Platform settings have been saved successfully.",
+      });
+    } catch (error) {
+      console.error('Error saving platform settings:', error);
+      toast({
+        title: "Save Failed",
+        description: "Failed to save platform settings.",
+        variant: "destructive"
+      });
+    }
+  };
 
   const handleUpgrade = (targetPlan: 'beta' | 'omega') => {
     setShowPlans(true);
@@ -42,7 +171,7 @@ export const DashboardSettings = () => {
     setSelectedPlan(planKey);
   };
 
-  const handleSumUpConnect = () => {
+  const handleSumUpConnect = async () => {
     if (!sumUpApiKey.trim()) {
       toast({
         title: "API Key Required",
@@ -52,9 +181,11 @@ export const DashboardSettings = () => {
       return;
     }
     
+    await savePlatformSettings();
+    
     toast({
       title: "SumUp Connected",
-      description: "Your SumUp account has been connected successfully.",
+      description: "Your SumUp API key has been saved and connected successfully.",
     });
   };
 
@@ -63,6 +194,7 @@ export const DashboardSettings = () => {
       ...prev,
       [method]: !prev[method]
     }));
+    setSettingsSaved(false);
   };
 
   const toggleSystemSetting = (setting: keyof typeof systemSettings) => {
@@ -70,6 +202,7 @@ export const DashboardSettings = () => {
       ...prev,
       [setting]: !prev[setting]
     }));
+    setSettingsSaved(false);
   };
 
   const pricingPlans = [
@@ -168,8 +301,8 @@ export const DashboardSettings = () => {
             </p>
           </div>
 
-          {/* Current Status */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {/* Current Status - Real Data */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
             <Card className="bg-white border-l-4 border-l-brand-orange">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3">
@@ -184,10 +317,22 @@ export const DashboardSettings = () => {
             <Card className="bg-white border-l-4 border-l-green-500">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3">
-                  <Shield className="w-8 h-8 text-green-600" />
+                  {platformStats.systemHealth === 'healthy' ? (
+                    <CheckCircle className="w-8 h-8 text-green-600" />
+                  ) : platformStats.systemHealth === 'warning' ? (
+                    <AlertCircle className="w-8 h-8 text-yellow-600" />
+                  ) : (
+                    <AlertCircle className="w-8 h-8 text-red-600" />
+                  )}
                   <div>
                     <h3 className="font-bold text-lg text-brand-black">System Status</h3>
-                    <p className="text-green-600">All Systems Operational</p>
+                    <p className={`${
+                      platformStats.systemHealth === 'healthy' ? 'text-green-600' :
+                      platformStats.systemHealth === 'warning' ? 'text-yellow-600' : 'text-red-600'
+                    }`}>
+                      {platformStats.systemHealth === 'healthy' ? 'All Systems Operational' :
+                       platformStats.systemHealth === 'warning' ? 'System Warning' : 'System Error'}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -197,10 +342,57 @@ export const DashboardSettings = () => {
                 <div className="flex items-center gap-3">
                   <Users className="w-8 h-8 text-blue-600" />
                   <div>
-                    <h3 className="font-bold text-lg text-brand-black">Active Users</h3>
-                    <p className="text-blue-600">1,247 Registered</p>
+                    <h3 className="font-bold text-lg text-brand-black">Total Users</h3>
+                    <p className="text-blue-600">
+                      {loading ? 'Loading...' : `${platformStats.totalUsers.toLocaleString()} Registered`}
+                    </p>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-white border-l-4 border-l-purple-500">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3">
+                  <Building className="w-8 h-8 text-purple-600" />
+                  <div>
+                    <h3 className="font-bold text-lg text-brand-black">Active Restaurants</h3>
+                    <p className="text-purple-600">
+                      {loading ? 'Loading...' : `${platformStats.activeRestaurants.toLocaleString()} Businesses`}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Revenue and Transaction Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <Card className="bg-white shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <BarChart3 className="w-8 h-8 text-brand-orange" />
+                  <div>
+                    <h3 className="font-bold text-lg text-brand-black">Monthly Revenue</h3>
+                    <p className="text-brand-gray">This month's platform revenue</p>
+                  </div>
+                </div>
+                <p className="text-3xl font-bold text-brand-orange">
+                  {loading ? 'Loading...' : `£${platformStats.monthlyRevenue.toLocaleString('en-GB', { minimumFractionDigits: 2 })}`}
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="bg-white shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <CreditCard className="w-8 h-8 text-green-600" />
+                  <div>
+                    <h3 className="font-bold text-lg text-brand-black">Total Transactions</h3>
+                    <p className="text-brand-gray">All-time platform transactions</p>
+                  </div>
+                </div>
+                <p className="text-3xl font-bold text-green-600">
+                  {loading ? 'Loading...' : platformStats.totalTransactions.toLocaleString()}
+                </p>
               </CardContent>
             </Card>
           </div>
@@ -233,21 +425,39 @@ export const DashboardSettings = () => {
                         className="mt-1"
                       />
                     </div>
-                    <Button 
-                      onClick={handleSumUpConnect}
-                      className="bg-brand-orange hover:bg-orange-600 text-white"
-                    >
-                      Connect SumUp Account
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        onClick={handleSumUpConnect}
+                        className="bg-brand-orange hover:bg-orange-600 text-white flex-1"
+                      >
+                        {sumUpApiKey ? 'Update SumUp Key' : 'Connect SumUp Account'}
+                      </Button>
+                      {!settingsSaved && (
+                        <Button 
+                          onClick={savePlatformSettings}
+                          variant="outline"
+                          className="px-4"
+                        >
+                          Save All
+                        </Button>
+                      )}
+                    </div>
                   </div>
                   <div className="space-y-3">
                     <h4 className="font-semibold text-brand-black">Integration Status</h4>
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-                      <span className="text-sm text-brand-gray">Not Connected</span>
+                      <div className={`w-3 h-3 rounded-full ${
+                        sumUpApiKey && settingsSaved ? 'bg-green-500' : 'bg-yellow-400'
+                      }`}></div>
+                      <span className="text-sm text-brand-gray">
+                        {sumUpApiKey && settingsSaved ? 'Connected & Saved' : sumUpApiKey ? 'Key Entered - Click Save' : 'Not Connected'}
+                      </span>
                     </div>
                     <p className="text-sm text-brand-gray">
-                      Connect your SumUp account to enable payment processing for all restaurants on the platform.
+                      {sumUpApiKey && settingsSaved 
+                        ? 'Your SumUp API key is saved and ready for payment processing.'
+                        : 'Connect your SumUp account to enable payment processing for all restaurants on the platform.'
+                      }
                     </p>
                   </div>
                 </div>
