@@ -70,13 +70,14 @@ export const DashboardSettings = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-brand-black flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-brand-orange rounded-full"></div>
-            <span>Fynlo</span>
-          </div>
-          Settings
-        </h1>
+        <div className="flex items-center gap-4 mb-2">
+          <img 
+            src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
+            alt="Fynlo Logo" 
+            className="h-12 w-auto"
+          />
+          <h1 className="text-3xl font-bold text-brand-black">Settings</h1>
+        </div>
         <p className="text-muted-foreground">Manage your subscription and account preferences</p>
       </div>
 
