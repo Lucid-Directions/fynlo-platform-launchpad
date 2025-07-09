@@ -22,10 +22,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 
 export const Dashboard = () => {
-  const { loading, fynloUserData } = useAuth();
-  const { isPlatformOwner, getRestaurantId, isAdmin } = useFeatureAccess();
+  const { loading, user } = useAuth();
+  const { isPlatformOwner, isAdmin, fynloUserData } = useFeatureAccess();
 
-  if (loading || !fynloUserData) {
+  if (loading || !user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card>
@@ -38,8 +38,8 @@ export const Dashboard = () => {
     );
   }
 
-  // Check access permissions - allow Supabase admin access as fallback
-  const hasAnyAccess = isPlatformOwner() || getRestaurantId() || isAdmin();
+  // Check access permissions - Platform owners and admins have access
+  const hasAnyAccess = isPlatformOwner() || isAdmin();
   
   if (!hasAnyAccess) {
     return (
