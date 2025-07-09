@@ -1,27 +1,75 @@
 import React, { useState } from 'react';
 import { useFeatureAccess } from '@/hooks/useFeatureAccess';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Check, ArrowRight, Crown } from 'lucide-react';
+import { Check, ArrowRight, Crown, Settings, CreditCard, Shield, Bell, Users, Building, BarChart3, Key, Globe } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Switch } from '@/components/ui/switch';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 
 export const DashboardSettings = () => {
   const { getSubscriptionPlan, isPlatformOwner } = useFeatureAccess();
   const { toast } = useToast();
   const currentPlan = getSubscriptionPlan();
   const [selectedPlan, setSelectedPlan] = useState<'alpha' | 'beta' | 'omega'>(currentPlan);
+  const [showPlans, setShowPlans] = useState(false);
+
+  // Platform admin settings state
+  const [sumUpApiKey, setSumUpApiKey] = useState('');
+  const [paymentMethods, setPaymentMethods] = useState({
+    sumup: true,
+    stripe: true,
+    cash: true,
+    card: true
+  });
+  const [systemSettings, setSystemSettings] = useState({
+    maintenanceMode: false,
+    registrationEnabled: true,
+    emailVerificationRequired: true,
+    multiLocationEnabled: true
+  });
 
   const handleUpgrade = (targetPlan: 'beta' | 'omega') => {
-    toast({
-      title: "Demo Mode",
-      description: `This would normally redirect to Stripe checkout for ${targetPlan} plan. In demo mode, we'll simulate the upgrade.`,
-    });
-    console.log(`Would upgrade to ${targetPlan} plan`);
+    setShowPlans(true);
+    // Scroll to plans section
+    document.getElementById('pricing-plans')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handlePlanClick = (planKey: 'alpha' | 'beta' | 'omega') => {
     setSelectedPlan(planKey);
+  };
+
+  const handleSumUpConnect = () => {
+    if (!sumUpApiKey.trim()) {
+      toast({
+        title: "API Key Required",
+        description: "Please enter your SumUp API key to connect your account.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    toast({
+      title: "SumUp Connected",
+      description: "Your SumUp account has been connected successfully.",
+    });
+  };
+
+  const togglePaymentMethod = (method: keyof typeof paymentMethods) => {
+    setPaymentMethods(prev => ({
+      ...prev,
+      [method]: !prev[method]
+    }));
+  };
+
+  const toggleSystemSetting = (setting: keyof typeof systemSettings) => {
+    setSystemSettings(prev => ({
+      ...prev,
+      [setting]: !prev[setting]
+    }));
   };
 
   const pricingPlans = [
@@ -99,6 +147,223 @@ export const DashboardSettings = () => {
     }
   ];
 
+  // Platform owner sees admin controls, regular users see plan selection
+  if (isPlatformOwner()) {
+    return (
+      <div className="py-8 bg-gradient-to-br from-orange-50 to-gray-100 min-h-screen">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <img 
+                src="/lovable-uploads/ae344ce5-1c9f-41c8-b990-94ddff083a5a.png" 
+                alt="Fynlo Logo" 
+                className="h-16 w-auto"
+              />
+              <h1 className="text-4xl md:text-5xl font-bold text-brand-black">Platform Settings</h1>
+            </div>
+            <Badge variant="secondary" className="mb-4 bg-purple-100 text-purple-700">Platform Administrator</Badge>
+            <p className="text-xl text-brand-gray max-w-3xl mx-auto leading-relaxed">
+              Complete control over your Fynlo platform. Configure payment methods, system settings, and manage global platform features.
+            </p>
+          </div>
+
+          {/* Current Status */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <Card className="bg-white border-l-4 border-l-brand-orange">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3">
+                  <Crown className="w-8 h-8 text-brand-orange" />
+                  <div>
+                    <h3 className="font-bold text-lg text-brand-black">Omega Plan</h3>
+                    <p className="text-brand-gray">Platform Owner</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-white border-l-4 border-l-green-500">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3">
+                  <Shield className="w-8 h-8 text-green-600" />
+                  <div>
+                    <h3 className="font-bold text-lg text-brand-black">System Status</h3>
+                    <p className="text-green-600">All Systems Operational</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-white border-l-4 border-l-blue-500">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3">
+                  <Users className="w-8 h-8 text-blue-600" />
+                  <div>
+                    <h3 className="font-bold text-lg text-brand-black">Active Users</h3>
+                    <p className="text-blue-600">1,247 Registered</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Payment Methods Configuration */}
+          <Card className="mb-8 bg-white shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-2xl text-brand-black">
+                <CreditCard className="w-6 h-6 text-brand-orange" />
+                Payment Methods Configuration
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* SumUp Integration */}
+              <div className="p-6 bg-orange-50 rounded-xl border border-orange-200">
+                <h3 className="text-xl font-bold text-brand-black mb-4 flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-brand-orange" />
+                  SumUp Integration
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="sumup-api-key" className="text-brand-black font-medium">SumUp API Key</Label>
+                      <Input
+                        id="sumup-api-key"
+                        type="password"
+                        placeholder="Enter your SumUp API key"
+                        value={sumUpApiKey}
+                        onChange={(e) => setSumUpApiKey(e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                    <Button 
+                      onClick={handleSumUpConnect}
+                      className="bg-brand-orange hover:bg-orange-600 text-white"
+                    >
+                      Connect SumUp Account
+                    </Button>
+                  </div>
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-brand-black">Integration Status</h4>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                      <span className="text-sm text-brand-gray">Not Connected</span>
+                    </div>
+                    <p className="text-sm text-brand-gray">
+                      Connect your SumUp account to enable payment processing for all restaurants on the platform.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Methods Toggle */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-brand-black">Available Payment Methods</h3>
+                  {Object.entries(paymentMethods).map(([method, enabled]) => (
+                    <div key={method} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <CreditCard className="w-5 h-5 text-brand-gray" />
+                        <span className="capitalize font-medium text-brand-black">{method}</span>
+                      </div>
+                      <Switch
+                        checked={enabled}
+                        onCheckedChange={() => togglePaymentMethod(method as keyof typeof paymentMethods)}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-brand-black">Transaction Fees</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <span className="text-brand-black">SumUp</span>
+                      <span className="font-semibold text-brand-orange">1.69%</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <span className="text-brand-black">Stripe</span>
+                      <span className="font-semibold text-brand-orange">1.4% + 20p</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <span className="text-brand-black">Cash</span>
+                      <span className="font-semibold text-green-600">Free</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* System Configuration */}
+          <Card className="mb-8 bg-white shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-2xl text-brand-black">
+                <Settings className="w-6 h-6 text-brand-orange" />
+                System Configuration
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {Object.entries(systemSettings).map(([setting, enabled]) => (
+                  <div key={setting} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <span className="font-medium text-brand-black capitalize">
+                        {setting.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                      </span>
+                      <p className="text-sm text-brand-gray mt-1">
+                        {setting === 'maintenanceMode' && 'Put the platform in maintenance mode'}
+                        {setting === 'registrationEnabled' && 'Allow new restaurant registrations'}
+                        {setting === 'emailVerificationRequired' && 'Require email verification for new users'}
+                        {setting === 'multiLocationEnabled' && 'Enable multi-location features'}
+                      </p>
+                    </div>
+                    <Switch
+                      checked={enabled}
+                      onCheckedChange={() => toggleSystemSetting(setting as keyof typeof systemSettings)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* API Configuration */}
+          <Card className="bg-white shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-2xl text-brand-black">
+                <Key className="w-6 h-6 text-brand-orange" />
+                API & Integration Settings
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <h3 className="font-semibold text-brand-black mb-2">Platform API Status</h3>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span className="text-sm text-green-700">API is operational</span>
+                  </div>
+                  <p className="text-sm text-brand-gray">
+                    Current API version: v2.1.0 • Last updated: Today at 14:30
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Button variant="outline" className="h-16 flex-col gap-2">
+                    <BarChart3 className="w-5 h-5" />
+                    View API Analytics
+                  </Button>
+                  <Button variant="outline" className="h-16 flex-col gap-2">
+                    <Key className="w-5 h-5" />
+                    Manage API Keys
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // Regular customer dashboard
   return (
     <div className="py-12 bg-gradient-to-br from-orange-50 to-gray-100 min-h-screen">
       <div className="max-w-7xl mx-auto px-6">
@@ -135,11 +400,6 @@ export const DashboardSettings = () => {
             <Badge className="bg-brand-orange text-white">
               {pricingPlans.find(p => p.planKey === currentPlan)?.name} Plan
             </Badge>
-            {isPlatformOwner() && (
-              <Badge variant="outline" className="border-brand-black text-brand-black">
-                Platform Owner
-              </Badge>
-            )}
           </div>
           <p className="text-lg text-brand-gray">
             {pricingPlans.find(p => p.planKey === currentPlan)?.description}
@@ -164,8 +424,8 @@ export const DashboardSettings = () => {
           </div>
         </div>
 
-        {/* Pricing Cards - Exact copy from pricing page */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+        {/* Pricing Cards */}
+        <div id="pricing-plans" className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
           {pricingPlans.map((plan, index) => (
             <Card 
               key={index}
@@ -255,7 +515,7 @@ export const DashboardSettings = () => {
                     className="w-full bg-brand-orange hover:bg-orange-600 text-white transition-all duration-300"
                     onClick={() => handleUpgrade(plan.planKey as 'beta' | 'omega')}
                   >
-                    Upgrade to {plan.name}
+                    Upgrade to {plan.name} with SumUp
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
                   </Button>
                 )}
@@ -318,7 +578,7 @@ export const DashboardSettings = () => {
             <div>
               <h3 className="font-semibold text-yellow-800">Demo Mode</h3>
               <p className="text-sm text-yellow-700 mt-1">
-                This is a demonstration. In a real implementation, upgrade buttons would redirect to Stripe checkout. 
+                This is a demonstration. In a real implementation, upgrade buttons would redirect to SumUp checkout. 
                 For testing, you can manually change the subscription level in the user data or implement a demo toggle.
               </p>
             </div>
