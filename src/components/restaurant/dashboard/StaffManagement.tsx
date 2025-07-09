@@ -34,9 +34,8 @@ interface StaffMember {
   hourly_rate?: number;
   is_active: boolean;
   created_at: string;
-  profiles?: {
-    full_name?: string;
-  };
+  restaurant_id: string;
+  updated_at: string;
 }
 
 interface StaffManagementProps {
@@ -58,10 +57,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ restaurant }) 
     try {
       const { data, error } = await supabase
         .from('staff_members')
-        .select(`
-          *,
-          profiles (full_name)
-        `)
+        .select('*')
         .eq('restaurant_id', restaurant.id)
         .order('created_at', { ascending: false });
 
@@ -133,8 +129,8 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ restaurant }) 
   };
 
   const filteredStaff = staffMembers.filter(staff => {
-    const matchesSearch = staff.profiles?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         staff.user_id.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = staff.user_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         staff.role.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesRole = roleFilter === 'all' || staff.role === roleFilter;
     
@@ -258,7 +254,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ restaurant }) 
                   </div>
                   <div>
                     <h3 className="font-semibold">
-                      {staff.profiles?.full_name || 'Unknown User'}
+                      Staff Member
                     </h3>
                     <Badge className={getRoleColor(staff.role)}>
                       {staff.role}

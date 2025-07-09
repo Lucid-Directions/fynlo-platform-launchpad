@@ -256,7 +256,7 @@ export const OrderManagement: React.FC<OrderManagementProps> = ({ restaurant }) 
 
                     <div className="flex items-center space-x-3">
                       <div className="text-right">
-                        <p className="font-semibold">£{parseFloat(order.total_amount).toFixed(2)}</p>
+                        <p className="font-semibold">£{parseFloat(order.total_amount.toString()).toFixed(2)}</p>
                         <p className="text-sm text-gray-500">
                           {new Date(order.created_at).toLocaleDateString('en-GB')}
                         </p>

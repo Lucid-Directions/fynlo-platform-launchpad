@@ -85,7 +85,7 @@ export const RestaurantOverview: React.FC<RestaurantOverviewProps> = ({ restaura
           order.status === 'delivered' || order.status === 'ready'
         );
         
-        const todaysSales = completedOrders.reduce((sum, order) => sum + parseFloat(order.total_amount), 0);
+        const todaysSales = completedOrders.reduce((sum, order) => sum + parseFloat(order.total_amount.toString()), 0);
         const activeOrders = todaysOrders.filter(order => 
           !['delivered', 'cancelled'].includes(order.status)
         ).length;
