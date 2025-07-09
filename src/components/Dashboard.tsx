@@ -38,8 +38,8 @@ export const Dashboard = () => {
     );
   }
 
-  // Check access permissions - Platform owners and admins have access
-  const hasAnyAccess = isPlatformOwner() || isAdmin();
+  // Check access permissions - Users with subscription data have access
+  const hasAnyAccess = fynloUserData !== null;
   
   if (!hasAnyAccess) {
     return (
