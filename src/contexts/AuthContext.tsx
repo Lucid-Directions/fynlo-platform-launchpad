@@ -46,60 +46,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('user_id', userId)
         .maybeSingle();
       
+      let role = 'customer';
       if (!error && data) {
-        setUserRole(data.role);
+        role = data.role;
       } else if (error) {
         console.error('Error fetching user role:', error);
-        setUserRole('customer');
-      } else {
-        setUserRole('customer');
       }
+      
+      setUserRole(role);
+      setDefaultFynloUserData(role);
     } catch (error) {
       console.error('Error fetching user role:', error);
       setUserRole('customer');
+      setDefaultFynloUserData('customer');
     }
   };
 
-  const fetchFynloUserData = async (session: Session) => {
-    try {
-      const response = await fetch('https://api.fynlo.co.uk/api/v1/auth/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          supabase_user_id: session.user.id,
-          email: session.user.email,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setFynloUserData({
-          is_platform_owner: data.is_platform_owner || false,
-          restaurant_id: data.restaurant_id,
-          subscription_plan: data.subscription_plan || 'alpha',
-          enabled_features: data.enabled_features || [],
-        });
-      } else {
-        console.error('Failed to verify user with Fynlo API:', response.statusText);
-        // Set default values if API call fails
-        setFynloUserData({
-          is_platform_owner: false,
-          subscription_plan: 'alpha',
-          enabled_features: [],
-        });
-      }
-    } catch (error) {
-      console.error('Error calling Fynlo API:', error);
-      // Set default values if API call fails
-      setFynloUserData({
-        is_platform_owner: false,
-        subscription_plan: 'alpha',
-        enabled_features: [],
-      });
-    }
+  const setDefaultFynloUserData = (userRole: string | null) => {
+    // For Supabase-only setup, determine platform owner status from user role
+    const isPlatformOwner = userRole === 'admin';
+    
+    setFynloUserData({
+      is_platform_owner: isPlatformOwner,
+      restaurant_id: !isPlatformOwner ? 'restaurant_1' : undefined,
+      subscription_plan: isPlatformOwner ? 'omega' : 'beta',
+      enabled_features: isPlatformOwner ? [
+        'business_management',
+        'subscription_management', 
+        'system_health',
+        'advanced_analytics',
+        'payment_settings'
+      ] : [
+        'inventory_management',
+        'staff_management',
+        'customer_database',
+        'advanced_reports'
+      ],
+    });
   };
 
   useEffect(() => {
@@ -113,7 +96,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           // Defer Supabase calls to prevent deadlocks
           setTimeout(() => {
             fetchUserRole(session.user.id);
-            fetchFynloUserData(session);
           }, 0);
         } else {
           setUserRole(null);
@@ -132,7 +114,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (session?.user) {
         setTimeout(() => {
           fetchUserRole(session.user.id);
-          fetchFynloUserData(session);
         }, 0);
       }
       
