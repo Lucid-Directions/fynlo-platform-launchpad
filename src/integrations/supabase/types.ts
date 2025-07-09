@@ -668,6 +668,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_subscriptions: {
+        Row: {
+          created_at: string | null
+          enabled_features: string[] | null
+          id: string
+          is_platform_owner: boolean | null
+          subscription_plan: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          enabled_features?: string[] | null
+          id?: string
+          is_platform_owner?: boolean | null
+          subscription_plan?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          enabled_features?: string[] | null
+          id?: string
+          is_platform_owner?: boolean | null
+          subscription_plan?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
