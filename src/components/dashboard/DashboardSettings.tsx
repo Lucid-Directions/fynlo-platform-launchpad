@@ -28,41 +28,52 @@ export const DashboardSettings = () => {
   const plans = [
     {
       id: 'alpha',
-      name: 'Alpha',
+      name: 'α Alpha',
+      symbol: 'α',
       price: 'Free',
-      description: 'Basic features for getting started',
-      features: ['Basic dashboard', 'Up to 5 orders/day', 'Email support'],
+      fee: '1% transaction fee',
+      description: 'Essential features for new restaurants',
+      features: ['Basic POS system', 'Up to 100 orders/month', 'Email support', 'Basic reporting'],
       current: currentPlan === 'alpha',
-      icon: Zap,
-      color: 'bg-gray-100 text-gray-800'
+      gradient: 'from-gray-100 to-gray-200',
+      textColor: 'text-gray-700',
+      bgColor: 'bg-gray-50'
     },
     {
       id: 'beta',
-      name: 'Beta',
-      price: '£59.99/month',
-      description: 'Advanced features for growing businesses',
-      features: ['Advanced analytics', 'Unlimited orders', 'Staff management', 'Inventory tracking', 'Priority support'],
+      name: 'β Beta',
+      symbol: 'β',
+      price: '£39/month',
+      fee: '1% transaction fee',
+      description: 'Advanced features for growing restaurants',
+      features: ['Everything in Alpha', 'Unlimited orders', 'Staff management', 'Inventory tracking', 'Advanced analytics', 'Priority support'],
       current: currentPlan === 'beta',
-      icon: Crown,
-      color: 'bg-blue-100 text-blue-800'
+      gradient: 'from-brand-orange/20 to-brand-orange/10',
+      textColor: 'text-brand-orange',
+      bgColor: 'bg-brand-orange/5'
     },
     {
       id: 'omega',
-      name: 'Omega',
-      price: '£99.99/month',
-      description: 'Full feature access for enterprise',
-      features: ['Everything in Beta', 'Multi-location management', 'Custom integrations', 'API access', 'White-label options', '24/7 phone support'],
+      name: 'Ω Omega',
+      symbol: 'Ω',
+      price: '£99/month',
+      fee: '1% transaction fee',
+      description: 'Complete platform control for enterprise',
+      features: ['Everything in Beta', 'Multi-location management', 'Custom integrations', 'API access', 'White-label options', 'Platform ownership', '24/7 phone support'],
       current: currentPlan === 'omega',
-      icon: Crown,
-      color: 'bg-purple-100 text-purple-800'
+      gradient: 'from-brand-black/20 to-brand-black/10',
+      textColor: 'text-brand-black',
+      bgColor: 'bg-brand-black/5'
     }
   ];
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-600">Manage your subscription and account preferences</p>
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-brand-orange to-brand-black bg-clip-text text-transparent">
+          Fynlo Settings
+        </h1>
+        <p className="text-muted-foreground">Manage your subscription and account preferences</p>
       </div>
 
       {/* Current Plan Status */}
@@ -75,11 +86,13 @@ export const DashboardSettings = () => {
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-3">
-            <Badge className={plans.find(p => p.id === currentPlan)?.color}>
+            <Badge className="bg-brand-orange text-white">
               {plans.find(p => p.id === currentPlan)?.name} Plan
             </Badge>
             {isPlatformOwner() && (
-              <Badge variant="outline">Platform Owner</Badge>
+              <Badge variant="outline" className="border-brand-black text-brand-black">
+                Platform Owner
+              </Badge>
             )}
           </div>
           <p className="text-sm text-gray-600 mt-2">
@@ -93,44 +106,59 @@ export const DashboardSettings = () => {
         <h2 className="text-xl font-semibold mb-4">Available Plans</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans.map((plan) => {
-            const Icon = plan.icon;
             return (
-              <Card key={plan.id} className={`relative ${plan.current ? 'ring-2 ring-primary' : ''}`}>
+              <Card key={plan.id} className={`relative overflow-hidden ${plan.current ? 'ring-2 ring-brand-orange' : ''} ${plan.bgColor}`}>
                 {plan.current && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-primary text-primary-foreground">Current Plan</Badge>
+                    <Badge className="bg-brand-orange text-white">Current Plan</Badge>
                   </div>
                 )}
-                <CardHeader className="text-center">
-                  <div className="mx-auto w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                    <Icon className="w-6 h-6 text-gray-600" />
+                
+                {/* Gradient background */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${plan.gradient} opacity-50`} />
+                
+                <CardHeader className="text-center relative z-10">
+                  {/* Greek symbol */}
+                  <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-gradient-to-br ${plan.gradient} border-2 border-white shadow-lg`}>
+                    <span className={`text-2xl font-bold ${plan.textColor}`}>
+                      {plan.symbol}
+                    </span>
                   </div>
-                  <CardTitle>{plan.name}</CardTitle>
-                  <div className="text-2xl font-bold text-primary">{plan.price}</div>
-                  <p className="text-sm text-gray-600">{plan.description}</p>
+                  <CardTitle className={`text-xl ${plan.textColor}`}>{plan.name}</CardTitle>
+                  <div className="space-y-1">
+                    <div className={`text-3xl font-bold ${plan.textColor}`}>{plan.price}</div>
+                    <div className="text-sm text-muted-foreground">{plan.fee}</div>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{plan.description}</p>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <ul className="space-y-2">
+                <CardContent className="space-y-4 relative z-10">
+                  <ul className="space-y-3">
                     {plan.features.map((feature, index) => (
-                      <li key={index} className="flex items-center text-sm">
-                        <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                        {feature}
+                      <li key={index} className="flex items-start text-sm">
+                        <Check className="w-4 h-4 text-brand-orange mr-3 flex-shrink-0 mt-0.5" />
+                        <span className="text-foreground">{feature}</span>
                       </li>
                     ))}
                   </ul>
                   
                   {!plan.current && plan.id !== 'alpha' && (
                     <Button 
-                      className="w-full"
+                      className="w-full bg-brand-orange hover:bg-brand-orange/90 text-white border-0"
                       onClick={() => handleUpgrade(plan.id as 'beta' | 'omega')}
                     >
-                      Upgrade to {plan.name}
+                      Upgrade to {plan.name.split(' ')[1]}
                     </Button>
                   )}
                   
                   {plan.current && (
-                    <Button variant="outline" className="w-full" disabled>
+                    <Button variant="outline" className={`w-full border-2 ${plan.textColor} bg-white/50`} disabled>
                       Current Plan
+                    </Button>
+                  )}
+                  
+                  {plan.id === 'alpha' && !plan.current && (
+                    <Button variant="outline" className="w-full" disabled>
+                      Free Plan
                     </Button>
                   )}
                 </CardContent>
