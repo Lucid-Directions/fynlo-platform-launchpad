@@ -324,6 +324,157 @@ export const DashboardSettings = () => {
             </CardContent>
           </Card>
 
+          {/* Infrastructure Configuration */}
+          <Card className="mb-8 bg-white shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-2xl text-brand-black">
+                <Building className="w-6 h-6 text-brand-orange" />
+                Infrastructure Configuration
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* DigitalOcean Configuration */}
+              <div className="p-6 bg-blue-50 rounded-xl border border-blue-200">
+                <h3 className="text-xl font-bold text-brand-black mb-4 flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-blue-600" />
+                  DigitalOcean Configuration
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="do-api-token" className="text-brand-black font-medium">DigitalOcean API Token</Label>
+                    <Input
+                      id="do-api-token"
+                      type="password"
+                      placeholder="Enter your DO API token"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="do-database-url" className="text-brand-black font-medium">Database Connection URL</Label>
+                    <Input
+                      id="do-database-url"
+                      type="password"
+                      placeholder="postgres://user:pass@host:port/db"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="do-app-platform-id" className="text-brand-black font-medium">App Platform ID</Label>
+                    <Input
+                      id="do-app-platform-id"
+                      placeholder="Enter your App Platform ID"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="do-cache-url" className="text-brand-black font-medium">Cache URL (Redis)</Label>
+                    <Input
+                      id="do-cache-url"
+                      type="password"
+                      placeholder="redis://user:pass@host:port"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="valkyrie-config" className="text-brand-black font-medium">Valkyrie Configuration</Label>
+                    <Input
+                      id="valkyrie-config"
+                      type="password"
+                      placeholder="Valkyrie service configuration"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="deployment-webhook" className="text-brand-black font-medium">Deployment Webhook URL</Label>
+                    <Input
+                      id="deployment-webhook"
+                      type="password"
+                      placeholder="Webhook URL for deployments"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Supabase Configuration */}
+              <div className="p-6 bg-green-50 rounded-xl border border-green-200">
+                <h3 className="text-xl font-bold text-brand-black mb-4 flex items-center gap-2">
+                  <Key className="w-5 h-5 text-green-600" />
+                  Supabase Configuration
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="supabase-url" className="text-brand-black font-medium">Supabase URL</Label>
+                    <Input
+                      id="supabase-url"
+                      placeholder="https://xxx.supabase.co"
+                      defaultValue="https://eweggzpvuqczrrrwszyy.supabase.co"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="supabase-anon-key" className="text-brand-black font-medium">Supabase Anon Key</Label>
+                    <Input
+                      id="supabase-anon-key"
+                      type="password"
+                      placeholder="Enter your Supabase anon key"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="supabase-service-key" className="text-brand-black font-medium">Supabase Service Role Key</Label>
+                    <Input
+                      id="supabase-service-key"
+                      type="password"
+                      placeholder="Enter your Supabase service role key"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="jwt-secret" className="text-brand-black font-medium">JWT Secret</Label>
+                    <Input
+                      id="jwt-secret"
+                      type="password"
+                      placeholder="Enter JWT secret for token verification"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Environment Variables */}
+              <div className="p-6 bg-purple-50 rounded-xl border border-purple-200">
+                <h3 className="text-xl font-bold text-brand-black mb-4 flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-purple-600" />
+                  Environment Variables
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="environment" className="text-brand-black font-medium">Environment</Label>
+                    <Input
+                      id="environment"
+                      placeholder="production / staging / development"
+                      defaultValue="production"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="cors-origin" className="text-brand-black font-medium">CORS Origin</Label>
+                    <Input
+                      id="cors-origin"
+                      placeholder="https://yourdomain.com"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="log-level" className="text-brand-black font-medium">Log Level</Label>
+                    <Input
+                      id="log-level"
+                      placeholder="info / debug / error"
+                      defaultValue="info"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="rate-limit" className="text-brand-black font-medium">Rate Limit (per minute)</Label>
+                    <Input
+                      id="rate-limit"
+                      placeholder="60"
+                      defaultValue="60"
+                    />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* API Configuration */}
           <Card className="bg-white shadow-lg">
             <CardHeader>
@@ -345,7 +496,7 @@ export const DashboardSettings = () => {
                   </p>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <Button variant="outline" className="h-16 flex-col gap-2">
                     <BarChart3 className="w-5 h-5" />
                     View API Analytics
@@ -353,6 +504,10 @@ export const DashboardSettings = () => {
                   <Button variant="outline" className="h-16 flex-col gap-2">
                     <Key className="w-5 h-5" />
                     Manage API Keys
+                  </Button>
+                  <Button variant="outline" className="h-16 flex-col gap-2">
+                    <Globe className="w-5 h-5" />
+                    Test Connections
                   </Button>
                 </div>
               </div>
