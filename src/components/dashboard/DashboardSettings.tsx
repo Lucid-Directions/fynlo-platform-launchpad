@@ -70,8 +70,12 @@ export const DashboardSettings = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-brand-orange to-brand-black bg-clip-text text-transparent">
-          Fynlo Settings
+        <h1 className="text-3xl font-bold text-brand-black flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-brand-orange rounded-full"></div>
+            <span>Fynlo</span>
+          </div>
+          Settings
         </h1>
         <p className="text-muted-foreground">Manage your subscription and account preferences</p>
       </div>
