@@ -810,13 +810,74 @@ export const DashboardSettings = () => {
             </CardContent>
           </Card>
 
-          {/* Save All Settings - Floating Action */}
+          {/* Save Settings Section */}
+          <Card className="bg-white shadow-lg border-2 border-orange-200">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {hasUnsavedChanges ? (
+                    <>
+                      <AlertCircle className="w-6 h-6 text-amber-500" />
+                      <div>
+                        <h3 className="font-bold text-amber-700">Unsaved Changes</h3>
+                        <p className="text-sm text-amber-600">You have modified settings that need to be saved</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="w-6 h-6 text-green-600" />
+                      <div>
+                        <h3 className="font-bold text-green-700">All Settings Saved</h3>
+                        <p className="text-sm text-green-600">Your platform configuration is up to date</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div className="flex gap-3">
+                  {hasUnsavedChanges && (
+                    <Button 
+                      variant="outline"
+                      onClick={() => {
+                        loadPlatformSettings();
+                        setHasUnsavedChanges(false);
+                      }}
+                    >
+                      Reset Changes
+                    </Button>
+                  )}
+                  <Button 
+                    onClick={savePlatformSettings}
+                    size="lg"
+                    className={`px-8 font-semibold ${
+                      hasUnsavedChanges 
+                        ? 'bg-brand-orange hover:bg-orange-600 text-white' 
+                        : 'bg-green-600 hover:bg-green-700 text-white'
+                    }`}
+                  >
+                    {hasUnsavedChanges ? (
+                      <>
+                        <Settings className="w-5 h-5 mr-2" />
+                        Save All Settings
+                      </>
+                    ) : (
+                      <>
+                        <Check className="w-5 h-5 mr-2" />
+                        All Settings Saved
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Save All Settings - Floating Action (backup) */}
           {hasUnsavedChanges && (
             <div className="fixed bottom-6 right-6 z-50">
               <Button 
                 onClick={savePlatformSettings}
                 size="lg"
-                className="bg-green-600 hover:bg-green-700 text-white shadow-lg px-8 py-4 text-lg font-semibold"
+                className="bg-brand-orange hover:bg-orange-600 text-white shadow-xl px-8 py-4 text-lg font-semibold animate-pulse"
               >
                 <Check className="w-5 h-5 mr-2" />
                 Save All Settings
