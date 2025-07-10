@@ -27,7 +27,21 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     )
 
-    const { restaurant_id, date_from, date_to } = await req.json();
+    // Allow both GET and POST requests
+    let restaurant_id, date_from, date_to;
+    
+    if (req.method === 'POST') {
+      const body = await req.json();
+      restaurant_id = body.restaurant_id;
+      date_from = body.date_from;
+      date_to = body.date_to;
+    } else {
+      // GET request - extract from URL params
+      const url = new URL(req.url);
+      restaurant_id = url.searchParams.get('restaurant_id');
+      date_from = url.searchParams.get('date_from');
+      date_to = url.searchParams.get('date_to');
+    }
     
     console.log('Fetching payment analytics for:', { restaurant_id, date_from, date_to });
 
@@ -38,20 +52,31 @@ Deno.serve(async (req) => {
       recentTransactions: [],
     };
 
-    // Fetch data from local database first
-    const { data: localPayments } = await supabaseClient
+    // Build query based on whether restaurant_id is provided
+    let query = supabaseClient
       .from('payments')
       .select('*')
-      .eq('restaurant_id', restaurant_id)
-      .gte('created_at', date_from || new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+      .gte('created_at', date_from || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
       .lte('created_at', date_to || new Date().toISOString())
       .order('created_at', { ascending: false });
+    
+    // Only filter by restaurant if provided
+    if (restaurant_id) {
+      query = query.eq('restaurant_id', restaurant_id);
+    }
+    
+    const { data: localPayments, error } = await query;
 
-    if (localPayments) {
+    if (error) {
+      console.error('Error fetching payments:', error);
+    } else if (localPayments) {
       analytics.totalTransactions = localPayments.length;
       analytics.totalRevenue = localPayments.reduce((sum, payment) => sum + parseFloat(payment.amount.toString()), 0);
       analytics.avgTransactionValue = analytics.totalTransactions > 0 ? analytics.totalRevenue / analytics.totalTransactions : 0;
       analytics.recentTransactions = localPayments.slice(0, 10);
+      console.log(`Found ${localPayments.length} payments with total revenue: £${analytics.totalRevenue}`);
+    } else {
+      console.log('No payment data found in database');
     }
 
     // Fetch from Stripe if available
