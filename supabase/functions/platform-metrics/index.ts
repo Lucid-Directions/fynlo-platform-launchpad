@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     )
 
-    console.log('Fetching platform metrics...');
+    console.log('Fetching real platform metrics from database...');
 
     const metrics: PlatformMetrics = {
       activeBusinesses: 0,
@@ -61,47 +61,101 @@ Deno.serve(async (req) => {
       },
     };
 
-    // For testing with Chucho restaurant - override with realistic test data
-    metrics.activeBusinesses = 1;
-    metrics.totalTransactions = 156;
-    metrics.totalRevenue = 5240.50;
-    metrics.growthMetrics = {
-      businessGrowth: 25.5,
-      revenueGrowth: 18.2,
-      transactionGrowth: 22.1
-    };
+    // Fetch active restaurants count
+    const { data: restaurants, error: restaurantsError } = await supabaseClient
+      .from('restaurants')
+      .select('id')
+      .eq('is_active', true);
 
-    // Add Chucho restaurant activity
-    metrics.recentActivity = [
-      {
-        id: 'chu001',
-        type: 'subscription',
-        description: 'Chucho restaurant (arnaud@luciddirections.co.uk) upgraded to Omega plan',
-        timestamp: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
-        status: 'completed',
-      },
-      {
-        id: 'chu002', 
-        type: 'payment',
-        description: 'Payment of £32.44 processed via Stripe for Chucho',
-        timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
-        status: 'completed',
-      },
-      {
-        id: 'chu003',
-        type: 'order',
-        description: 'New order #CHU001 from Chucho - Carnitas Taco',
-        timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
-        status: 'completed',
+    if (!restaurantsError && restaurants) {
+      metrics.activeBusinesses = restaurants.length;
+      console.log(`Found ${restaurants.length} active businesses`);
+    } else {
+      console.log('No restaurants found or error:', restaurantsError);
+    }
+
+    // Fetch total revenue from payments
+    const { data: payments, error: paymentsError } = await supabaseClient
+      .from('payments')
+      .select('amount')
+      .eq('payment_status', 'completed');
+
+    if (!paymentsError && payments) {
+      metrics.totalRevenue = payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
+      console.log(`Total revenue: £${metrics.totalRevenue}`);
+    } else {
+      console.log('No payments found or error:', paymentsError);
+    }
+
+    // Fetch total transactions count
+    const { data: orders, error: ordersCountError } = await supabaseClient
+      .from('orders')
+      .select('id');
+
+    if (!ordersCountError && orders) {
+      metrics.totalTransactions = orders.length;
+      console.log(`Total transactions: ${metrics.totalTransactions}`);
+    } else {
+      console.log('No orders found or error:', ordersCountError);
+    }
+
+    // Calculate growth metrics (compare last 30 days vs previous 30 days)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const sixtyDaysAgo = new Date();
+    sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+
+    // Revenue growth
+    const { data: recentPayments } = await supabaseClient
+      .from('payments')
+      .select('amount, created_at')
+      .eq('payment_status', 'completed')
+      .gte('created_at', thirtyDaysAgo.toISOString());
+
+    const { data: previousPayments } = await supabaseClient
+      .from('payments')
+      .select('amount, created_at')
+      .eq('payment_status', 'completed')
+      .gte('created_at', sixtyDaysAgo.toISOString())
+      .lt('created_at', thirtyDaysAgo.toISOString());
+
+    if (recentPayments && previousPayments) {
+      const recentRevenue = recentPayments.reduce((sum, p) => sum + Number(p.amount), 0);
+      const previousRevenue = previousPayments.reduce((sum, p) => sum + Number(p.amount), 0);
+      
+      if (previousRevenue > 0) {
+        metrics.growthMetrics.revenueGrowth = ((recentRevenue - previousRevenue) / previousRevenue) * 100;
       }
-    ];
+    }
 
-    // Get recent activity
-    const { data: recentOrders } = await supabaseClient
+    // Transaction growth
+    const { data: recentOrders30 } = await supabaseClient
+      .from('orders')
+      .select('id')
+      .gte('created_at', thirtyDaysAgo.toISOString());
+
+    const { data: previousOrders30 } = await supabaseClient
+      .from('orders')
+      .select('id')
+      .gte('created_at', sixtyDaysAgo.toISOString())
+      .lt('created_at', thirtyDaysAgo.toISOString());
+
+    if (recentOrders30 && previousOrders30) {
+      const recentCount = recentOrders30.length;
+      const previousCount = previousOrders30.length;
+      
+      if (previousCount > 0) {
+        metrics.growthMetrics.transactionGrowth = ((recentCount - previousCount) / previousCount) * 100;
+      }
+    }
+
+    // Get recent activity from orders
+    const { data: recentOrders, error: ordersError } = await supabaseClient
       .from('orders')
       .select(`
         id, 
         order_number, 
+        total_amount,
         created_at, 
         status,
         restaurants (name)
@@ -109,14 +163,25 @@ Deno.serve(async (req) => {
       .order('created_at', { ascending: false })
       .limit(10);
 
-    if (recentOrders) {
+    if (!ordersError && recentOrders && recentOrders.length > 0) {
       metrics.recentActivity = recentOrders.map(order => ({
         id: order.id,
         type: 'order',
-        description: `New order #${order.order_number} from ${order.restaurants?.name || 'Unknown Restaurant'}`,
+        description: `Order #${order.order_number} - £${Number(order.total_amount).toFixed(2)} from ${order.restaurants?.name || 'Unknown Restaurant'}`,
         timestamp: order.created_at,
         status: order.status,
       }));
+      console.log(`Found ${recentOrders.length} recent orders`);
+    } else {
+      // Add a system message when no orders exist
+      metrics.recentActivity = [{
+        id: 'system-message',
+        type: 'system',
+        description: 'Platform connected successfully. Database ready for first orders.',
+        timestamp: new Date().toISOString(),
+        status: 'info',
+      }];
+      console.log('No orders found, showing system message');
     }
 
     // Test database connection for system health
