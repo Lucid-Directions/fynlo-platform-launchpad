@@ -67,28 +67,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const isPlatformOwner = userRole === 'admin';
     
     let restaurantId: string | undefined;
+    let isRestaurantOwner = false;
     
-    // For non-platform owners, fetch their restaurant association
-    if (!isPlatformOwner && userId) {
+    // Check if user owns a restaurant directly
+    if (userId) {
       try {
-        const { data } = await supabase
-          .rpc('get_user_restaurant_id', { _user_id: userId });
-        restaurantId = data;
+        const { data: ownedRestaurants } = await supabase
+          .from('restaurants')
+          .select('id')
+          .eq('owner_id', userId)
+          .eq('is_active', true);
+        
+        if (ownedRestaurants && ownedRestaurants.length > 0) {
+          restaurantId = ownedRestaurants[0].id;
+          isRestaurantOwner = true;
+        } else {
+          // If not a restaurant owner, check if they're associated with a restaurant as staff
+          const { data } = await supabase
+            .rpc('get_user_restaurant_id', { _user_id: userId });
+          restaurantId = data;
+        }
       } catch (error) {
-        console.error('Error fetching user restaurant ID:', error);
+        console.error('Error fetching restaurant data:', error);
       }
     }
+    
+    // Restaurant owners get Omega plan, platform owners get Omega, others get Beta
+    const subscriptionPlan = isPlatformOwner || isRestaurantOwner ? 'omega' : 'beta';
     
     setFynloUserData({
       is_platform_owner: isPlatformOwner,
       restaurant_id: restaurantId,
-      subscription_plan: isPlatformOwner ? 'omega' : 'beta',
+      subscription_plan: subscriptionPlan,
       enabled_features: isPlatformOwner ? [
         'business_management',
         'subscription_management', 
         'system_health',
         'advanced_analytics',
         'payment_settings'
+      ] : isRestaurantOwner ? [
+        'inventory_management',
+        'staff_management',
+        'customer_database',
+        'advanced_reports',
+        'menu_management',
+        'order_management',
+        'payment_processing',
+        'table_management'
       ] : [
         'inventory_management',
         'staff_management',

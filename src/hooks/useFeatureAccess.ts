@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useEffect, useState } from 'react';
 
 export const useFeatureAccess = () => {
-  const { user, userRole } = useAuth();
+  const { user, userRole, fynloUserData } = useAuth();
   const [subscriptionData, setSubscriptionData] = useState<{
     subscription_plan: 'alpha' | 'beta' | 'omega';
     is_platform_owner: boolean;
@@ -11,29 +11,22 @@ export const useFeatureAccess = () => {
   } | null>(null);
 
   useEffect(() => {
-    const fetchSubscriptionData = async () => {
-      if (!user) return;
-      
-      const { data } = await supabase
-        .from('user_subscriptions')
-        .select('subscription_plan, is_platform_owner, enabled_features')
-        .eq('user_id', user.id)
-        .single();
-      
-      if (data) {
-        setSubscriptionData(data as { subscription_plan: 'alpha' | 'beta' | 'omega'; is_platform_owner: boolean; enabled_features: string[]; });
-      } else {
-        // Default subscription data if none exists
-        setSubscriptionData({
-          subscription_plan: 'alpha',
-          is_platform_owner: false,
-          enabled_features: []
-        });
-      }
-    };
-
-    fetchSubscriptionData();
-  }, [user]);
+    // Use the fynloUserData from AuthContext instead of making separate API calls
+    if (fynloUserData) {
+      setSubscriptionData({
+        subscription_plan: fynloUserData.subscription_plan,
+        is_platform_owner: fynloUserData.is_platform_owner,
+        enabled_features: fynloUserData.enabled_features
+      });
+    } else if (user) {
+      // Fallback to default if no fynloUserData
+      setSubscriptionData({
+        subscription_plan: 'alpha',
+        is_platform_owner: false,
+        enabled_features: []
+      });
+    }
+  }, [user, fynloUserData]);
 
   const hasFeature = (featureKey: string): boolean => {
     if (!subscriptionData) return false;
@@ -64,9 +57,7 @@ export const useFeatureAccess = () => {
   };
 
   const getRestaurantId = () => {
-    // This would need to be fetched from restaurants table or stored in subscription data
-    // For now, returning null as it's not in the subscription table
-    return null;
+    return fynloUserData?.restaurant_id || null;
   };
 
   const isAdmin = (): boolean => {
