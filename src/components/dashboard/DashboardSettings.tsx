@@ -20,7 +20,8 @@ interface PlatformStats {
 }
 
 interface PlatformSettings {
-  sumupApiKey?: string;
+  sumupPlatformApiKey?: string;
+  sumupRestaurantApiKey?: string;
   paymentMethods: {
     sumup: boolean;
     stripe: boolean;
@@ -51,7 +52,8 @@ export const DashboardSettings = () => {
   });
 
   // Platform admin settings state - now persistent and auto-populated
-  const [sumUpApiKey, setSumUpApiKey] = useState('sup_sk_Eeh3NQTbrGWjwXCe3Xmz8AgI8MiVA65N7');
+  const [sumupPlatformApiKey, setSumupPlatformApiKey] = useState('sup_sk_Eeh3NQTbrGWjwXCe3Xmz8AgI8MiVA65N7');
+  const [sumupRestaurantApiKey, setSumupRestaurantApiKey] = useState('');
   const [stripeSecretKey, setStripeSecretKey] = useState('sk_test_development_key_placeholder');
   const [squareAccessToken, setSquareAccessToken] = useState('EAAAlw3Uvq6PutIC6j87XYtwYe3zeSbHuPbmHy7-D0S1rI7s3ORmKg-JUFbtdgMD');
   const [databaseUrl, setDatabaseUrl] = useState('postgresql://doadmin:AVNS_DKOJkLvWZuR3j-QO1zW@fynlo-pos-db-do-user-23457625-0.i.db.ondigitalocean.com:25060/defaultdb?sslmode=require');
@@ -134,7 +136,8 @@ export const DashboardSettings = () => {
       const savedSettings = localStorage.getItem('fynlo_platform_settings');
       if (savedSettings) {
         const settings: PlatformSettings = JSON.parse(savedSettings);
-        setSumUpApiKey(settings.sumupApiKey || '');
+        setSumupPlatformApiKey(settings.sumupPlatformApiKey || '');
+        setSumupRestaurantApiKey(settings.sumupRestaurantApiKey || '');
         setPaymentMethods(settings.paymentMethods);
         setSystemSettings(settings.systemSettings);
         setSettingsSaved(true);
@@ -147,7 +150,8 @@ export const DashboardSettings = () => {
   const savePlatformSettings = async () => {
     try {
       const settings: PlatformSettings = {
-        sumupApiKey: sumUpApiKey,
+        sumupPlatformApiKey: sumupPlatformApiKey,
+        sumupRestaurantApiKey: sumupRestaurantApiKey,
         paymentMethods,
         systemSettings
       };
@@ -181,7 +185,7 @@ export const DashboardSettings = () => {
   };
 
   const handleSumUpConnect = async () => {
-    if (!sumUpApiKey.trim()) {
+    if (!sumupPlatformApiKey.trim()) {
       toast({
         title: "API Key Required",
         description: "Please enter your SumUp API key to connect your account.",
@@ -199,7 +203,7 @@ export const DashboardSettings = () => {
   };
 
   const handleSumUpApiKeyChange = (value: string) => {
-    setSumUpApiKey(value);
+    setSumupPlatformApiKey(value);
     setSettingsSaved(false);
     setHasUnsavedChanges(true);
   };
@@ -430,57 +434,80 @@ export const DashboardSettings = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* SumUp Integration */}
+              {/* SumUp Platform Integration */}
               <div className="p-6 bg-orange-50 rounded-xl border border-orange-200">
                 <h3 className="text-xl font-bold text-brand-black mb-4 flex items-center gap-2">
                   <Globe className="w-5 h-5 text-brand-orange" />
-                  SumUp Integration
+                  SumUp Platform Integration (Client Subscriptions)
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="sumup-api-key" className="text-brand-black font-medium">SumUp API Key</Label>
+                      <Label htmlFor="sumup-platform-api-key" className="text-brand-black font-medium">SumUp Platform API Key</Label>
                       <Input
-                        id="sumup-api-key"
+                        id="sumup-platform-api-key"
                         type="password"
-                        placeholder="Enter your SumUp API key"
-                        value={sumUpApiKey}
-                        onChange={(e) => handleSumUpApiKeyChange(e.target.value)}
+                        placeholder="Enter your SumUp platform API key"
+                        value={sumupPlatformApiKey}
+                        onChange={(e) => handleCredentialChange(setSumupPlatformApiKey)(e.target.value)}
                         className="mt-1"
                       />
-                    </div>
-                    <div className="flex gap-2">
-                      <Button 
-                        onClick={handleSumUpConnect}
-                        className="bg-brand-orange hover:bg-orange-600 text-white flex-1"
-                      >
-                        {sumUpApiKey ? 'Update SumUp Key' : 'Connect SumUp Account'}
-                      </Button>
-                      {!settingsSaved && (
-                        <Button 
-                          onClick={savePlatformSettings}
-                          variant="outline"
-                          className="px-4"
-                        >
-                          Save All
-                        </Button>
-                      )}
                     </div>
                   </div>
                   <div className="space-y-3">
                     <h4 className="font-semibold text-brand-black">Integration Status</h4>
                     <div className="flex items-center gap-2">
                       <div className={`w-3 h-3 rounded-full ${
-                        sumUpApiKey && settingsSaved ? 'bg-green-500' : 'bg-yellow-400'
+                        sumupPlatformApiKey && settingsSaved ? 'bg-green-500' : 'bg-yellow-400'
                       }`}></div>
                       <span className="text-sm text-brand-gray">
-                        {sumUpApiKey && settingsSaved ? 'Connected & Saved' : sumUpApiKey ? 'Key Entered - Click Save' : 'Not Connected'}
+                        {sumupPlatformApiKey && settingsSaved ? 'Connected & Saved' : sumupPlatformApiKey ? 'Key Entered - Click Save' : 'Not Connected'}
                       </span>
                     </div>
                     <p className="text-sm text-brand-gray">
-                      {sumUpApiKey && settingsSaved 
-                        ? 'Your SumUp API key is saved and ready for payment processing.'
-                        : 'Connect your SumUp account to enable payment processing for all restaurants on the platform.'
+                      {sumupPlatformApiKey && settingsSaved 
+                        ? 'Your SumUp platform API key is ready for client subscription processing.'
+                        : 'Platform admin uses this for processing client subscription payments.'
+                      }
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* SumUp Restaurant Integration */}
+              <div className="p-6 bg-green-50 rounded-xl border border-green-200">
+                <h3 className="text-xl font-bold text-brand-black mb-4 flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-green-600" />
+                  SumUp Restaurant Integration (Restaurant Sales)
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="sumup-restaurant-api-key" className="text-brand-black font-medium">SumUp Restaurant API Key</Label>
+                      <Input
+                        id="sumup-restaurant-api-key"
+                        type="password"
+                        placeholder="Enter your SumUp restaurant API key"
+                        value={sumupRestaurantApiKey}
+                        onChange={(e) => handleCredentialChange(setSumupRestaurantApiKey)(e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-brand-black">Integration Status</h4>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${
+                        sumupRestaurantApiKey && settingsSaved ? 'bg-green-500' : 'bg-yellow-400'
+                      }`}></div>
+                      <span className="text-sm text-brand-gray">
+                        {sumupRestaurantApiKey && settingsSaved ? 'Connected & Saved' : sumupRestaurantApiKey ? 'Key Entered - Click Save' : 'Not Connected'}
+                      </span>
+                    </div>
+                    <p className="text-sm text-brand-gray">
+                      {sumupRestaurantApiKey && settingsSaved 
+                        ? 'Your SumUp restaurant API key is ready for restaurant sales processing.'
+                        : 'Restaurants use this for processing customer payments and sales.'
                       }
                     </p>
                   </div>

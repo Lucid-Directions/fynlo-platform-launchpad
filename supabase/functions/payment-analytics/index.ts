@@ -79,8 +79,8 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Fetch from SumUp if available
-    const sumupKey = Deno.env.get('SUMUP_API_KEY');
+    // Fetch from SumUp Restaurant API if available
+    const sumupKey = Deno.env.get('SUMUP_RESTAURANT_API_KEY');
     if (sumupKey) {
       try {
         const sumupResponse = await fetch('https://api.sumup.com/v0.1/me/transactions', {
