@@ -54,21 +54,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       setUserRole(role);
-      setDefaultFynloUserData(role);
+      await setDefaultFynloUserData(role, userId);
     } catch (error) {
       console.error('Error fetching user role:', error);
       setUserRole('customer');
-      setDefaultFynloUserData('customer');
+      await setDefaultFynloUserData('customer', userId);
     }
   };
 
-  const setDefaultFynloUserData = (userRole: string | null) => {
+  const setDefaultFynloUserData = async (userRole: string | null, userId: string) => {
     // For Supabase-only setup, determine platform owner status from user role
     const isPlatformOwner = userRole === 'admin';
     
+    let restaurantId: string | undefined;
+    
+    // For non-platform owners, fetch their restaurant association
+    if (!isPlatformOwner && userId) {
+      try {
+        const { data } = await supabase
+          .rpc('get_user_restaurant_id', { _user_id: userId });
+        restaurantId = data;
+      } catch (error) {
+        console.error('Error fetching user restaurant ID:', error);
+      }
+    }
+    
     setFynloUserData({
       is_platform_owner: isPlatformOwner,
-      restaurant_id: !isPlatformOwner ? 'restaurant_1' : undefined,
+      restaurant_id: restaurantId,
       subscription_plan: isPlatformOwner ? 'omega' : 'beta',
       enabled_features: isPlatformOwner ? [
         'business_management',

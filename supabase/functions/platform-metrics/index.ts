@@ -33,12 +33,56 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Get the authorization header
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Missing authorization header' }),
+        { status: 401, headers: corsHeaders }
+      );
+    }
+
+    // Create client with user's token for authentication
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-    )
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        global: {
+          headers: { authorization: authHeader },
+        },
+      }
+    );
+
+    // Verify user is authenticated and is platform owner
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: corsHeaders }
+      );
+    }
+
+    // Check if user is platform owner (admin role)
+    const { data: userRole } = await supabaseClient
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (userRole?.role !== 'admin') {
+      return new Response(
+        JSON.stringify({ error: 'Platform owner access required' }),
+        { status: 403, headers: corsHeaders }
+      );
+    }
 
     console.log('Fetching real platform metrics from database...');
+
+    // Create admin client for platform-wide data access
+    const adminClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    );
 
     const metrics: PlatformMetrics = {
       activeBusinesses: 0,
@@ -62,7 +106,7 @@ Deno.serve(async (req) => {
     };
 
     // Fetch active restaurants count
-    const { data: restaurants, error: restaurantsError } = await supabaseClient
+    const { data: restaurants, error: restaurantsError } = await adminClient
       .from('restaurants')
       .select('id')
       .eq('is_active', true);
@@ -75,7 +119,7 @@ Deno.serve(async (req) => {
     }
 
     // Fetch total revenue from payments
-    const { data: payments, error: paymentsError } = await supabaseClient
+    const { data: payments, error: paymentsError } = await adminClient
       .from('payments')
       .select('amount')
       .eq('payment_status', 'completed');
@@ -88,7 +132,7 @@ Deno.serve(async (req) => {
     }
 
     // Fetch total transactions count
-    const { data: orders, error: ordersCountError } = await supabaseClient
+    const { data: orders, error: ordersCountError } = await adminClient
       .from('orders')
       .select('id');
 
@@ -106,13 +150,13 @@ Deno.serve(async (req) => {
     sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
 
     // Revenue growth
-    const { data: recentPayments } = await supabaseClient
+    const { data: recentPayments } = await adminClient
       .from('payments')
       .select('amount, created_at')
       .eq('payment_status', 'completed')
       .gte('created_at', thirtyDaysAgo.toISOString());
 
-    const { data: previousPayments } = await supabaseClient
+    const { data: previousPayments } = await adminClient
       .from('payments')
       .select('amount, created_at')
       .eq('payment_status', 'completed')
@@ -129,12 +173,12 @@ Deno.serve(async (req) => {
     }
 
     // Transaction growth
-    const { data: recentOrders30 } = await supabaseClient
+    const { data: recentOrders30 } = await adminClient
       .from('orders')
       .select('id')
       .gte('created_at', thirtyDaysAgo.toISOString());
 
-    const { data: previousOrders30 } = await supabaseClient
+    const { data: previousOrders30 } = await adminClient
       .from('orders')
       .select('id')
       .gte('created_at', sixtyDaysAgo.toISOString())
@@ -150,7 +194,7 @@ Deno.serve(async (req) => {
     }
 
     // Get recent activity from orders
-    const { data: recentOrders, error: ordersError } = await supabaseClient
+    const { data: recentOrders, error: ordersError } = await adminClient
       .from('orders')
       .select(`
         id, 
@@ -186,7 +230,7 @@ Deno.serve(async (req) => {
 
     // Test database connection for system health
     try {
-      const { error: healthError } = await supabaseClient
+      const { error: healthError } = await adminClient
         .from('restaurants')
         .select('id')
         .limit(1);

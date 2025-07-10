@@ -22,10 +22,34 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Get the authorization header
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Missing authorization header' }),
+        { status: 401, headers: corsHeaders }
+      );
+    }
+
+    // Create client with user's token for authentication
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-    )
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        global: {
+          headers: { authorization: authHeader },
+        },
+      }
+    );
+
+    // Verify user is authenticated
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: corsHeaders }
+      );
+    }
 
     // Allow both GET and POST requests
     let restaurant_id, date_from, date_to;
@@ -45,6 +69,38 @@ Deno.serve(async (req) => {
     
     console.log('Fetching payment analytics for:', { restaurant_id, date_from, date_to });
 
+    // Check user permissions - platform owners can access all data, others only their restaurant
+    const { data: userRole } = await supabaseClient
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    const isPlatformOwner = userRole?.role === 'admin';
+
+    // If not platform owner and no restaurant_id provided, get user's restaurant
+    if (!isPlatformOwner && !restaurant_id) {
+      const { data: userRestaurantId } = await supabaseClient
+        .rpc('get_user_restaurant_id', { _user_id: user.id });
+      restaurant_id = userRestaurantId;
+    }
+
+    // Verify access to restaurant if specified
+    if (restaurant_id && !isPlatformOwner) {
+      const { data: hasAccess } = await supabaseClient
+        .rpc('user_has_restaurant_access', { 
+          _user_id: user.id, 
+          _restaurant_id: restaurant_id 
+        });
+      
+      if (!hasAccess) {
+        return new Response(
+          JSON.stringify({ error: 'Access denied to restaurant data' }),
+          { status: 403, headers: corsHeaders }
+        );
+      }
+    }
+
     const analytics: PaymentAnalytics = {
       totalRevenue: 0,
       totalTransactions: 0,
@@ -52,7 +108,7 @@ Deno.serve(async (req) => {
       recentTransactions: [],
     };
 
-    // Build query based on whether restaurant_id is provided
+    // Build query with proper access control
     let query = supabaseClient
       .from('payments')
       .select('*')
@@ -60,7 +116,7 @@ Deno.serve(async (req) => {
       .lte('created_at', date_to || new Date().toISOString())
       .order('created_at', { ascending: false });
     
-    // Only filter by restaurant if provided
+    // Filter by restaurant if provided (platform owners can see all, others restricted by RLS)
     if (restaurant_id) {
       query = query.eq('restaurant_id', restaurant_id);
     }

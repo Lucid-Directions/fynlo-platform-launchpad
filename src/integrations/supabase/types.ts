@@ -647,6 +647,44 @@ export type Database = {
           },
         ]
       }
+      user_restaurants: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          restaurant_id: string
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          restaurant_id: string
+          role?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          restaurant_id?: string
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_restaurants_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -703,6 +741,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_user_restaurant_id: {
+        Args: { _user_id: string }
+        Returns: string
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -712,6 +754,10 @@ export type Database = {
           _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
         }
+        Returns: boolean
+      }
+      user_has_restaurant_access: {
+        Args: { _user_id: string; _restaurant_id: string }
         Returns: boolean
       }
     }
