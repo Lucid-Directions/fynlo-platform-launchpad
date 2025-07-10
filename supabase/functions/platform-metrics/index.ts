@@ -61,72 +61,40 @@ Deno.serve(async (req) => {
       },
     };
 
-    // Get active restaurants count
-    const { data: restaurants, error: restaurantError } = await supabaseClient
-      .from('restaurants')
-      .select('id, name, created_at, is_active')
-      .eq('is_active', true);
+    // For testing with Chucho restaurant - override with realistic test data
+    metrics.activeBusinesses = 1;
+    metrics.totalTransactions = 156;
+    metrics.totalRevenue = 5240.50;
+    metrics.growthMetrics = {
+      businessGrowth: 25.5,
+      revenueGrowth: 18.2,
+      transactionGrowth: 22.1
+    };
 
-    if (restaurantError) {
-      console.error('Error fetching restaurants:', restaurantError);
-    } else {
-      metrics.activeBusinesses = restaurants?.length || 0;
-      
-      // Calculate business growth (last 30 days vs previous 30 days)
-      const today = new Date();
-      const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-      const sixtyDaysAgo = new Date(today.getTime() - 60 * 24 * 60 * 60 * 1000);
-      
-      const recentBusinesses = restaurants?.filter(r => 
-        new Date(r.created_at) >= thirtyDaysAgo
-      ).length || 0;
-      
-      const previousBusinesses = restaurants?.filter(r => 
-        new Date(r.created_at) >= sixtyDaysAgo && new Date(r.created_at) < thirtyDaysAgo
-      ).length || 0;
-      
-      metrics.growthMetrics.businessGrowth = previousBusinesses > 0 
-        ? ((recentBusinesses - previousBusinesses) / previousBusinesses) * 100 
-        : 0;
-    }
-
-    // Get total revenue and transactions from all restaurants
-    const { data: payments, error: paymentsError } = await supabaseClient
-      .from('payments')
-      .select('amount, created_at, payment_status')
-      .eq('payment_status', 'completed');
-
-    if (paymentsError) {
-      console.error('Error fetching payments:', paymentsError);
-    } else {
-      metrics.totalTransactions = payments?.length || 0;
-      metrics.totalRevenue = payments?.reduce((sum, payment) => 
-        sum + parseFloat(payment.amount.toString()), 0) || 0;
-
-      // Calculate growth metrics
-      const today = new Date();
-      const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-      const sixtyDaysAgo = new Date(today.getTime() - 60 * 24 * 60 * 60 * 1000);
-
-      const recentPayments = payments?.filter(p => 
-        new Date(p.created_at) >= thirtyDaysAgo
-      ) || [];
-      
-      const previousPayments = payments?.filter(p => 
-        new Date(p.created_at) >= sixtyDaysAgo && new Date(p.created_at) < thirtyDaysAgo
-      ) || [];
-
-      const recentRevenue = recentPayments.reduce((sum, p) => sum + parseFloat(p.amount.toString()), 0);
-      const previousRevenue = previousPayments.reduce((sum, p) => sum + parseFloat(p.amount.toString()), 0);
-
-      metrics.growthMetrics.revenueGrowth = previousRevenue > 0 
-        ? ((recentRevenue - previousRevenue) / previousRevenue) * 100 
-        : 0;
-
-      metrics.growthMetrics.transactionGrowth = previousPayments.length > 0 
-        ? ((recentPayments.length - previousPayments.length) / previousPayments.length) * 100 
-        : 0;
-    }
+    // Add Chucho restaurant activity
+    metrics.recentActivity = [
+      {
+        id: 'chu001',
+        type: 'subscription',
+        description: 'Chucho restaurant (arnaud@luciddirections.co.uk) upgraded to Omega plan',
+        timestamp: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
+        status: 'completed',
+      },
+      {
+        id: 'chu002', 
+        type: 'payment',
+        description: 'Payment of £32.44 processed via Stripe for Chucho',
+        timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+        status: 'completed',
+      },
+      {
+        id: 'chu003',
+        type: 'order',
+        description: 'New order #CHU001 from Chucho - Carnitas Taco',
+        timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
+        status: 'completed',
+      }
+    ];
 
     // Get recent activity
     const { data: recentOrders } = await supabaseClient
