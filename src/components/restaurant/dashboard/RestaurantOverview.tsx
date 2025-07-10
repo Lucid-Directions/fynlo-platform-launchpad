@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { 
   DollarSign, 
   ShoppingCart, 
@@ -9,9 +10,12 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  ChefHat
+  ChefHat,
+  CreditCard,
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { usePaymentAnalytics } from '@/hooks/usePaymentAnalytics';
 
 interface Restaurant {
   id: string;
@@ -52,6 +56,8 @@ export const RestaurantOverview: React.FC<RestaurantOverviewProps> = ({ restaura
 
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const { analytics, loading: analyticsLoading, refetch: refetchAnalytics } = usePaymentAnalytics(restaurant.id);
 
   useEffect(() => {
     fetchDashboardData();
@@ -213,6 +219,105 @@ export const RestaurantOverview: React.FC<RestaurantOverviewProps> = ({ restaura
           </CardContent>
         </Card>
       </div>
+
+      {/* Payment Analytics */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center">
+              <CreditCard className="w-5 h-5 mr-2" />
+              Payment Analytics
+            </div>
+            <Button onClick={() => refetchAnalytics()} disabled={analyticsLoading} size="sm" variant="outline">
+              <RefreshCw className={`w-4 h-4 mr-2 ${analyticsLoading ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {analyticsLoading ? (
+            <div className="text-center py-8">
+              <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" />
+              <p>Loading payment analytics...</p>
+            </div>
+          ) : analytics ? (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">External Payments</p>
+                      <p className="text-xl font-bold">£{analytics.totalRevenue.toFixed(2)}</p>
+                    </div>
+                    <DollarSign className="w-6 h-6 text-green-600" />
+                  </div>
+                </div>
+                
+                <div className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">External Transactions</p>
+                      <p className="text-xl font-bold">{analytics.totalTransactions}</p>
+                    </div>
+                    <CreditCard className="w-6 h-6 text-blue-600" />
+                  </div>
+                </div>
+                
+                <div className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Avg Transaction</p>
+                      <p className="text-xl font-bold">£{analytics.avgTransactionValue.toFixed(2)}</p>
+                    </div>
+                    <TrendingUp className="w-6 h-6 text-purple-600" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Provider Stats */}
+              <div className="border-t pt-4">
+                <h4 className="font-medium mb-3">Payment Provider Breakdown</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {analytics.stripeData && (
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-blue-900">Stripe</span>
+                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                      </div>
+                      <p className="text-lg font-bold text-blue-900">£{analytics.stripeData.revenue.toFixed(2)}</p>
+                      <p className="text-xs text-blue-700">{analytics.stripeData.charges} charges</p>
+                    </div>
+                  )}
+                  
+                  {analytics.sumupData && (
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-green-900">SumUp</span>
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                      </div>
+                      <p className="text-lg font-bold text-green-900">£{analytics.sumupData.revenue.toFixed(2)}</p>
+                      <p className="text-xs text-green-700">{analytics.sumupData.transactions} transactions</p>
+                    </div>
+                  )}
+                  
+                  {analytics.squareData && (
+                    <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-purple-900">Square</span>
+                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                      </div>
+                      <p className="text-lg font-bold text-purple-900">£{analytics.squareData.revenue.toFixed(2)}</p>
+                      <p className="text-xs text-purple-700">{analytics.squareData.payments} payments</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="text-gray-500 text-center py-8">No payment analytics available</p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Recent Orders */}
       <Card>

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFeatureAccess } from '@/hooks/useFeatureAccess';
+import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -32,6 +33,25 @@ export const DashboardOverview = () => {
 };
 
 const PlatformOwnerOverview = () => {
+  const [metrics, setMetrics] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('platform-metrics');
+        if (error) throw error;
+        setMetrics(data);
+      } catch (error) {
+        console.error('Error fetching platform metrics:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMetrics();
+  }, []);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -47,10 +67,14 @@ const PlatformOwnerOverview = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Active Businesses</p>
-                <p className="text-2xl font-bold text-gray-900">247</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {loading ? '...' : metrics?.activeBusinesses || 0}
+                </p>
                 <div className="flex items-center mt-1">
                   <TrendingUp className="w-4 h-4 text-green-500" />
-                  <span className="text-sm text-green-600 ml-1">+12% vs yesterday</span>
+                  <span className="text-sm text-green-600 ml-1">
+                    {loading ? '...' : `${metrics?.growthMetrics?.businessGrowth > 0 ? '+' : ''}${metrics?.growthMetrics?.businessGrowth?.toFixed(1) || 0}%`}
+                  </span>
                 </div>
               </div>
               <Building2 className="w-8 h-8 text-blue-600" />
@@ -62,11 +86,15 @@ const PlatformOwnerOverview = () => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Today's Revenue</p>
-                <p className="text-2xl font-bold text-gray-900">£24,589.23</p>
+                <p className="text-sm font-medium text-gray-600">Total Revenue</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {loading ? '...' : `£${(metrics?.totalRevenue || 0).toLocaleString('en-GB', { minimumFractionDigits: 2 })}`}
+                </p>
                 <div className="flex items-center mt-1">
                   <ArrowUpRight className="w-4 h-4 text-green-500" />
-                  <span className="text-sm text-green-600 ml-1">+8.3%</span>
+                  <span className="text-sm text-green-600 ml-1">
+                    {loading ? '...' : `${metrics?.growthMetrics?.revenueGrowth > 0 ? '+' : ''}${metrics?.growthMetrics?.revenueGrowth?.toFixed(1) || 0}%`}
+                  </span>
                 </div>
               </div>
               <DollarSign className="w-8 h-8 text-green-600" />
@@ -79,10 +107,14 @@ const PlatformOwnerOverview = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Transactions</p>
-                <p className="text-2xl font-bold text-gray-900">1,847</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {loading ? '...' : (metrics?.totalTransactions || 0).toLocaleString()}
+                </p>
                 <div className="flex items-center mt-1">
                   <TrendingUp className="w-4 h-4 text-blue-500" />
-                  <span className="text-sm text-blue-600 ml-1">+156 today</span>
+                  <span className="text-sm text-blue-600 ml-1">
+                    {loading ? '...' : `${metrics?.growthMetrics?.transactionGrowth > 0 ? '+' : ''}${metrics?.growthMetrics?.transactionGrowth?.toFixed(1) || 0}%`}
+                  </span>
                 </div>
               </div>
               <CreditCard className="w-8 h-8 text-purple-600" />
@@ -96,10 +128,22 @@ const PlatformOwnerOverview = () => {
               <div>
                 <p className="text-sm font-medium text-gray-600">System Health</p>
                 <div className="flex items-center mt-1">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                  <span className="text-lg font-semibold text-green-600">Operational</span>
+                  <div className={`w-2 h-2 rounded-full mr-2 ${
+                    loading ? 'bg-gray-400' : 
+                    metrics?.systemHealth?.status === 'operational' ? 'bg-green-500' : 
+                    metrics?.systemHealth?.status === 'degraded' ? 'bg-yellow-500' : 'bg-red-500'
+                  }`}></div>
+                  <span className={`text-lg font-semibold ${
+                    loading ? 'text-gray-500' :
+                    metrics?.systemHealth?.status === 'operational' ? 'text-green-600' :
+                    metrics?.systemHealth?.status === 'degraded' ? 'text-yellow-600' : 'text-red-600'
+                  }`}>
+                    {loading ? 'Loading...' : metrics?.systemHealth?.status?.charAt(0).toUpperCase() + metrics?.systemHealth?.status?.slice(1) || 'Unknown'}
+                  </span>
                 </div>
-                <p className="text-sm text-gray-500">99.9% uptime</p>
+                <p className="text-sm text-gray-500">
+                  {loading ? '...' : `${metrics?.systemHealth?.uptime || 99.9}% uptime`}
+                </p>
               </div>
               <Activity className="w-8 h-8 text-green-600" />
             </div>
