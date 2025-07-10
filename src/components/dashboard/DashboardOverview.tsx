@@ -177,29 +177,40 @@ const PlatformOwnerOverview = () => {
           <CardTitle>Recent Activity</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {[
-              { icon: Building2, text: 'New business "Mario\'s Pizza" registered', time: '2 minutes ago', type: 'success' },
-              { icon: AlertTriangle, text: 'High transaction volume detected', time: '15 minutes ago', type: 'warning' },
-              { icon: Users, text: '5 new restaurant users this hour', time: '1 hour ago', type: 'info' }
-            ].map((activity, index) => (
-              <div key={index} className="flex items-center space-x-3">
-                <div className={`p-2 rounded-full ${
-                  activity.type === 'success' ? 'bg-green-100' :
-                  activity.type === 'warning' ? 'bg-yellow-100' : 'bg-blue-100'
-                }`}>
-                  <activity.icon className={`w-4 h-4 ${
-                    activity.type === 'success' ? 'text-green-600' :
-                    activity.type === 'warning' ? 'text-yellow-600' : 'text-blue-600'
-                  }`} />
+          {loading ? (
+            <div className="text-center py-8 text-gray-500">Loading activity...</div>
+          ) : metrics?.recentActivity?.length ? (
+            <div className="space-y-4">
+              {metrics.recentActivity.map((activity, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <div className="p-2 rounded-full bg-blue-100">
+                    <Activity className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{activity.description}</p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(activity.timestamp).toLocaleString()}
+                    </p>
+                  </div>
+                  {activity.status && (
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      activity.status === 'completed' ? 'bg-green-100 text-green-700' :
+                      activity.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                      'bg-gray-100 text-gray-700'
+                    }`}>
+                      {activity.status}
+                    </span>
+                  )}
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{activity.text}</p>
-                  <p className="text-xs text-gray-500">{activity.time}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <Activity className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p>Platform connected successfully.</p>
+              <p className="text-sm">Activity will appear here when restaurants start processing orders.</p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
