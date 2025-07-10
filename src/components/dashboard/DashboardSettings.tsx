@@ -65,6 +65,7 @@ export const DashboardSettings = () => {
     multiLocationEnabled: true
   });
   const [settingsSaved, setSettingsSaved] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   // Load platform data and settings on mount
   useEffect(() => {
@@ -146,6 +147,7 @@ export const DashboardSettings = () => {
       
       localStorage.setItem('fynlo_platform_settings', JSON.stringify(settings));
       setSettingsSaved(true);
+      setHasUnsavedChanges(false);
       
       toast({
         title: "Settings Saved",
@@ -189,12 +191,19 @@ export const DashboardSettings = () => {
     });
   };
 
+  const handleSumUpApiKeyChange = (value: string) => {
+    setSumUpApiKey(value);
+    setSettingsSaved(false);
+    setHasUnsavedChanges(true);
+  };
+
   const togglePaymentMethod = (method: keyof typeof paymentMethods) => {
     setPaymentMethods(prev => ({
       ...prev,
       [method]: !prev[method]
     }));
     setSettingsSaved(false);
+    setHasUnsavedChanges(true);
   };
 
   const toggleSystemSetting = (setting: keyof typeof systemSettings) => {
@@ -203,6 +212,7 @@ export const DashboardSettings = () => {
       [setting]: !prev[setting]
     }));
     setSettingsSaved(false);
+    setHasUnsavedChanges(true);
   };
 
   const pricingPlans = [
@@ -421,7 +431,7 @@ export const DashboardSettings = () => {
                         type="password"
                         placeholder="Enter your SumUp API key"
                         value={sumUpApiKey}
-                        onChange={(e) => setSumUpApiKey(e.target.value)}
+                        onChange={(e) => handleSumUpApiKeyChange(e.target.value)}
                         className="mt-1"
                       />
                     </div>
@@ -684,6 +694,20 @@ export const DashboardSettings = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Save All Settings - Floating Action */}
+          {hasUnsavedChanges && (
+            <div className="fixed bottom-6 right-6 z-50">
+              <Button 
+                onClick={savePlatformSettings}
+                size="lg"
+                className="bg-green-600 hover:bg-green-700 text-white shadow-lg px-8 py-4 text-lg font-semibold"
+              >
+                <Check className="w-5 h-5 mr-2" />
+                Save All Settings
+              </Button>
+            </div>
+          )}
 
           {/* API Configuration */}
           <Card className="bg-white shadow-lg">
