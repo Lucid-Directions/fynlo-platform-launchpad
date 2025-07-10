@@ -50,8 +50,15 @@ export const DashboardSettings = () => {
     systemHealth: 'healthy'
   });
 
-  // Platform admin settings state - now persistent
-  const [sumUpApiKey, setSumUpApiKey] = useState('');
+  // Platform admin settings state - now persistent and auto-populated
+  const [sumUpApiKey, setSumUpApiKey] = useState('sup_sk_Eeh3NQTbrGWjwXCe3Xmz8AgI8MiVA65N7');
+  const [stripeSecretKey, setStripeSecretKey] = useState('sk_test_development_key_placeholder');
+  const [squareAccessToken, setSquareAccessToken] = useState('EAAAlw3Uvq6PutIC6j87XYtwYe3zeSbHuPbmHy7-D0S1rI7s3ORmKg-JUFbtdgMD');
+  const [databaseUrl, setDatabaseUrl] = useState('postgresql://doadmin:AVNS_DKOJkLvWZuR3j-QO1zW@fynlo-pos-db-do-user-23457625-0.i.db.ondigitalocean.com:25060/defaultdb?sslmode=require');
+  const [redisUrl, setRedisUrl] = useState('rediss://default:AVNS_ZSfCiU1eo6lTVbr410O@fynlo-pos-cache-do-user-23457625-0.i.db.ondigitalocean.com:25061');
+  const [spacesAccessKey, setSpacesAccessKey] = useState('DO00UFYJDGXBQ7WJ8MZX');
+  const [spacesSecretKey, setSpacesSecretKey] = useState('15ElFvalC1hmLXjQExmbmnQIWE09FU1eMhxbyjq9ULo');
+  const [supabaseServiceRole, setSupabaseServiceRole] = useState('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV3ZWdnenB2dXFjenJycndzenl5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDc4MjIxNywiZXhwIjoyMDY2MzU4MjE3fQ.3MZGwVJXzzeI4pRgN2amPnBrL6LuAKJLiAPmUBucFZE');
   const [paymentMethods, setPaymentMethods] = useState({
     sumup: true,
     stripe: true,
@@ -193,6 +200,13 @@ export const DashboardSettings = () => {
 
   const handleSumUpApiKeyChange = (value: string) => {
     setSumUpApiKey(value);
+    setSettingsSaved(false);
+    setHasUnsavedChanges(true);
+  };
+
+  // Additional credential change handlers
+  const handleCredentialChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (value: string) => {
+    setter(value);
     setSettingsSaved(false);
     setHasUnsavedChanges(true);
   };
@@ -473,6 +487,74 @@ export const DashboardSettings = () => {
                 </div>
               </div>
 
+              {/* Stripe Integration */}
+              <div className="p-6 bg-blue-50 rounded-xl border border-blue-200">
+                <h3 className="text-xl font-bold text-brand-black mb-4 flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-blue-600" />
+                  Stripe Integration
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="stripe-secret-key" className="text-brand-black font-medium">Stripe Secret Key</Label>
+                      <Input
+                        id="stripe-secret-key"
+                        type="password"
+                        placeholder="Enter your Stripe secret key"
+                        value={stripeSecretKey}
+                        onChange={(e) => handleCredentialChange(setStripeSecretKey)(e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-brand-black">Integration Status</h4>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${
+                        stripeSecretKey && settingsSaved ? 'bg-green-500' : 'bg-yellow-400'
+                      }`}></div>
+                      <span className="text-sm text-brand-gray">
+                        {stripeSecretKey && settingsSaved ? 'Connected & Saved' : stripeSecretKey ? 'Key Entered - Click Save' : 'Not Connected'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Square Integration */}
+              <div className="p-6 bg-purple-50 rounded-xl border border-purple-200">
+                <h3 className="text-xl font-bold text-brand-black mb-4 flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-purple-600" />
+                  Square Integration
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="square-access-token" className="text-brand-black font-medium">Square Access Token</Label>
+                      <Input
+                        id="square-access-token"
+                        type="password"
+                        placeholder="Enter your Square access token"
+                        value={squareAccessToken}
+                        onChange={(e) => handleCredentialChange(setSquareAccessToken)(e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-brand-black">Integration Status</h4>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${
+                        squareAccessToken && settingsSaved ? 'bg-green-500' : 'bg-yellow-400'
+                      }`}></div>
+                      <span className="text-sm text-brand-gray">
+                        {squareAccessToken && settingsSaved ? 'Connected & Saved' : squareAccessToken ? 'Key Entered - Click Save' : 'Not Connected'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Payment Methods Toggle */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -574,6 +656,8 @@ export const DashboardSettings = () => {
                       id="do-database-url"
                       type="password"
                       placeholder="postgres://user:pass@host:port/db"
+                      value={databaseUrl}
+                      onChange={(e) => setDatabaseUrl(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
@@ -589,6 +673,8 @@ export const DashboardSettings = () => {
                       id="do-cache-url"
                       type="password"
                       placeholder="redis://user:pass@host:port"
+                      value={redisUrl}
+                      onChange={(e) => setRedisUrl(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
@@ -639,6 +725,8 @@ export const DashboardSettings = () => {
                       id="supabase-service-key"
                       type="password"
                       placeholder="Enter your Supabase service role key"
+                      value={supabaseServiceRole}
+                      onChange={(e) => setSupabaseServiceRole(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
