@@ -756,7 +756,19 @@ export type Database = {
         }
         Returns: boolean
       }
+      user_has_feature: {
+        Args: { _user_id: string; _feature_key: string }
+        Returns: boolean
+      }
       user_has_restaurant_access: {
+        Args: { _user_id: string; _restaurant_id: string }
+        Returns: boolean
+      }
+      user_has_subscription_level: {
+        Args: { _user_id: string; _required_level: string }
+        Returns: boolean
+      }
+      user_owns_restaurant: {
         Args: { _user_id: string; _restaurant_id: string }
         Returns: boolean
       }
