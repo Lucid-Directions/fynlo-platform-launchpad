@@ -93,7 +93,7 @@ export default {
         // Combined Animations
         "enter": "fade-in 0.3s ease-out",
         "exit": "fade-out 0.3s ease-out"
-      }
+      },
 		extend: {
 			colors: {
 				border: 'hsl(var(--border))',
