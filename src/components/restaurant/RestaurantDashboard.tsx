@@ -13,6 +13,7 @@ const TableManagement = lazy(() => import('./dashboard/TableManagement').then(m 
 const PaymentProcessing = lazy(() => import('./dashboard/PaymentProcessing').then(m => ({ default: m.PaymentProcessing })));
 const RestaurantStaffManagement = lazy(() => import('./dashboard/StaffManagement').then(m => ({ default: m.StaffManagement })));
 const RestaurantSettings = lazy(() => import('./dashboard/RestaurantSettings').then(m => ({ default: m.RestaurantSettings })));
+const AdvancedAnalytics = lazy(() => import('../dashboard/AdvancedAnalytics').then(m => ({ default: m.AdvancedAnalytics })));
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -126,6 +127,7 @@ export const RestaurantDashboard = () => {
           <Route path="/tables" element={<TableManagement restaurant={restaurant} />} />
           <Route path="/payments" element={<PaymentProcessing restaurant={restaurant} />} />
           <Route path="/staff" element={<RestaurantStaffManagement restaurant={restaurant} />} />
+          <Route path="/analytics" element={<AdvancedAnalytics restaurantId={restaurant.id} />} />
           <Route path="/settings" element={<RestaurantSettings restaurant={restaurant} />} />
         </Routes>
       </Suspense>

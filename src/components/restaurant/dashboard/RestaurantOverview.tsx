@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { usePaymentAnalytics } from '@/hooks/usePaymentAnalytics';
+import { AdvancedAnalytics } from '../../dashboard/AdvancedAnalytics';
 
 interface Restaurant {
   id: string;
