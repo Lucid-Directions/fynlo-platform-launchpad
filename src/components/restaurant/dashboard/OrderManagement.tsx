@@ -19,7 +19,9 @@ import {
   TrendingUp,
   Users,
   DollarSign,
-  Calendar
+  Calendar,
+  Wifi,
+  WifiOff
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -82,6 +84,7 @@ export const OrderManagement: React.FC<OrderManagementProps> = ({ restaurant }) 
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [orderDialogOpen, setOrderDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('active');
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
   const [orderStats, setOrderStats] = useState({
     todayOrders: 0,
     activeOrders: 0,
@@ -105,12 +108,24 @@ export const OrderManagement: React.FC<OrderManagementProps> = ({ restaurant }) 
           table: 'orders',
           filter: `restaurant_id=eq.${restaurant.id}`
         },
-        () => {
+        (payload) => {
+          console.log('Real-time order update:', payload);
           fetchOrders();
           fetchOrderStats();
+          
+          // Show notification for new orders
+          if (payload.eventType === 'INSERT') {
+            toast({
+              title: "New Order Received!",
+              description: `Order #${payload.new.order_number} has been placed`,
+            });
+          }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Subscription status:', status);
+        setConnectionStatus(status === 'SUBSCRIBED' ? 'connected' : 'disconnected');
+      });
 
     return () => {
       supabase.removeChannel(channel);
@@ -306,9 +321,21 @@ export const OrderManagement: React.FC<OrderManagementProps> = ({ restaurant }) 
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Order Management</h1>
-          <p className="text-gray-600">Manage and track all restaurant orders in real-time</p>
+        <div className="flex items-center gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Order Management</h1>
+            <p className="text-gray-600">Manage and track all restaurant orders in real-time</p>
+          </div>
+          <Badge 
+            variant={connectionStatus === 'connected' ? 'default' : 'destructive'} 
+            className="flex items-center gap-1"
+          >
+            {connectionStatus === 'connected' ? (
+              <><Wifi className="w-3 h-3" /> Live</>
+            ) : (
+              <><WifiOff className="w-3 h-3" /> Disconnected</>
+            )}
+          </Badge>
         </div>
         <Button>
           <Plus className="w-4 h-4 mr-2" />

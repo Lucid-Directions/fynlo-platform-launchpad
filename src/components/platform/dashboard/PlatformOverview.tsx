@@ -11,7 +11,9 @@ import {
   AlertCircle,
   Bell,
   Settings,
-  BarChart3
+  BarChart3,
+  Wifi,
+  WifiOff
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -47,6 +49,7 @@ export const PlatformOverview = () => {
   });
   const [loading, setLoading] = useState(true);
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -63,8 +66,17 @@ export const PlatformOverview = () => {
           schema: 'public',
           table: 'restaurants'
         },
-        () => {
+        (payload) => {
+          console.log('Platform restaurant update:', payload);
           fetchPlatformMetrics();
+          fetchRecentActivity();
+          
+          if (payload.eventType === 'INSERT') {
+            toast({
+              title: "New Restaurant Joined!",
+              description: `${payload.new.name} has joined the platform`,
+            });
+          }
         }
       )
       .on(
@@ -74,11 +86,16 @@ export const PlatformOverview = () => {
           schema: 'public',
           table: 'orders'
         },
-        () => {
+        (payload) => {
+          console.log('Platform order update:', payload);
           fetchPlatformMetrics();
+          fetchRecentActivity();
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Platform subscription status:', status);
+        setConnectionStatus(status === 'SUBSCRIBED' ? 'connected' : 'disconnected');
+      });
 
     return () => {
       supabase.removeChannel(channel);
@@ -204,11 +221,23 @@ export const PlatformOverview = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">Platform Overview</h1>
-          <p className="text-muted-foreground">
-            Real-time monitoring of all restaurants and platform performance
-          </p>
+        <div className="flex items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold">Platform Overview</h1>
+            <p className="text-muted-foreground">
+              Real-time monitoring of all restaurants and platform performance
+            </p>
+          </div>
+          <Badge 
+            variant={connectionStatus === 'connected' ? 'default' : 'destructive'} 
+            className="flex items-center gap-1"
+          >
+            {connectionStatus === 'connected' ? (
+              <><Wifi className="w-3 h-3" /> Live Updates</>
+            ) : (
+              <><WifiOff className="w-3 h-3" /> Disconnected</>
+            )}
+          </Badge>
         </div>
         <div className="flex space-x-2">
           <Button variant="outline">
