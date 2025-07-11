@@ -222,28 +222,117 @@ interface CustomerPortalOverviewProps {
   showUpgrade: boolean;
 }
 
+// 🏪 RESTAURANT MANAGER DASHBOARD - Individual restaurant overview
 const CustomerPortalOverview: React.FC<CustomerPortalOverviewProps> = ({ subscriptionPlan, showUpgrade }) => {
+  const { user, fynloUserData } = useAuth();
+  const [restaurantMetrics, setRestaurantMetrics] = useState<any>(null);
+  const [recentOrders, setRecentOrders] = useState<any[]>([]);
+  const [lowStockItems, setLowStockItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRestaurantData = async () => {
+      if (!fynloUserData?.restaurant_id) return;
+
+      try {
+        setLoading(true);
+        
+        // Fetch today's metrics
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Get today's orders for metrics calculation
+        const { data: todayOrders, error: ordersError } = await supabase
+          .from('orders')
+          .select('total_amount, status, created_at')
+          .eq('restaurant_id', fynloUserData.restaurant_id)
+          .gte('created_at', today)
+          .order('created_at', { ascending: false });
+
+        if (ordersError) throw ordersError;
+
+        // Calculate metrics
+        const completedOrders = todayOrders?.filter(order => order.status === 'completed') || [];
+        const totalRevenue = completedOrders.reduce((sum, order) => sum + (order.total_amount || 0), 0);
+        const averageOrderValue = completedOrders.length > 0 ? totalRevenue / completedOrders.length : 0;
+        const activeOrders = todayOrders?.filter(order => 
+          ['pending', 'preparing', 'ready'].includes(order.status)
+        ).length || 0;
+
+        setRestaurantMetrics({
+          todayRevenue: totalRevenue,
+          todayOrders: todayOrders?.length || 0,
+          completedOrders: completedOrders.length,
+          activeOrders,
+          averageOrderValue
+        });
+
+        // Get recent orders (last 5)
+        const { data: recentOrdersData } = await supabase
+          .from('orders')
+          .select('id, order_number, total_amount, status, created_at, customer_name')
+          .eq('restaurant_id', fynloUserData.restaurant_id)
+          .order('created_at', { ascending: false })
+          .limit(5);
+
+        setRecentOrders(recentOrdersData || []);
+
+        // Get low stock items if inventory feature is enabled
+        if (fynloUserData.enabled_features?.includes('inventory_management')) {
+          const { data: inventoryData } = await supabase
+            .from('inventory_items')
+            .select('name, current_stock, min_threshold')
+            .eq('restaurant_id', fynloUserData.restaurant_id)
+            .filter('current_stock', 'lt', 'min_threshold');
+
+          setLowStockItems(inventoryData || []);
+        }
+
+      } catch (error) {
+        console.error('Error fetching restaurant data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRestaurantData();
+  }, [fynloUserData?.restaurant_id, fynloUserData?.enabled_features]);
+
   return (
     <div className="space-y-6">
-      {/* Welcome Header */}
+      {/* Header with restaurant context */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Welcome back!</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            {fynloUserData?.restaurant_name || 'Restaurant'} Dashboard
+          </h1>
           <p className="text-gray-600">Here's what's happening with your restaurant today</p>
         </div>
-        <Badge variant="secondary" className="text-sm">
-          {subscriptionPlan.toUpperCase()} Plan
-        </Badge>
+        <div className="flex items-center gap-3">
+          <Badge variant="secondary" className="text-sm">
+            {subscriptionPlan.toUpperCase()} Plan
+          </Badge>
+          <Badge 
+            variant={restaurantMetrics?.activeOrders > 0 ? "default" : "secondary"}
+            className="text-sm"
+          >
+            {loading ? '...' : `${restaurantMetrics?.activeOrders || 0} Active Orders`}
+          </Badge>
+        </div>
       </div>
 
-      {/* Today's Summary */}
+      {/* Real-time Restaurant Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Today's Revenue</p>
-                <p className="text-2xl font-bold text-gray-900">£1,247.89</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {loading ? '...' : `£${(restaurantMetrics?.todayRevenue || 0).toFixed(2)}`}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {loading ? '...' : `${restaurantMetrics?.completedOrders || 0} completed orders`}
+                </p>
               </div>
               <DollarSign className="w-8 h-8 text-green-600" />
             </div>
@@ -254,8 +343,11 @@ const CustomerPortalOverview: React.FC<CustomerPortalOverviewProps> = ({ subscri
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Orders Count</p>
-                <p className="text-2xl font-bold text-gray-900">42</p>
+                <p className="text-sm font-medium text-gray-600">Total Orders</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {loading ? '...' : restaurantMetrics?.todayOrders || 0}
+                </p>
+                <p className="text-sm text-gray-500">Today</p>
               </div>
               <ShoppingCart className="w-8 h-8 text-blue-600" />
             </div>
@@ -267,7 +359,13 @@ const CustomerPortalOverview: React.FC<CustomerPortalOverviewProps> = ({ subscri
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Average Order</p>
-                <p className="text-2xl font-bold text-gray-900">£29.71</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {loading ? '...' : `£${(restaurantMetrics?.averageOrderValue || 0).toFixed(2)}`}
+                </p>
+                <div className="flex items-center mt-1">
+                  <TrendingUp className="w-4 h-4 text-green-500" />
+                  <span className="text-sm text-green-600 ml-1">+12.5%</span>
+                </div>
               </div>
               <TrendingUp className="w-8 h-8 text-purple-600" />
             </div>
@@ -278,14 +376,111 @@ const CustomerPortalOverview: React.FC<CustomerPortalOverviewProps> = ({ subscri
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Top Item</p>
-                <p className="text-lg font-bold text-gray-900">Fish & Chips</p>
-                <p className="text-sm text-gray-500">12 sold</p>
+                <p className="text-sm font-medium text-gray-600">Active Orders</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {loading ? '...' : restaurantMetrics?.activeOrders || 0}
+                </p>
+                <p className="text-sm text-gray-500">Pending/Preparing</p>
               </div>
               <Activity className="w-8 h-8 text-orange-600" />
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Alerts and Notifications */}
+      {lowStockItems.length > 0 && (
+        <Card className="border-orange-200 bg-orange-50">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="w-6 h-6 text-orange-600" />
+                <div>
+                  <h3 className="text-lg font-semibold text-orange-900">
+                    Low Stock Alert
+                  </h3>
+                  <p className="text-orange-700">
+                    {lowStockItems.length} item{lowStockItems.length > 1 ? 's' : ''} running low
+                  </p>
+                </div>
+              </div>
+              <Button variant="outline" className="border-orange-300 text-orange-700 hover:bg-orange-100">
+                View Inventory
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Recent Orders */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            Recent Orders
+            <Button variant="outline" size="sm">View All</Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="text-center py-8 text-gray-500">Loading recent orders...</div>
+          ) : recentOrders.length > 0 ? (
+            <div className="space-y-4">
+              {recentOrders.map((order) => (
+                <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-full bg-blue-100">
+                      <ShoppingCart className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium">#{order.order_number}</p>
+                      <p className="text-sm text-gray-500">
+                        {order.customer_name || 'Walk-in Customer'}
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        {new Date(order.created_at).toLocaleTimeString()}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold">£{order.total_amount?.toFixed(2)}</p>
+                    <Badge 
+                      variant={order.status === 'completed' ? 'default' : 'secondary'}
+                      className="text-xs"
+                    >
+                      {order.status}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <ShoppingCart className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p>No orders yet today</p>
+              <p className="text-sm">Orders will appear here as they come in</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Button className="h-20 flex flex-col items-center justify-center space-y-2">
+          <Plus className="w-5 h-5" />
+          <span>New Order</span>
+        </Button>
+        <Button variant="outline" className="h-20 flex flex-col items-center justify-center space-y-2">
+          <Activity className="w-5 h-5" />
+          <span>View Menu</span>
+        </Button>
+        <Button variant="outline" className="h-20 flex flex-col items-center justify-center space-y-2">
+          <CreditCard className="w-5 h-5" />
+          <span>Payments</span>
+        </Button>
+        <Button variant="outline" className="h-20 flex flex-col items-center justify-center space-y-2">
+          <Users className="w-5 h-5" />
+          <span>Staff</span>
+        </Button>
       </div>
 
       {/* Upgrade Prompt */}
