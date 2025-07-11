@@ -21,9 +21,10 @@ import { UpgradePrompt } from './dashboard/UpgradePrompt';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 
+// 🏪 RESTAURANT MANAGER DASHBOARD - For individual restaurant management
 export const Dashboard = () => {
-  const { loading, user } = useAuth();
-  const { isPlatformOwner, isAdmin, fynloUserData } = useFeatureAccess();
+  const { loading, user, fynloUserData } = useAuth();
+  const { isPlatformOwner, isAdmin } = useFeatureAccess();
 
   if (loading || !user) {
     return (
@@ -31,7 +32,7 @@ export const Dashboard = () => {
         <Card>
           <CardContent className="p-8 flex items-center space-x-4">
             <Loader2 className="w-6 h-6 animate-spin" />
-            <span>Loading your dashboard...</span>
+            <span>Loading your restaurant dashboard...</span>
           </CardContent>
         </Card>
       </div>
@@ -47,7 +48,7 @@ export const Dashboard = () => {
         <Card>
           <CardContent className="p-8 text-center">
             <h2 className="text-xl font-semibold mb-2">Access Denied</h2>
-            <p className="text-gray-600">Unable to determine your access level.</p>
+            <p className="text-gray-600">Unable to determine your restaurant access level.</p>
           </CardContent>
         </Card>
       </div>
@@ -57,9 +58,24 @@ export const Dashboard = () => {
   return (
     <DashboardLayout>
       <Routes>
+        {/* Restaurant Manager Routes - Restaurant-specific data only */}
         <Route path="/" element={<DashboardOverview />} />
+        <Route path="/dashboard" element={<DashboardOverview />} />
         
-        {/* Platform Owner Routes - allow Supabase admin access */}
+        {/* Core Restaurant Management Features */}
+        <Route path="/analytics" element={<AnalyticsDashboard />} />
+        <Route path="/payments" element={<PaymentSettings />} />
+        <Route path="/settings" element={<DashboardSettings />} />
+        <Route path="/reports" element={<ReportsPage />} />
+        
+        {/* Feature-Gated Restaurant Management Tools */}
+        <Route path="/inventory" element={<InventoryManagement />} />
+        <Route path="/staff" element={<StaffManagement />} />
+        <Route path="/customers" element={<CustomerDatabase />} />
+        <Route path="/locations" element={<LocationManagement />} />
+        <Route path="/api" element={<ApiAccess />} />
+
+        {/* Legacy Platform Owner Routes - kept for backward compatibility */}
         {(isPlatformOwner() || isAdmin()) && (
           <>
             <Route path="/businesses" element={<BusinessManagement />} />
@@ -67,19 +83,6 @@ export const Dashboard = () => {
             <Route path="/system" element={<SystemHealth />} />
           </>
         )}
-        
-        {/* Shared Routes */}
-        <Route path="/analytics" element={<AnalyticsDashboard />} />
-        <Route path="/payments" element={<PaymentSettings />} />
-        <Route path="/settings" element={<DashboardSettings />} />
-        <Route path="/reports" element={<ReportsPage />} />
-        
-        {/* Customer Portal Routes (Feature-Gated) */}
-        <Route path="/inventory" element={<InventoryManagement />} />
-        <Route path="/staff" element={<StaffManagement />} />
-        <Route path="/customers" element={<CustomerDatabase />} />
-        <Route path="/locations" element={<LocationManagement />} />
-        <Route path="/api" element={<ApiAccess />} />
       </Routes>
     </DashboardLayout>
   );

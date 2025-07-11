@@ -6,8 +6,11 @@ import { supabase } from '@/integrations/supabase/client';
 interface FynloUserData {
   is_platform_owner: boolean;
   restaurant_id?: string;
+  restaurant_name?: string;
   subscription_plan: 'alpha' | 'beta' | 'omega';
   enabled_features: string[];
+  permissions?: string[];
+  role?: 'admin' | 'customer' | 'staff' | 'manager';
 }
 
 interface AuthContextType {
