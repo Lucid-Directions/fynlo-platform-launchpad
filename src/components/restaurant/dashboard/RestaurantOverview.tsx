@@ -17,6 +17,8 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { usePaymentAnalytics } from '@/hooks/usePaymentAnalytics';
 import { AdvancedAnalytics } from '../../dashboard/AdvancedAnalytics';
+import { AnimatedCard, StaggeredList } from '../../ui/animations';
+import { CardSkeleton, ChartSkeleton } from '../../ui/loading-skeletons';
 
 interface Restaurant {
   id: string;
@@ -280,10 +282,10 @@ export const RestaurantOverview: React.FC<RestaurantOverviewProps> = ({ restaura
                 <h4 className="font-medium mb-3">Payment Provider Breakdown</h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {analytics.stripeData && (
-                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg transition-all duration-300 hover:shadow-md hover:scale-105">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-medium text-blue-900">Stripe</span>
-                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
                       </div>
                       <p className="text-lg font-bold text-blue-900">£{analytics.stripeData.revenue.toFixed(2)}</p>
                       <p className="text-xs text-blue-700">{analytics.stripeData.charges} charges</p>
@@ -291,10 +293,10 @@ export const RestaurantOverview: React.FC<RestaurantOverviewProps> = ({ restaura
                   )}
                   
                   {analytics.sumupData && (
-                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg transition-all duration-300 hover:shadow-md hover:scale-105">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-medium text-green-900">SumUp</span>
-                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                       </div>
                       <p className="text-lg font-bold text-green-900">£{analytics.sumupData.revenue.toFixed(2)}</p>
                       <p className="text-xs text-green-700">{analytics.sumupData.transactions} transactions</p>
@@ -302,10 +304,10 @@ export const RestaurantOverview: React.FC<RestaurantOverviewProps> = ({ restaura
                   )}
                   
                   {analytics.squareData && (
-                    <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                    <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg transition-all duration-300 hover:shadow-md hover:scale-105">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-medium text-purple-900">Square</span>
-                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
                       </div>
                       <p className="text-lg font-bold text-purple-900">£{analytics.squareData.revenue.toFixed(2)}</p>
                       <p className="text-xs text-purple-700">{analytics.squareData.payments} payments</p>
