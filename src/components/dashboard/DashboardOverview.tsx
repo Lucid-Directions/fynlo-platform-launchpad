@@ -417,7 +417,9 @@ const CustomerPortalOverview: React.FC<CustomerPortalOverviewProps> = ({ subscri
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             Recent Orders
-            <Button variant="outline" size="sm">View All</Button>
+            <Button variant="outline" size="sm" onClick={() => {
+              window.location.href = '/dashboard/orders';
+            }}>View All</Button>
           </CardTitle>
         </CardHeader>
         <CardContent>

@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Download, Calendar as CalendarIcon, TrendingUp, DollarSign, Users, ShoppingCart, Filter, RefreshCw } from 'lucide-react';
 import { format as formatDate, subDays, startOfMonth, endOfMonth, startOfYear, endOfYear } from 'date-fns';
+import { useToast } from '@/hooks/use-toast';
 
 interface AdvancedAnalyticsProps {
   restaurantId?: string;
@@ -21,6 +22,7 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({
   restaurantId, 
   isPlatformView = false 
 }) => {
+  const { toast } = useToast();
   const [dateRange, setDateRange] = useState('30d');
   const [customDateRange, setCustomDateRange] = useState<{ from?: Date; to?: Date } | undefined>(undefined);
   const [isExporting, setIsExporting] = useState(false);
@@ -187,7 +189,12 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({
             </Popover>
           )}
 
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => {
+            toast({
+              title: "Filters",
+              description: "Advanced filtering options will be available in a future update.",
+            });
+          }}>
             <Filter className="h-4 w-4 mr-2" />
             Filters
           </Button>

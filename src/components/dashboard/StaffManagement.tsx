@@ -5,7 +5,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Users, UserCheck, UserX, AlertCircle } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Users, UserCheck, UserX, AlertCircle, UserPlus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface StaffMember {
@@ -33,6 +37,13 @@ export const StaffManagement = () => {
   const [staffMembers, setStaffMembers] = useState<StaffMember[]>([]);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
+  const [addStaffOpen, setAddStaffOpen] = useState(false);
+  const [newStaff, setNewStaff] = useState({
+    email: '',
+    role: 'staff',
+    restaurant_id: '',
+    hourly_rate: ''
+  });
 
   useEffect(() => {
     fetchData();
@@ -95,6 +106,169 @@ export const StaffManagement = () => {
     }
   };
 
+  const handleAddStaff = async () => {
+    try {
+      if (!newStaff.email || !newStaff.restaurant_id) {
+        toast({
+          title: "Error",
+          description: "Please fill in all required fields.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // First, create the user account
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: newStaff.email,
+        password: 'TempPassword123!', // Temporary password - user will be asked to reset
+        options: {
+          data: {
+            full_name: newStaff.email.split('@')[0], // Use email prefix as temporary name
+          },
+        },
+      });
+
+      if (authError) throw authError;
+
+      if (!authData.user) {
+        throw new Error('Failed to create user account');
+      }
+
+      // Then create the staff member record
+      const { error: staffError } = await supabase
+        .from('staff_members')
+        .insert({
+          user_id: authData.user.id,
+          restaurant_id: newStaff.restaurant_id,
+          role: newStaff.role,
+          hourly_rate: newStaff.hourly_rate ? parseFloat(newStaff.hourly_rate) : null,
+          is_active: true,
+        });
+
+      if (staffError) throw staffError;
+
+      // Create user-restaurant association
+      const { error: userRestaurantError } = await supabase
+        .from('user_restaurants')
+        .insert({
+          user_id: authData.user.id,
+          restaurant_id: newStaff.restaurant_id,
+          role: newStaff.role,
+          is_active: true,
+        });
+
+      if (userRestaurantError) throw userRestaurantError;
+
+      toast({
+        title: "Success",
+        description: "Staff member added successfully! They will receive an email to set up their account.",
+      });
+
+      setAddStaffOpen(false);
+      setNewStaff({
+        email: '',
+        role: 'staff',
+        restaurant_id: '',
+        hourly_rate: ''
+      });
+      
+      await fetchData();
+    } catch (error) {
+      console.error('Error adding staff:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add staff member. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const AddStaffDialog = () => (
+    <Dialog open={addStaffOpen} onOpenChange={setAddStaffOpen}>
+      <DialogTrigger asChild>
+        <Button onClick={() => setAddStaffOpen(true)}>
+          <UserPlus className="mr-2 h-4 w-4" />
+          Add Staff Member
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Add New Staff Member</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email *</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="staff@example.com"
+              value={newStaff.email}
+              onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
+            />
+          </div>
+          
+          <div className="grid gap-2">
+            <Label htmlFor="restaurant">Restaurant *</Label>
+            <Select
+              value={newStaff.restaurant_id}
+              onValueChange={(value) => setNewStaff({ ...newStaff, restaurant_id: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select restaurant" />
+              </SelectTrigger>
+              <SelectContent>
+                {restaurants.map((restaurant) => (
+                  <SelectItem key={restaurant.id} value={restaurant.id}>
+                    {restaurant.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="role">Role</Label>
+            <Select
+              value={newStaff.role}
+              onValueChange={(value) => setNewStaff({ ...newStaff, role: value })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="staff">Staff</SelectItem>
+                <SelectItem value="manager">Manager</SelectItem>
+                <SelectItem value="chef">Chef</SelectItem>
+                <SelectItem value="server">Server</SelectItem>
+                <SelectItem value="cashier">Cashier</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="hourly_rate">Hourly Rate (£)</Label>
+            <Input
+              id="hourly_rate"
+              type="number"
+              placeholder="15.00"
+              value={newStaff.hourly_rate}
+              onChange={(e) => setNewStaff({ ...newStaff, hourly_rate: e.target.value })}
+            />
+          </div>
+        </div>
+        
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" onClick={() => setAddStaffOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={handleAddStaff}>
+            Add Staff Member
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+
   if (!hasFeature('staff_management')) {
     return (
       <UpgradePrompt
@@ -133,10 +307,7 @@ export const StaffManagement = () => {
           <h1 className="text-3xl font-bold">Staff Management</h1>
           <p className="text-muted-foreground">Manage platform staff across all restaurants</p>
         </div>
-        <Button>
-          <Users className="mr-2 h-4 w-4" />
-          Add Staff Member
-        </Button>
+        <AddStaffDialog />
       </div>
 
       {/* Quick Stats */}
@@ -214,10 +385,7 @@ export const StaffManagement = () => {
                 Get started by adding your first staff member to the platform.
               </p>
               <div className="mt-6">
-                <Button>
-                  <Users className="mr-2 h-4 w-4" />
-                  Add Staff Member
-                </Button>
+                <AddStaffDialog />
               </div>
             </div>
           ) : (
