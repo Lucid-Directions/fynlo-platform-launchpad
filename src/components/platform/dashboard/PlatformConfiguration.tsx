@@ -16,9 +16,11 @@ import {
   Save,
   AlertCircle,
   CheckCircle,
-  Flag
+  Flag,
+  CreditCard
 } from "lucide-react";
 import { toast } from "sonner";
+import { PlatformPaymentSettings } from '../settings/PlatformPaymentSettings';
 
 const PlatformConfiguration = () => {
   const [subscriptionPlans, setSubscriptionPlans] = useState([
@@ -98,6 +100,7 @@ const PlatformConfiguration = () => {
         <TabsList>
           <TabsTrigger value="subscriptions">Subscription Plans</TabsTrigger>
           <TabsTrigger value="features">Feature Flags</TabsTrigger>
+          <TabsTrigger value="payments">Payment Settings</TabsTrigger>
           <TabsTrigger value="platform">Platform Settings</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
@@ -233,6 +236,10 @@ const PlatformConfiguration = () => {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="payments">
+          <PlatformPaymentSettings />
         </TabsContent>
 
         <TabsContent value="platform" className="space-y-4">

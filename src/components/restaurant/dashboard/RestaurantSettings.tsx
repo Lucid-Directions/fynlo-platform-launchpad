@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Save, 
   Clock, 
@@ -19,6 +20,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { PaymentConfiguration } from '../settings/PaymentConfiguration';
 
 interface Restaurant {
   id: string;
@@ -214,6 +216,14 @@ export const RestaurantSettings: React.FC<RestaurantSettingsProps> = ({ restaura
         <h1 className="text-2xl font-bold text-gray-900">Restaurant Settings</h1>
         <p className="text-gray-600">Configure your restaurant's operational settings</p>
       </div>
+
+      <Tabs defaultValue="general" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="general">General Settings</TabsTrigger>
+          <TabsTrigger value="payments">Payment Settings</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="general" className="space-y-6">
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Restaurant Information */}
@@ -443,13 +453,19 @@ export const RestaurantSettings: React.FC<RestaurantSettingsProps> = ({ restaura
         </Card>
       </div>
 
-      {/* Save All Settings */}
-      <div className="flex justify-end">
-        <Button onClick={saveSettings} disabled={saving} size="lg">
-          <Settings className="w-4 h-4 mr-2" />
-          Save All Settings
-        </Button>
-      </div>
+        {/* Save All Settings */}
+        <div className="flex justify-end">
+          <Button onClick={saveSettings} disabled={saving} size="lg">
+            <Settings className="w-4 h-4 mr-2" />
+            Save All Settings
+          </Button>
+        </div>
+        </TabsContent>
+
+        <TabsContent value="payments">
+          <PaymentConfiguration restaurantId={restaurant.id} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
