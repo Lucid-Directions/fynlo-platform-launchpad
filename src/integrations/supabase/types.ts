@@ -14,6 +14,53 @@ export type Database = {
   }
   public: {
     Tables: {
+      inventory_items: {
+        Row: {
+          created_at: string | null
+          current_stock: number | null
+          id: string
+          min_threshold: number | null
+          name: string
+          restaurant_id: string | null
+          sku: string | null
+          supplier_info: Json | null
+          unit_cost: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_stock?: number | null
+          id?: string
+          min_threshold?: number | null
+          name: string
+          restaurant_id?: string | null
+          sku?: string | null
+          supplier_info?: Json | null
+          unit_cost?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_stock?: number | null
+          id?: string
+          min_threshold?: number | null
+          name?: string
+          restaurant_id?: string | null
+          sku?: string | null
+          supplier_info?: Json | null
+          unit_cost?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_items_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       menu_categories: {
         Row: {
           created_at: string
@@ -454,6 +501,100 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      restaurant_analytics: {
+        Row: {
+          avg_order_value: number | null
+          created_at: string | null
+          date: string
+          id: string
+          order_count: number | null
+          peak_hours: Json | null
+          popular_items: Json | null
+          restaurant_id: string | null
+          total_revenue: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          avg_order_value?: number | null
+          created_at?: string | null
+          date: string
+          id?: string
+          order_count?: number | null
+          peak_hours?: Json | null
+          popular_items?: Json | null
+          restaurant_id?: string | null
+          total_revenue?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          avg_order_value?: number | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          order_count?: number | null
+          peak_hours?: Json | null
+          popular_items?: Json | null
+          restaurant_id?: string | null
+          total_revenue?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_analytics_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurant_customers: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          loyalty_points: number | null
+          name: string | null
+          order_history: Json | null
+          phone: string | null
+          preferences: Json | null
+          restaurant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          loyalty_points?: number | null
+          name?: string | null
+          order_history?: Json | null
+          phone?: string | null
+          preferences?: Json | null
+          restaurant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          loyalty_points?: number | null
+          name?: string | null
+          order_history?: Json | null
+          phone?: string | null
+          preferences?: Json | null
+          restaurant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_customers_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       restaurant_settings: {
         Row: {
