@@ -14,6 +14,8 @@ const PaymentProcessing = lazy(() => import('./dashboard/PaymentProcessing').the
 const RestaurantStaffManagement = lazy(() => import('./dashboard/StaffManagement').then(m => ({ default: m.StaffManagement })));
 const RestaurantSettings = lazy(() => import('./dashboard/RestaurantSettings').then(m => ({ default: m.RestaurantSettings })));
 const AdvancedAnalytics = lazy(() => import('../dashboard/AdvancedAnalytics').then(m => ({ default: m.AdvancedAnalytics })));
+const InventoryManagement = lazy(() => import('./dashboard/InventoryManagement').then(m => ({ default: m.InventoryManagement })));
+const CustomerDatabase = lazy(() => import('./dashboard/CustomerDatabase').then(m => ({ default: m.CustomerDatabase })));
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -128,6 +130,8 @@ export const RestaurantDashboard = () => {
           <Route path="/payments" element={<PaymentProcessing restaurant={restaurant} />} />
           <Route path="/staff" element={<RestaurantStaffManagement restaurant={restaurant} />} />
           <Route path="/analytics" element={<AdvancedAnalytics restaurantId={restaurant.id} />} />
+          <Route path="/inventory" element={<InventoryManagement restaurant={restaurant} />} />
+          <Route path="/customers" element={<CustomerDatabase restaurant={restaurant} />} />
           <Route path="/settings" element={<RestaurantSettings restaurant={restaurant} />} />
         </Routes>
       </Suspense>
