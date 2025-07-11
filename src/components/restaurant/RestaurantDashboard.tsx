@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { RestaurantDashboardLayout } from './RestaurantDashboardLayout';
-import { RestaurantOverview } from './dashboard/RestaurantOverview';
-import { OrderManagement } from './dashboard/OrderManagement';
-import { MenuManagement } from './dashboard/MenuManagement';
-import { TableManagement } from './dashboard/TableManagement';
-import { PaymentProcessing } from './dashboard/PaymentProcessing';
-import { StaffManagement as RestaurantStaffManagement } from './dashboard/StaffManagement';
-import { RestaurantSettings } from './dashboard/RestaurantSettings';
+import { LoadingSpinner } from '../ui/loading-spinner';
+
+// Lazy load restaurant dashboard components for better performance
+const RestaurantOverview = lazy(() => import('./dashboard/RestaurantOverview').then(m => ({ default: m.RestaurantOverview })));
+const OrderManagement = lazy(() => import('./dashboard/OrderManagement').then(m => ({ default: m.OrderManagement })));
+const MenuManagement = lazy(() => import('./dashboard/MenuManagement').then(m => ({ default: m.MenuManagement })));
+const TableManagement = lazy(() => import('./dashboard/TableManagement').then(m => ({ default: m.TableManagement })));
+const PaymentProcessing = lazy(() => import('./dashboard/PaymentProcessing').then(m => ({ default: m.PaymentProcessing })));
+const RestaurantStaffManagement = lazy(() => import('./dashboard/StaffManagement').then(m => ({ default: m.StaffManagement })));
+const RestaurantSettings = lazy(() => import('./dashboard/RestaurantSettings').then(m => ({ default: m.RestaurantSettings })));
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -115,15 +118,17 @@ export const RestaurantDashboard = () => {
 
   return (
     <RestaurantDashboardLayout restaurant={restaurant}>
-      <Routes>
-        <Route path="/" element={<RestaurantOverview restaurant={restaurant} />} />
-        <Route path="/orders" element={<OrderManagement restaurant={restaurant} />} />
-        <Route path="/menu" element={<MenuManagement restaurant={restaurant} />} />
-        <Route path="/tables" element={<TableManagement restaurant={restaurant} />} />
-        <Route path="/payments" element={<PaymentProcessing restaurant={restaurant} />} />
-        <Route path="/staff" element={<RestaurantStaffManagement restaurant={restaurant} />} />
-        <Route path="/settings" element={<RestaurantSettings restaurant={restaurant} />} />
-      </Routes>
+      <Suspense fallback={<div className="flex items-center justify-center min-h-[400px]"><LoadingSpinner /></div>}>
+        <Routes>
+          <Route path="/" element={<RestaurantOverview restaurant={restaurant} />} />
+          <Route path="/orders" element={<OrderManagement restaurant={restaurant} />} />
+          <Route path="/menu" element={<MenuManagement restaurant={restaurant} />} />
+          <Route path="/tables" element={<TableManagement restaurant={restaurant} />} />
+          <Route path="/payments" element={<PaymentProcessing restaurant={restaurant} />} />
+          <Route path="/staff" element={<RestaurantStaffManagement restaurant={restaurant} />} />
+          <Route path="/settings" element={<RestaurantSettings restaurant={restaurant} />} />
+        </Routes>
+      </Suspense>
     </RestaurantDashboardLayout>
   );
 };
