@@ -3,6 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { 
   Plus, 
   Search, 
@@ -11,10 +22,16 @@ import {
   Eye,
   EyeOff,
   Star,
-  DollarSign
+  DollarSign,
+  Grid3X3,
+  List,
+  Settings,
+  Move
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { MenuItemDialog } from './MenuItemDialog';
+import { CategoryDialog } from './CategoryDialog';
 
 interface Restaurant {
   id: string;
@@ -42,6 +59,7 @@ interface MenuCategory {
   name: string;
   description?: string;
   is_active: boolean;
+  sort_order?: number;
 }
 
 interface MenuManagementProps {
@@ -54,6 +72,13 @@ export const MenuManagement: React.FC<MenuManagementProps> = ({ restaurant }) =>
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [itemDialogOpen, setItemDialogOpen] = useState(false);
+  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
+  const [editingCategory, setEditingCategory] = useState<MenuCategory | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<MenuItem | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -94,7 +119,6 @@ export const MenuManagement: React.FC<MenuManagementProps> = ({ restaurant }) =>
         .from('menu_categories')
         .select('*')
         .eq('restaurant_id', restaurant.id)
-        .eq('is_active', true)
         .order('sort_order');
 
       if (error) {
@@ -159,6 +183,60 @@ export const MenuManagement: React.FC<MenuManagementProps> = ({ restaurant }) =>
     }
   };
 
+  const handleEditItem = (item: MenuItem) => {
+    setEditingItem(item);
+    setItemDialogOpen(true);
+  };
+
+  const handleDeleteItem = (item: MenuItem) => {
+    setItemToDelete(item);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteItem = async () => {
+    if (!itemToDelete) return;
+
+    try {
+      const { error } = await supabase
+        .from('menu_items')
+        .delete()
+        .eq('id', itemToDelete.id);
+
+      if (error) throw error;
+
+      await fetchMenuItems();
+      toast({
+        title: "Success",
+        description: "Menu item deleted successfully",
+      });
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete menu item",
+        variant: "destructive",
+      });
+    } finally {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  };
+
+  const handleEditCategory = (category: MenuCategory) => {
+    setEditingCategory(category);
+    setCategoryDialogOpen(true);
+  };
+
+  const handleSaveItem = () => {
+    fetchMenuItems();
+    setEditingItem(null);
+  };
+
+  const handleSaveCategory = () => {
+    fetchCategories();
+    setEditingCategory(null);
+  };
+
   const filteredItems = menuItems.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          item.description?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -182,11 +260,11 @@ export const MenuManagement: React.FC<MenuManagementProps> = ({ restaurant }) =>
           <p className="text-gray-600">Manage your restaurant's menu items and categories</p>
         </div>
         <div className="flex space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => setCategoryDialogOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Add Category
           </Button>
-          <Button>
+          <Button onClick={() => setItemDialogOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Add Item
           </Button>
@@ -248,115 +326,305 @@ export const MenuManagement: React.FC<MenuManagementProps> = ({ restaurant }) =>
         </Card>
       </div>
 
-      {/* Filters */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Search menu items..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md"
-            >
-              <option value="all">All Categories</option>
-              {categories.map(category => (
-                <option key={category.id} value={category.name}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Management Tabs */}
+      <Tabs defaultValue="items" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="items">Menu Items</TabsTrigger>
+          <TabsTrigger value="categories">Categories</TabsTrigger>
+        </TabsList>
 
-      {/* Menu Items Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredItems.map((item) => (
-          <Card key={item.id} className={`${!item.is_available ? 'opacity-60' : ''}`}>
+        <TabsContent value="items" className="space-y-6">
+          {/* Filters and View Toggle */}
+          <Card>
             <CardContent className="p-4">
-              <div className="flex justify-between items-start mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <h3 className="font-semibold text-lg">{item.name}</h3>
-                    {item.is_featured && (
-                      <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    )}
+              <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search menu items..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                    />
                   </div>
-                  {item.menu_categories && (
-                    <Badge variant="outline" className="text-xs mb-2">
-                      {item.menu_categories.name}
-                    </Badge>
-                  )}
-                  {item.description && (
-                    <p className="text-sm text-gray-600 mb-2">{item.description}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center mb-4">
-                <div>
-                  <p className="text-xl font-bold text-green-600">£{item.price.toFixed(2)}</p>
-                  <p className="text-sm text-gray-500">Cost: £{item.cost.toFixed(2)}</p>
-                </div>
-                <div className="flex space-x-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => toggleItemAvailability(item.id, item.is_available)}
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-md"
                   >
-                    {item.is_available ? (
-                      <Eye className="w-4 h-4 text-green-600" />
-                    ) : (
-                      <EyeOff className="w-4 h-4 text-gray-400" />
-                    )}
+                    <option value="all">All Categories</option>
+                    {categories.filter(c => c.is_active).map(category => (
+                      <option key={category.id} value={category.name}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('grid')}
+                  >
+                    <Grid3X3 className="w-4 h-4" />
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={viewMode === 'list' ? 'default' : 'outline'}
                     size="sm"
-                    onClick={() => toggleFeatured(item.id, item.is_featured)}
+                    onClick={() => setViewMode('list')}
                   >
-                    <Star className={`w-4 h-4 ${item.is_featured ? 'text-yellow-500 fill-current' : 'text-gray-400'}`} />
-                  </Button>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center">
-                <div className="flex space-x-2">
-                  {item.allergens && item.allergens.length > 0 && (
-                    <Badge variant="outline" className="text-xs">
-                      Allergens: {item.allergens.join(', ')}
-                    </Badge>
-                  )}
-                </div>
-                <div className="flex space-x-1">
-                  <Button variant="outline" size="sm">
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Trash2 className="w-4 h-4" />
+                    <List className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
-        ))}
-      </div>
 
-      {filteredItems.length === 0 && (
-        <Card>
-          <CardContent className="p-8 text-center">
-            <p className="text-gray-500">No menu items found</p>
-          </CardContent>
-        </Card>
-      )}
+          {/* Menu Items Display */}
+          {viewMode === 'grid' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredItems.map((item) => (
+                <Card key={item.id} className={`${!item.is_available ? 'opacity-60' : ''}`}>
+                  <CardContent className="p-4">
+                    {item.image_url && (
+                      <div className="mb-4">
+                        <img
+                          src={item.image_url}
+                          alt={item.name}
+                          className="w-full h-48 object-cover rounded-lg"
+                        />
+                      </div>
+                    )}
+                    
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <h3 className="font-semibold text-lg">{item.name}</h3>
+                          {item.is_featured && (
+                            <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                          )}
+                        </div>
+                        {item.menu_categories && (
+                          <Badge variant="outline" className="text-xs mb-2">
+                            {item.menu_categories.name}
+                          </Badge>
+                        )}
+                        {item.description && (
+                          <p className="text-sm text-gray-600 mb-2">{item.description}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center mb-4">
+                      <div>
+                        <p className="text-xl font-bold text-green-600">£{item.price.toFixed(2)}</p>
+                        <p className="text-sm text-gray-500">Cost: £{item.cost.toFixed(2)}</p>
+                      </div>
+                      <div className="flex space-x-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleItemAvailability(item.id, item.is_available)}
+                        >
+                          {item.is_available ? (
+                            <Eye className="w-4 h-4 text-green-600" />
+                          ) : (
+                            <EyeOff className="w-4 h-4 text-gray-400" />
+                          )}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleFeatured(item.id, item.is_featured)}
+                        >
+                          <Star className={`w-4 h-4 ${item.is_featured ? 'text-yellow-500 fill-current' : 'text-gray-400'}`} />
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <div className="flex flex-wrap gap-1">
+                        {item.allergens && item.allergens.length > 0 && (
+                          <Badge variant="secondary" className="text-xs">
+                            {item.allergens.length} allergen{item.allergens.length !== 1 ? 's' : ''}
+                          </Badge>
+                        )}
+                        {item.tags && item.tags.map(tag => (
+                          <Badge key={tag} variant="outline" className="text-xs">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                      <div className="flex space-x-1">
+                        <Button variant="outline" size="sm" onClick={() => handleEditItem(item)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => handleDeleteItem(item)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="p-0">
+                <div className="divide-y">
+                  {filteredItems.map((item) => (
+                    <div key={item.id} className={`p-4 flex items-center justify-between ${!item.is_available ? 'opacity-60' : ''}`}>
+                      <div className="flex items-center space-x-4 flex-1">
+                        {item.image_url && (
+                          <img
+                            src={item.image_url}
+                            alt={item.name}
+                            className="w-16 h-16 object-cover rounded-lg"
+                          />
+                        )}
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <h3 className="font-semibold">{item.name}</h3>
+                            {item.is_featured && (
+                              <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-2 mb-1">
+                            {item.menu_categories && (
+                              <Badge variant="outline" className="text-xs">
+                                {item.menu_categories.name}
+                              </Badge>
+                            )}
+                            <span className="text-lg font-bold text-green-600">£{item.price.toFixed(2)}</span>
+                          </div>
+                          {item.description && (
+                            <p className="text-sm text-gray-600">{item.description}</p>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleItemAvailability(item.id, item.is_available)}
+                        >
+                          {item.is_available ? (
+                            <Eye className="w-4 h-4 text-green-600" />
+                          ) : (
+                            <EyeOff className="w-4 h-4 text-gray-400" />
+                          )}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleFeatured(item.id, item.is_featured)}
+                        >
+                          <Star className={`w-4 h-4 ${item.is_featured ? 'text-yellow-500 fill-current' : 'text-gray-400'}`} />
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => handleEditItem(item)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => handleDeleteItem(item)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {filteredItems.length === 0 && (
+            <Card>
+              <CardContent className="p-8 text-center">
+                <p className="text-gray-500">No menu items found</p>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="categories" className="space-y-6">
+          {/* Categories Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Menu Categories</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {categories.map((category) => (
+                  <div key={category.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2">
+                        <Move className="w-4 h-4 text-gray-400" />
+                        <span className="text-sm text-gray-500">#{category.sort_order}</span>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">{category.name}</h3>
+                        {category.description && (
+                          <p className="text-sm text-gray-600">{category.description}</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge variant={category.is_active ? 'default' : 'secondary'}>
+                        {category.is_active ? 'Active' : 'Inactive'}
+                      </Badge>
+                      <span className="text-sm text-gray-500">
+                        {menuItems.filter(item => item.menu_categories?.name === category.name).length} items
+                      </span>
+                      <Button variant="outline" size="sm" onClick={() => handleEditCategory(category)}>
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                
+                {categories.length === 0 && (
+                  <div className="p-8 text-center text-gray-500">
+                    <p>No categories found. Create your first category to organize your menu.</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* Dialogs */}
+      <MenuItemDialog
+        open={itemDialogOpen}
+        onOpenChange={setItemDialogOpen}
+        item={editingItem}
+        restaurantId={restaurant.id}
+        categories={categories.filter(c => c.is_active)}
+        onSave={handleSaveItem}
+      />
+
+      <CategoryDialog
+        open={categoryDialogOpen}
+        onOpenChange={setCategoryDialogOpen}
+        category={editingCategory}
+        restaurantId={restaurant.id}
+        onSave={handleSaveCategory}
+      />
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Menu Item</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{itemToDelete?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteItem}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
