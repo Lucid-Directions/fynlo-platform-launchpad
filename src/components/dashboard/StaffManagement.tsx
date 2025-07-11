@@ -200,10 +200,11 @@ export const StaffManagement = () => {
             <Label htmlFor="email">Email *</Label>
             <Input
               id="email"
+              name="email"
               type="email"
               placeholder="staff@example.com"
               value={newStaff.email}
-              onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
+              onChange={(e) => setNewStaff(prev => ({ ...prev, email: e.target.value }))}
             />
           </div>
           
