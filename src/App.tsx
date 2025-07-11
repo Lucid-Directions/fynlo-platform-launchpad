@@ -16,6 +16,9 @@ import NotFound from "./pages/NotFound";
 import { Dashboard } from "@/components/Dashboard";
 import { PlatformLayout } from "@/components/platform/PlatformLayout";
 import { PlatformOverview } from "@/components/platform/dashboard/PlatformOverview";
+import FinancialManagement from "@/components/platform/dashboard/FinancialManagement";
+import PlatformConfiguration from "@/components/platform/dashboard/PlatformConfiguration";
+import SupportManagement from "@/components/platform/dashboard/SupportManagement";
 
 const queryClient = new QueryClient();
 
@@ -79,21 +82,21 @@ const App = () => (
             <Route path="/platform/financial" element={
               <PlatformRoute>
                 <PlatformLayout>
-                  <div>Financial Management - Coming Soon</div>
+                  <FinancialManagement />
                 </PlatformLayout>
               </PlatformRoute>
             } />
             <Route path="/platform/configuration" element={
               <PlatformRoute>
                 <PlatformLayout>
-                  <div>Platform Configuration - Coming Soon</div>
+                  <PlatformConfiguration />
                 </PlatformLayout>
               </PlatformRoute>
             } />
             <Route path="/platform/support" element={
               <PlatformRoute>
                 <PlatformLayout>
-                  <div>Support Management - Coming Soon</div>
+                  <SupportManagement />
                 </PlatformLayout>
               </PlatformRoute>
             } />
