@@ -73,14 +73,21 @@ export const PlatformPaymentSettings: React.FC = () => {
 
   const loadPlatformSettings = async () => {
     try {
-      // In a real implementation, this would load from a secure platform settings table
-      const savedConfig = localStorage.getItem('platform_payment_config');
-      if (savedConfig) {
-        setConfig(JSON.parse(savedConfig));
+      const { data, error } = await supabase
+        .from('platform_settings')
+        .select('setting_value')
+        .eq('setting_key', 'payment_config')
+        .single();
+
+      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+        throw error;
       }
-      
-      // Check if SumUp is configured by testing if we have valid credentials
-      setSumupConnected(!!config.sumup_app_id && !!config.sumup_app_secret);
+
+      if (data?.setting_value) {
+        const loadedConfig = data.setting_value as unknown as PlatformPaymentConfig;
+        setConfig(loadedConfig);
+        setSumupConnected(!!loadedConfig.sumup_app_id && !!loadedConfig.sumup_app_secret);
+      }
     } catch (error) {
       console.error('Error loading platform settings:', error);
       toast({
@@ -96,18 +103,24 @@ export const PlatformPaymentSettings: React.FC = () => {
   const saveConfiguration = async () => {
     setSaving(true);
     try {
-      // In a real implementation, this would save to a secure platform settings table
-      localStorage.setItem('platform_payment_config', JSON.stringify(config));
+      const { error } = await supabase
+        .from('platform_settings')
+        .upsert({
+          setting_key: 'payment_config',
+          setting_value: config as any
+        });
+
+      if (error) throw error;
       
       toast({
         title: "Success",
-        description: "Platform payment configuration saved",
+        description: "Platform payment configuration saved to database",
       });
     } catch (error) {
       console.error('Error saving configuration:', error);
       toast({
         title: "Error",
-        description: "Failed to save configuration",
+        description: "Failed to save configuration to database",
         variant: "destructive",
       });
     } finally {
