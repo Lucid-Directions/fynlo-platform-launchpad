@@ -30,7 +30,7 @@ export const ProtectedRoute: React.FC<RouteGuardProps> = ({ children }) => {
 export const RestaurantRoute: React.FC<RouteGuardProps> = ({ children }) => {
   const { user, fynloUserData, loading } = useAuth();
 
-  if (loading) {
+  if (loading || (user && !fynloUserData)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingSpinner />
@@ -54,7 +54,7 @@ export const RestaurantRoute: React.FC<RouteGuardProps> = ({ children }) => {
 export const PlatformRoute: React.FC<RouteGuardProps> = ({ children }) => {
   const { user, fynloUserData, loading } = useAuth();
 
-  if (loading) {
+  if (loading || (user && !fynloUserData)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingSpinner />
@@ -78,7 +78,7 @@ export const PlatformRoute: React.FC<RouteGuardProps> = ({ children }) => {
 export const PublicRoute: React.FC<RouteGuardProps> = ({ children }) => {
   const { user, fynloUserData, loading } = useAuth();
 
-  if (loading) {
+  if (loading || (user && !fynloUserData)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingSpinner />

@@ -22,7 +22,7 @@ import {
   Eye,
   EyeOff,
   Star,
-  DollarSign,
+  PoundSterling,
   Grid3X3,
   List,
   Settings,
@@ -280,7 +280,7 @@ export const MenuManagement: React.FC<MenuManagementProps> = ({ restaurant }) =>
                 <p className="text-sm text-gray-600">Total Items</p>
                 <p className="text-2xl font-bold">{menuItems.length}</p>
               </div>
-              <DollarSign className="w-8 h-8 text-gray-400" />
+              <PoundSterling className="w-8 h-8 text-gray-400" />
             </div>
           </CardContent>
         </Card>

@@ -12,7 +12,7 @@ import {
   CreditCard,
   Users,
   Activity,
-  DollarSign,
+  PoundSterling,
   ShoppingCart,
   AlertTriangle,
   Plus
@@ -97,7 +97,7 @@ const PlatformOwnerOverview = () => {
                   </span>
                 </div>
               </div>
-              <DollarSign className="w-8 h-8 text-green-600" />
+              <PoundSterling className="w-8 h-8 text-green-600" />
             </div>
           </CardContent>
         </Card>
@@ -334,7 +334,7 @@ const CustomerPortalOverview: React.FC<CustomerPortalOverviewProps> = ({ subscri
                   {loading ? '...' : `${restaurantMetrics?.completedOrders || 0} completed orders`}
                 </p>
               </div>
-              <DollarSign className="w-8 h-8 text-green-600" />
+              <PoundSterling className="w-8 h-8 text-green-600" />
             </div>
           </CardContent>
         </Card>

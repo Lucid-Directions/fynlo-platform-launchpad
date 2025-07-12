@@ -19,7 +19,7 @@ import {
   Bell,
   TrendingUp,
   Users,
-  DollarSign,
+  PoundSterling,
   Calendar,
   Wifi,
   WifiOff
@@ -389,7 +389,7 @@ export const OrderManagement: React.FC<OrderManagementProps> = ({ restaurant }) 
                 <p className="text-sm text-gray-600">Today's Revenue</p>
                 <p className="text-2xl font-bold text-green-600">£{orderStats.todayRevenue.toFixed(2)}</p>
               </div>
-              <DollarSign className="w-8 h-8 text-green-400" />
+              <PoundSterling className="w-8 h-8 text-green-400" />
             </div>
           </CardContent>
         </Card>

@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
-  DollarSign, 
+  PoundSterling, 
   ShoppingCart, 
   Users, 
   TrendingUp,
@@ -163,7 +163,7 @@ export const RestaurantOverview: React.FC<RestaurantOverviewProps> = ({ restaura
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Today's Sales</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <PoundSterling className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">£{stats.todaysSales.toFixed(2)}</div>
@@ -252,7 +252,7 @@ export const RestaurantOverview: React.FC<RestaurantOverviewProps> = ({ restaura
                       <p className="text-sm text-gray-600">External Payments</p>
                       <p className="text-xl font-bold">£{analytics.totalRevenue.toFixed(2)}</p>
                     </div>
-                    <DollarSign className="w-6 h-6 text-green-600" />
+                    <PoundSterling className="w-6 h-6 text-green-600" />
                   </div>
                 </div>
                 
