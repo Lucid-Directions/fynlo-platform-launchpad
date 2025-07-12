@@ -10,7 +10,7 @@ import {
   Save, 
   AlertTriangle,
   CheckCircle,
-  DollarSign,
+  PoundSterling,
   Users
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -255,7 +255,7 @@ export const PlatformPaymentSettings: React.FC = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <DollarSign className="w-5 h-5" />
+              <PoundSterling className="w-5 h-5" />
               <span>Platform Commission</span>
             </CardTitle>
           </CardHeader>

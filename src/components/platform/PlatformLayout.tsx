@@ -8,7 +8,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard,
   Building2,
-  DollarSign,
+  PoundSterling,
   Settings,
   MessageSquare,
   ChevronLeft,
@@ -56,7 +56,7 @@ const PlatformSidebar = () => {
     {
       title: 'Financial',
       href: '/platform/financial',
-      icon: DollarSign,
+      icon: PoundSterling,
     },
     {
       title: 'Configuration',

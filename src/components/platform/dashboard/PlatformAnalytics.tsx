@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   TrendingUp, 
-  DollarSign,
+  PoundSterling,
   Users,
   Building2,
   Calendar,
@@ -267,7 +267,7 @@ export const PlatformAnalytics: React.FC = () => {
                   {formatCurrency(metrics.totalRevenue)}
                 </p>
               </div>
-              <DollarSign className="w-8 h-8 text-green-400" />
+              <PoundSterling className="w-8 h-8 text-green-400" />
             </div>
           </CardContent>
         </Card>
@@ -391,7 +391,7 @@ export const PlatformAnalytics: React.FC = () => {
                 
                 <div className="p-4 bg-blue-50 rounded-lg">
                   <div className="flex items-center space-x-2 mb-2">
-                    <DollarSign className="w-5 h-5 text-blue-600" />
+                    <PoundSterling className="w-5 h-5 text-blue-600" />
                     <span className="font-medium text-blue-800">Revenue</span>
                   </div>
                   <p className="text-sm text-blue-700">

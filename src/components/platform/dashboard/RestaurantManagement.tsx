@@ -14,7 +14,7 @@ import {
   MoreHorizontal,
   MapPin,
   Calendar,
-  DollarSign,
+  PoundSterling,
   TrendingUp,
   Activity
 } from 'lucide-react';
@@ -226,7 +226,7 @@ export const RestaurantManagement: React.FC = () => {
                   {formatCurrency(totalStats.totalRevenue)}
                 </p>
               </div>
-              <DollarSign className="w-8 h-8 text-green-400" />
+              <PoundSterling className="w-8 h-8 text-green-400" />
             </div>
           </CardContent>
         </Card>
