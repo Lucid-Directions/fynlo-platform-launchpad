@@ -64,11 +64,22 @@ export const PaymentConfiguration: React.FC<PaymentConfigurationProps> = ({ rest
         setSumupConnected(paymentMethods.includes('sumup'));
       }
 
-      // In a real implementation, bank details would be stored securely
-      // For now, we'll use local state as an example
-      const savedBankDetails = localStorage.getItem(`bank_details_${restaurantId}`);
-      if (savedBankDetails) {
-        setBankDetails(JSON.parse(savedBankDetails));
+      // Load bank details from database
+      const { data: bankData } = await supabase
+        .from('restaurant_bank_details')
+        .select('*')
+        .eq('restaurant_id', restaurantId)
+        .single();
+
+      if (bankData) {
+        setBankDetails({
+          account_holder_name: bankData.account_holder_name || '',
+          bank_name: bankData.bank_name || '',
+          account_number: bankData.account_number || '',
+          sort_code: bankData.sort_code || '',
+          swift_code: bankData.swift_code || '',
+          iban: bankData.iban || ''
+        });
       }
     } catch (error) {
       console.error('Error loading payment settings:', error);
@@ -85,19 +96,29 @@ export const PaymentConfiguration: React.FC<PaymentConfigurationProps> = ({ rest
   const saveBankDetails = async () => {
     setSaving(true);
     try {
-      // In a real implementation, bank details should be encrypted and stored securely
-      // This is just for demonstration
-      localStorage.setItem(`bank_details_${restaurantId}`, JSON.stringify(bankDetails));
+      const { error } = await supabase
+        .from('restaurant_bank_details')
+        .upsert({
+          restaurant_id: restaurantId,
+          account_holder_name: bankDetails.account_holder_name,
+          bank_name: bankDetails.bank_name,
+          account_number: bankDetails.account_number,
+          sort_code: bankDetails.sort_code,
+          iban: bankDetails.iban,
+          swift_code: bankDetails.swift_code
+        });
+
+      if (error) throw error;
       
       toast({
         title: "Success",
-        description: "Bank details saved securely",
+        description: "Bank details saved securely to database",
       });
     } catch (error) {
       console.error('Error saving bank details:', error);
       toast({
         title: "Error",
-        description: "Failed to save bank details",
+        description: "Failed to save bank details to database",
         variant: "destructive",
       });
     } finally {

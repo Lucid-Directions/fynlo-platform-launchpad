@@ -132,16 +132,42 @@ export const DashboardSettings = () => {
 
   const loadPlatformSettings = async () => {
     try {
-      // Load from localStorage for now (you could store in a platform_settings table)
-      const savedSettings = localStorage.getItem('fynlo_platform_settings');
-      if (savedSettings) {
-        const settings: PlatformSettings = JSON.parse(savedSettings);
-        setSumupPlatformApiKey(settings.sumupPlatformApiKey || '');
-        setSumupRestaurantApiKey(settings.sumupRestaurantApiKey || '');
-        setPaymentMethods(settings.paymentMethods);
-        setSystemSettings(settings.systemSettings);
-        setSettingsSaved(true);
+      // Load API keys
+      const { data: apiKeysData } = await supabase
+        .from('platform_settings')
+        .select('setting_value')
+        .eq('setting_key', 'api_keys')
+        .single();
+
+      if (apiKeysData?.setting_value) {
+        const apiKeys = apiKeysData.setting_value as any;
+        setSumupPlatformApiKey(apiKeys.sumupPlatformApiKey || '');
+        setSumupRestaurantApiKey(apiKeys.sumupRestaurantApiKey || '');
       }
+
+      // Load payment methods
+      const { data: paymentData } = await supabase
+        .from('platform_settings')
+        .select('setting_value')
+        .eq('setting_key', 'payment_methods')
+        .single();
+
+      if (paymentData?.setting_value) {
+        setPaymentMethods(paymentData.setting_value as any);
+      }
+
+      // Load system settings
+      const { data: systemData } = await supabase
+        .from('platform_settings')
+        .select('setting_value')
+        .eq('setting_key', 'system_settings')
+        .single();
+
+      if (systemData?.setting_value) {
+        setSystemSettings(systemData.setting_value as any);
+      }
+
+      setSettingsSaved(true);
     } catch (error) {
       console.error('Error loading platform settings:', error);
     }
@@ -149,26 +175,45 @@ export const DashboardSettings = () => {
 
   const savePlatformSettings = async () => {
     try {
-      const settings: PlatformSettings = {
-        sumupPlatformApiKey: sumupPlatformApiKey,
-        sumupRestaurantApiKey: sumupRestaurantApiKey,
-        paymentMethods,
-        systemSettings
-      };
-      
-      localStorage.setItem('fynlo_platform_settings', JSON.stringify(settings));
+      // Save API keys
+      await supabase
+        .from('platform_settings')
+        .upsert({
+          setting_key: 'api_keys',
+          setting_value: {
+            sumupPlatformApiKey: sumupPlatformApiKey,
+            sumupRestaurantApiKey: sumupRestaurantApiKey
+          } as any
+        });
+
+      // Save payment methods
+      await supabase
+        .from('platform_settings')
+        .upsert({
+          setting_key: 'payment_methods',
+          setting_value: paymentMethods as any
+        });
+
+      // Save system settings
+      await supabase
+        .from('platform_settings')
+        .upsert({
+          setting_key: 'system_settings',
+          setting_value: systemSettings as any
+        });
+
       setSettingsSaved(true);
       setHasUnsavedChanges(false);
       
       toast({
         title: "Settings Saved",
-        description: "Platform settings have been saved successfully.",
+        description: "Platform settings have been saved to database successfully.",
       });
     } catch (error) {
       console.error('Error saving platform settings:', error);
       toast({
         title: "Save Failed",
-        description: "Failed to save platform settings.",
+        description: "Failed to save platform settings to database.",
         variant: "destructive"
       });
     }
