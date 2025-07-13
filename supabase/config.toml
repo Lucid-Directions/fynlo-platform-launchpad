@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.platform-metrics]
 verify_jwt = false
+
+[functions.sumup-payments]
+verify_jwt = true
