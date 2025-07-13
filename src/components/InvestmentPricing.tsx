@@ -4,9 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Check, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
+import { SumUpPaymentModal } from "@/components/SumUpPaymentModal";
 
 export const InvestmentPricing = () => {
   const [selectedPlan, setSelectedPlan] = useState('beta'); // Default to beta (most popular)
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [selectedPaymentPlan, setSelectedPaymentPlan] = useState<{
+    type: 'beta' | 'omega';
+    name: string;
+    price: number;
+  } | null>(null);
 
   const pricingPlans = [
     {
@@ -99,6 +106,30 @@ export const InvestmentPricing = () => {
     setSelectedPlan(planKey);
     // Dispatch event to sync with other components
     window.dispatchEvent(new CustomEvent('planSelected', { detail: { plan: planKey } }));
+  };
+
+  const handleSubscribeClick = (planKey: string) => {
+    if (planKey === 'alpha') {
+      // Free plan - handle differently or redirect to signup
+      return;
+    }
+    
+    const plan = pricingPlans.find(p => p.planKey === planKey);
+    if (plan && (planKey === 'beta' || planKey === 'omega')) {
+      setSelectedPaymentPlan({
+        type: planKey as 'beta' | 'omega',
+        name: plan.name,
+        price: parseInt(plan.price.replace('£', ''))
+      });
+      setPaymentModalOpen(true);
+    }
+  };
+
+  const handlePaymentSuccess = () => {
+    setPaymentModalOpen(false);
+    setSelectedPaymentPlan(null);
+    // Redirect to dashboard or show success message
+    window.location.href = '/dashboard';
   };
 
   return (
@@ -231,6 +262,7 @@ export const InvestmentPricing = () => {
                         ? 'bg-brand-orange hover:bg-orange-600 text-white' 
                         : 'bg-brand-black hover:bg-gray-800 text-white hover:bg-orange-50 hover:border-orange-300'
                   }`}
+                  onClick={() => plan.planKey === 'alpha' ? handlePlanClick(plan.planKey) : handleSubscribeClick(plan.planKey)}
                 >
                   {plan.buttonText}
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
@@ -265,6 +297,18 @@ export const InvestmentPricing = () => {
           </div>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      {selectedPaymentPlan && (
+        <SumUpPaymentModal
+          isOpen={paymentModalOpen}
+          onClose={() => setPaymentModalOpen(false)}
+          planType={selectedPaymentPlan.type}
+          planName={selectedPaymentPlan.name}
+          planPrice={selectedPaymentPlan.price}
+          onSuccess={handlePaymentSuccess}
+        />
+      )}
     </section>
   );
 };

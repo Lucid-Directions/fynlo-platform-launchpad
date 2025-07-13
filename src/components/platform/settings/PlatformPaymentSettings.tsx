@@ -27,6 +27,7 @@ interface SubscriptionPlan {
 interface PlatformPaymentConfig {
   sumup_app_id: string;
   sumup_app_secret: string;
+  merchant_code?: string;
   subscription_plans: SubscriptionPlan[];
   platform_commission_rate: number;
 }
@@ -131,24 +132,37 @@ export const PlatformPaymentSettings: React.FC = () => {
   const testSumUpConnection = async () => {
     setTestingConnection(true);
     try {
-      // In a real implementation, this would test the SumUp API connection
       if (!config.sumup_app_id || !config.sumup_app_secret) {
         throw new Error('SumUp credentials are required');
       }
+
+      const response = await fetch('/functions/v1/sumup-payments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+        },
+        body: JSON.stringify({
+          action: 'test_connection'
+        }),
+      });
+
+      const result = await response.json();
       
-      // Simulate API test
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      if (!result.success) {
+        throw new Error(result.error || 'Connection test failed');
+      }
       
       setSumupConnected(true);
       toast({
         title: "Success",
-        description: "SumUp connection successful",
+        description: `SumUp connection successful. Merchant: ${result.merchant_code}`,
       });
     } catch (error) {
       setSumupConnected(false);
       toast({
         title: "Connection Failed",
-        description: "Unable to connect to SumUp. Please check your credentials.",
+        description: `Unable to connect to SumUp: ${error instanceof Error ? error.message : 'Unknown error'}`,
         variant: "destructive",
       });
     } finally {
@@ -240,6 +254,16 @@ export const PlatformPaymentSettings: React.FC = () => {
                   value={config.sumup_app_secret}
                   onChange={(e) => setConfig(prev => ({ ...prev, sumup_app_secret: e.target.value }))}
                   placeholder="Enter your SumUp App Secret"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="merchant_code">SumUp Merchant Code (Optional)</Label>
+                <Input
+                  id="merchant_code"
+                  value={config.merchant_code || ''}
+                  onChange={(e) => setConfig(prev => ({ ...prev, merchant_code: e.target.value }))}
+                  placeholder="Your SumUp Merchant Code (will be auto-detected)"
                 />
               </div>
 
