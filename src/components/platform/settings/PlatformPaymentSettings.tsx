@@ -104,24 +104,37 @@ export const PlatformPaymentSettings: React.FC = () => {
   const saveConfiguration = async () => {
     setSaving(true);
     try {
-      const { error } = await supabase
+      console.log('Saving configuration:', config);
+      
+      const { data, error } = await supabase
         .from('platform_settings')
         .upsert({
           setting_key: 'payment_config',
           setting_value: config as any
-        });
+        }, {
+          onConflict: 'setting_key'
+        })
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw error;
+      }
+      
+      console.log('Save successful:', data);
       
       toast({
         title: "Success",
         description: "Platform payment configuration saved to database",
       });
+      
+      // Reload to confirm the save
+      await loadPlatformSettings();
     } catch (error) {
       console.error('Error saving configuration:', error);
       toast({
         title: "Error",
-        description: "Failed to save configuration to database",
+        description: `Failed to save configuration: ${error instanceof Error ? error.message : 'Unknown error'}`,
         variant: "destructive",
       });
     } finally {
