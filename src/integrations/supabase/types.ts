@@ -14,91 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      customer_loyalty: {
-        Row: {
-          created_at: string
-          current_points: number | null
-          current_tier: string | null
-          current_tier_spending: number | null
-          current_visit_streak: number | null
-          customer_id: string
-          enrollment_date: string | null
-          id: string
-          is_active: boolean | null
-          last_visit_date: string | null
-          loyalty_program_id: string
-          restaurant_id: string
-          tier_progress: number | null
-          total_points_earned: number | null
-          total_points_redeemed: number | null
-          total_spending: number | null
-          total_visits: number | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          current_points?: number | null
-          current_tier?: string | null
-          current_tier_spending?: number | null
-          current_visit_streak?: number | null
-          customer_id: string
-          enrollment_date?: string | null
-          id?: string
-          is_active?: boolean | null
-          last_visit_date?: string | null
-          loyalty_program_id: string
-          restaurant_id: string
-          tier_progress?: number | null
-          total_points_earned?: number | null
-          total_points_redeemed?: number | null
-          total_spending?: number | null
-          total_visits?: number | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          current_points?: number | null
-          current_tier?: string | null
-          current_tier_spending?: number | null
-          current_visit_streak?: number | null
-          customer_id?: string
-          enrollment_date?: string | null
-          id?: string
-          is_active?: boolean | null
-          last_visit_date?: string | null
-          loyalty_program_id?: string
-          restaurant_id?: string
-          tier_progress?: number | null
-          total_points_earned?: number | null
-          total_points_redeemed?: number | null
-          total_spending?: number | null
-          total_visits?: number | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "customer_loyalty_customer_id_fkey"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "restaurant_customers"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "customer_loyalty_loyalty_program_id_fkey"
-            columns: ["loyalty_program_id"]
-            isOneToOne: false
-            referencedRelation: "loyalty_programs"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "customer_loyalty_restaurant_id_fkey"
-            columns: ["restaurant_id"]
-            isOneToOne: false
-            referencedRelation: "restaurants"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       inventory_items: {
         Row: {
           created_at: string | null
@@ -146,172 +61,39 @@ export type Database = {
           },
         ]
       }
-      loyalty_campaigns: {
-        Row: {
-          bonus_points: number | null
-          bonus_visits: number | null
-          campaign_type: string
-          created_at: string
-          current_uses: number | null
-          days_of_week: number[] | null
-          description: string | null
-          discount_amount: number | null
-          discount_percentage: number | null
-          end_date: string | null
-          end_time: string | null
-          free_item_menu_item_id: string | null
-          id: string
-          is_active: boolean | null
-          loyalty_program_id: string | null
-          max_total_uses: number | null
-          max_uses_per_customer: number | null
-          min_purchase_amount: number | null
-          multiplier: number | null
-          name: string
-          restaurant_id: string
-          start_date: string
-          start_time: string | null
-          updated_at: string
-        }
-        Insert: {
-          bonus_points?: number | null
-          bonus_visits?: number | null
-          campaign_type: string
-          created_at?: string
-          current_uses?: number | null
-          days_of_week?: number[] | null
-          description?: string | null
-          discount_amount?: number | null
-          discount_percentage?: number | null
-          end_date?: string | null
-          end_time?: string | null
-          free_item_menu_item_id?: string | null
-          id?: string
-          is_active?: boolean | null
-          loyalty_program_id?: string | null
-          max_total_uses?: number | null
-          max_uses_per_customer?: number | null
-          min_purchase_amount?: number | null
-          multiplier?: number | null
-          name: string
-          restaurant_id: string
-          start_date: string
-          start_time?: string | null
-          updated_at?: string
-        }
-        Update: {
-          bonus_points?: number | null
-          bonus_visits?: number | null
-          campaign_type?: string
-          created_at?: string
-          current_uses?: number | null
-          days_of_week?: number[] | null
-          description?: string | null
-          discount_amount?: number | null
-          discount_percentage?: number | null
-          end_date?: string | null
-          end_time?: string | null
-          free_item_menu_item_id?: string | null
-          id?: string
-          is_active?: boolean | null
-          loyalty_program_id?: string | null
-          max_total_uses?: number | null
-          max_uses_per_customer?: number | null
-          min_purchase_amount?: number | null
-          multiplier?: number | null
-          name?: string
-          restaurant_id?: string
-          start_date?: string
-          start_time?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "loyalty_campaigns_free_item_menu_item_id_fkey"
-            columns: ["free_item_menu_item_id"]
-            isOneToOne: false
-            referencedRelation: "menu_items"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "loyalty_campaigns_loyalty_program_id_fkey"
-            columns: ["loyalty_program_id"]
-            isOneToOne: false
-            referencedRelation: "loyalty_programs"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "loyalty_campaigns_restaurant_id_fkey"
-            columns: ["restaurant_id"]
-            isOneToOne: false
-            referencedRelation: "restaurants"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       loyalty_programs: {
         Row: {
-          created_at: string
+          created_at: string | null
           description: string | null
-          dollar_value_per_point: number | null
-          end_date: string | null
           id: string
           is_active: boolean | null
           name: string
-          points_per_dollar: number | null
           program_type: string
           restaurant_id: string
-          reward_after_visits: number | null
-          spending_reward_type: string | null
-          spending_reward_value: number | null
-          spending_threshold: number | null
-          start_date: string | null
-          tier_benefits: Json | null
-          tier_thresholds: Json | null
-          updated_at: string
-          visits_required: number | null
+          settings: Json | null
+          updated_at: string | null
         }
         Insert: {
-          created_at?: string
+          created_at?: string | null
           description?: string | null
-          dollar_value_per_point?: number | null
-          end_date?: string | null
           id?: string
           is_active?: boolean | null
           name: string
-          points_per_dollar?: number | null
           program_type: string
           restaurant_id: string
-          reward_after_visits?: number | null
-          spending_reward_type?: string | null
-          spending_reward_value?: number | null
-          spending_threshold?: number | null
-          start_date?: string | null
-          tier_benefits?: Json | null
-          tier_thresholds?: Json | null
-          updated_at?: string
-          visits_required?: number | null
+          settings?: Json | null
+          updated_at?: string | null
         }
         Update: {
-          created_at?: string
+          created_at?: string | null
           description?: string | null
-          dollar_value_per_point?: number | null
-          end_date?: string | null
           id?: string
           is_active?: boolean | null
           name?: string
-          points_per_dollar?: number | null
           program_type?: string
           restaurant_id?: string
-          reward_after_visits?: number | null
-          spending_reward_type?: string | null
-          spending_reward_value?: number | null
-          spending_threshold?: number | null
-          start_date?: string | null
-          tier_benefits?: Json | null
-          tier_thresholds?: Json | null
-          updated_at?: string
-          visits_required?: number | null
+          settings?: Json | null
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -1123,52 +905,43 @@ export type Database = {
       }
       staff_schedules: {
         Row: {
-          break_end: string | null
-          break_start: string | null
-          created_at: string
-          day_of_week: number
+          created_at: string | null
           end_time: string
           id: string
-          is_active: boolean | null
-          is_recurring: boolean | null
           notes: string | null
           restaurant_id: string
-          specific_date: string | null
+          role_assigned: string | null
+          shift_date: string
           staff_member_id: string
           start_time: string
-          updated_at: string
+          status: string | null
+          updated_at: string | null
         }
         Insert: {
-          break_end?: string | null
-          break_start?: string | null
-          created_at?: string
-          day_of_week: number
+          created_at?: string | null
           end_time: string
           id?: string
-          is_active?: boolean | null
-          is_recurring?: boolean | null
           notes?: string | null
           restaurant_id: string
-          specific_date?: string | null
+          role_assigned?: string | null
+          shift_date: string
           staff_member_id: string
           start_time: string
-          updated_at?: string
+          status?: string | null
+          updated_at?: string | null
         }
         Update: {
-          break_end?: string | null
-          break_start?: string | null
-          created_at?: string
-          day_of_week?: number
+          created_at?: string | null
           end_time?: string
           id?: string
-          is_active?: boolean | null
-          is_recurring?: boolean | null
           notes?: string | null
           restaurant_id?: string
-          specific_date?: string | null
+          role_assigned?: string | null
+          shift_date?: string
           staff_member_id?: string
           start_time?: string
-          updated_at?: string
+          status?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {

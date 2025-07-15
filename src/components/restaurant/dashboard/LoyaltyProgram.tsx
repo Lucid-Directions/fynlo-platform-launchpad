@@ -77,7 +77,7 @@ export const LoyaltyProgram: React.FC<LoyaltyProgramProps> = ({ restaurant }) =>
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setPrograms(data || []);
+      setPrograms((data || []) as LoyaltyProgram[]);
     } catch (error) {
       console.error('Error fetching loyalty programs:', error);
       toast({

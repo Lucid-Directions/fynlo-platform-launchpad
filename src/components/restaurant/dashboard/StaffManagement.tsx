@@ -112,7 +112,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ restaurant }) 
         throw error;
       }
 
-      setSchedules(data || []);
+      setSchedules((data || []) as StaffSchedule[]);
     } catch (error) {
       console.error('Error fetching schedules:', error);
       toast({
@@ -356,24 +356,6 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ restaurant }) 
                         Joined: {new Date(staff.created_at).toLocaleDateString('en-GB')}
                       </p>
                     </div>
-
-                    {staff.permissions && staff.permissions.length > 0 && (
-                      <div>
-                        <p className="text-sm font-medium text-gray-700 mb-1">Permissions:</p>
-                        <div className="flex flex-wrap gap-1">
-                          {staff.permissions.slice(0, 3).map((permission, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {permission}
-                            </Badge>
-                          ))}
-                          {staff.permissions.length > 3 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{staff.permissions.length - 3} more
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    )}
 
                     <div className="flex justify-between pt-2 border-t">
                       <div className="flex space-x-1">
