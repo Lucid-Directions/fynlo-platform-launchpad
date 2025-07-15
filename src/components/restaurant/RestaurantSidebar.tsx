@@ -18,7 +18,8 @@ import {
   Package2,
   Database,
   Map,
-  Code
+  Code,
+  Gift
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -116,6 +117,12 @@ export const RestaurantSidebar: React.FC<RestaurantSidebarProps> = ({
       href: '/restaurant/staff', 
       icon: Users,
       show: hasFeature('staff_management')
+    },
+    { 
+      title: 'Loyalty', 
+      href: '/restaurant/loyalty', 
+      icon: Gift,
+      show: true
     },
     { 
       title: 'API Access', 
