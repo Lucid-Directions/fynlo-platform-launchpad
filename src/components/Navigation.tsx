@@ -60,6 +60,17 @@ export const Navigation = () => {
               Platform
             </Link>
             <Link 
+              to="/restaurant" 
+              className={`font-medium transition-all duration-300 hover:scale-105 hover:-rotate-1 hover-lift animate-slide-in ${
+                isActive('/restaurant') 
+                  ? 'text-brand-orange' 
+                  : 'text-brand-black hover:text-brand-orange'
+              }`}
+              style={{ animationDelay: '0.15s' }}
+            >
+              Restaurant
+            </Link>
+            <Link 
               to="/solutions" 
               className={`font-medium transition-all duration-300 hover:scale-105 hover:-rotate-1 hover-lift animate-slide-in ${
                 isActive('/solutions') 
@@ -148,6 +159,17 @@ export const Navigation = () => {
                     }`}
                   >
                     Platform
+                  </Link>
+                  <Link 
+                    to="/restaurant" 
+                    onClick={() => setIsOpen(false)}
+                    className={`text-lg font-medium transition-colors p-3 rounded-lg ${
+                      isActive('/restaurant') 
+                        ? 'text-brand-orange bg-orange-50' 
+                        : 'text-brand-black hover:text-brand-orange hover:bg-orange-50'
+                    }`}
+                  >
+                    Restaurant
                   </Link>
                   <Link 
                     to="/solutions" 
