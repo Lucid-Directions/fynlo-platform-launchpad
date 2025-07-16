@@ -61,6 +61,322 @@ export type Database = {
           },
         ]
       }
+      loyalty_ab_assignments: {
+        Row: {
+          assigned_at: string
+          customer_id: string
+          id: string
+          test_id: string
+          variant: string
+        }
+        Insert: {
+          assigned_at?: string
+          customer_id: string
+          id?: string
+          test_id: string
+          variant?: string
+        }
+        Update: {
+          assigned_at?: string
+          customer_id?: string
+          id?: string
+          test_id?: string
+          variant?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_ab_assignments_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_ab_tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loyalty_ab_tests: {
+        Row: {
+          control_settings: Json
+          created_at: string
+          description: string | null
+          end_date: string | null
+          id: string
+          name: string
+          primary_metric: string
+          program_id: string
+          secondary_metrics: string[] | null
+          start_date: string | null
+          status: string
+          test_type: string
+          traffic_split: number
+          updated_at: string
+          variant_settings: Json
+        }
+        Insert: {
+          control_settings?: Json
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name: string
+          primary_metric?: string
+          program_id: string
+          secondary_metrics?: string[] | null
+          start_date?: string | null
+          status?: string
+          test_type?: string
+          traffic_split?: number
+          updated_at?: string
+          variant_settings?: Json
+        }
+        Update: {
+          control_settings?: Json
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name?: string
+          primary_metric?: string
+          program_id?: string
+          secondary_metrics?: string[] | null
+          start_date?: string | null
+          status?: string
+          test_type?: string
+          traffic_split?: number
+          updated_at?: string
+          variant_settings?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_ab_tests_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loyalty_analytics: {
+        Row: {
+          active_members: number | null
+          avg_transaction_value: number | null
+          churned_members: number | null
+          created_at: string
+          date: string
+          id: string
+          new_members: number | null
+          points_earned: number | null
+          points_redeemed: number | null
+          program_id: string
+          referrals_generated: number | null
+          repeat_purchase_rate: number | null
+          restaurant_id: string
+          rewards_claimed: number | null
+          total_members: number | null
+          total_revenue: number | null
+          total_transactions: number | null
+          updated_at: string
+        }
+        Insert: {
+          active_members?: number | null
+          avg_transaction_value?: number | null
+          churned_members?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          new_members?: number | null
+          points_earned?: number | null
+          points_redeemed?: number | null
+          program_id: string
+          referrals_generated?: number | null
+          repeat_purchase_rate?: number | null
+          restaurant_id: string
+          rewards_claimed?: number | null
+          total_members?: number | null
+          total_revenue?: number | null
+          total_transactions?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active_members?: number | null
+          avg_transaction_value?: number | null
+          churned_members?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          new_members?: number | null
+          points_earned?: number | null
+          points_redeemed?: number | null
+          program_id?: string
+          referrals_generated?: number | null
+          repeat_purchase_rate?: number | null
+          restaurant_id?: string
+          rewards_claimed?: number | null
+          total_members?: number | null
+          total_revenue?: number | null
+          total_transactions?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_analytics_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loyalty_analytics_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loyalty_customer_data: {
+        Row: {
+          ab_test_variants: Json | null
+          created_at: string
+          current_points: number | null
+          customer_email: string | null
+          customer_hash: string | null
+          customer_phone: string | null
+          id: string
+          last_activity: string | null
+          last_purchase: string | null
+          lifetime_points: number | null
+          program_id: string
+          referrals_made: number | null
+          restaurant_id: string
+          reviews_left: number | null
+          tier_level: string | null
+          total_spent: number | null
+          updated_at: string
+          visit_count: number | null
+        }
+        Insert: {
+          ab_test_variants?: Json | null
+          created_at?: string
+          current_points?: number | null
+          customer_email?: string | null
+          customer_hash?: string | null
+          customer_phone?: string | null
+          id?: string
+          last_activity?: string | null
+          last_purchase?: string | null
+          lifetime_points?: number | null
+          program_id: string
+          referrals_made?: number | null
+          restaurant_id: string
+          reviews_left?: number | null
+          tier_level?: string | null
+          total_spent?: number | null
+          updated_at?: string
+          visit_count?: number | null
+        }
+        Update: {
+          ab_test_variants?: Json | null
+          created_at?: string
+          current_points?: number | null
+          customer_email?: string | null
+          customer_hash?: string | null
+          customer_phone?: string | null
+          id?: string
+          last_activity?: string | null
+          last_purchase?: string | null
+          lifetime_points?: number | null
+          program_id?: string
+          referrals_made?: number | null
+          restaurant_id?: string
+          reviews_left?: number | null
+          tier_level?: string | null
+          total_spent?: number | null
+          updated_at?: string
+          visit_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_customer_data_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loyalty_customer_data_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loyalty_integrations: {
+        Row: {
+          api_key: string | null
+          created_at: string
+          error_log: string | null
+          id: string
+          integration_type: string
+          is_active: boolean | null
+          last_sync: string | null
+          program_id: string
+          provider: string
+          restaurant_id: string
+          settings: Json | null
+          sync_status: string | null
+          updated_at: string
+          webhook_url: string | null
+        }
+        Insert: {
+          api_key?: string | null
+          created_at?: string
+          error_log?: string | null
+          id?: string
+          integration_type: string
+          is_active?: boolean | null
+          last_sync?: string | null
+          program_id: string
+          provider: string
+          restaurant_id: string
+          settings?: Json | null
+          sync_status?: string | null
+          updated_at?: string
+          webhook_url?: string | null
+        }
+        Update: {
+          api_key?: string | null
+          created_at?: string
+          error_log?: string | null
+          id?: string
+          integration_type?: string
+          is_active?: boolean | null
+          last_sync?: string | null
+          program_id?: string
+          provider?: string
+          restaurant_id?: string
+          settings?: Json | null
+          sync_status?: string | null
+          updated_at?: string
+          webhook_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_integrations_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loyalty_integrations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       loyalty_programs: {
         Row: {
           created_at: string | null
@@ -101,6 +417,76 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loyalty_transactions: {
+        Row: {
+          ab_test_id: string | null
+          created_at: string
+          customer_data_id: string
+          id: string
+          order_amount: number | null
+          order_id: string | null
+          points_balance: number
+          points_change: number
+          program_id: string
+          reason: string | null
+          rule_id: string | null
+          transaction_type: string
+          variant: string | null
+        }
+        Insert: {
+          ab_test_id?: string | null
+          created_at?: string
+          customer_data_id: string
+          id?: string
+          order_amount?: number | null
+          order_id?: string | null
+          points_balance: number
+          points_change: number
+          program_id: string
+          reason?: string | null
+          rule_id?: string | null
+          transaction_type: string
+          variant?: string | null
+        }
+        Update: {
+          ab_test_id?: string | null
+          created_at?: string
+          customer_data_id?: string
+          id?: string
+          order_amount?: number | null
+          order_id?: string | null
+          points_balance?: number
+          points_change?: number
+          program_id?: string
+          reason?: string | null
+          rule_id?: string | null
+          transaction_type?: string
+          variant?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_transactions_ab_test_id_fkey"
+            columns: ["ab_test_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_ab_tests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loyalty_transactions_customer_data_id_fkey"
+            columns: ["customer_data_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_customer_data"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loyalty_transactions_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_programs"
             referencedColumns: ["id"]
           },
         ]
