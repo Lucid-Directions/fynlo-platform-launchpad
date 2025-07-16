@@ -16,7 +16,9 @@ import {
   Calendar,
   PoundSterling,
   TrendingUp,
-  Activity
+  Activity,
+  Heart,
+  Gift
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -368,11 +370,19 @@ export const RestaurantManagement: React.FC = () => {
                             >
                               {restaurant.is_active ? 'Deactivate' : 'Activate'}
                             </Button>
-                            <Button variant="outline" size="sm">
-                              <Eye className="w-4 h-4 mr-1" />
-                              View
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => window.open(`/restaurant/loyalty?restaurant_id=${restaurant.id}`, '_blank')}
+                            >
+                              <Heart className="w-4 h-4 mr-1" />
+                              Loyalty
                             </Button>
-                            <Button variant="outline" size="sm">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => window.open(`/restaurant?restaurant_id=${restaurant.id}`, '_blank')}
+                            >
                               <Settings className="w-4 h-4 mr-1" />
                               Manage
                             </Button>
