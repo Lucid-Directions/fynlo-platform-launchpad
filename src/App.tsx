@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import { Dashboard } from "@/components/Dashboard";
 import { PlatformLayout } from "@/components/platform/PlatformLayout";
 import { PlatformOverview } from "@/components/platform/dashboard/PlatformOverview";
+import { RestaurantManagement } from "@/components/platform/dashboard/RestaurantManagement";
 import FinancialManagement from "@/components/platform/dashboard/FinancialManagement";
 import PlatformConfiguration from "@/components/platform/dashboard/PlatformConfiguration";
 import SupportManagement from "@/components/platform/dashboard/SupportManagement";
@@ -75,7 +76,7 @@ const App = () => (
             <Route path="/platform/restaurants" element={
               <PlatformRoute>
                 <PlatformLayout>
-                  <div>Restaurant Management - Coming Soon</div>
+                  <RestaurantManagement />
                 </PlatformLayout>
               </PlatformRoute>
             } />
