@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LoyaltyAnalyticsDashboard } from '../analytics/LoyaltyAnalyticsDashboard';
 import { ABTestManager } from '../ab-testing/ABTestManager';
 import { IntegrationManager } from '../integrations/IntegrationManager';
+import { QRCampaignManager } from '../loyalty/QRCampaignManager';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -302,8 +303,19 @@ export const PlatformLoyaltyPrograms: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
+      {/* Tabs for different views */}
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="ab-testing">A/B Testing</TabsTrigger>
+          <TabsTrigger value="integrations">Integrations</TabsTrigger>
+          <TabsTrigger value="qr-campaigns">QR Campaigns</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-6">
+          {/* Header */}
+          <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Loyalty Programs</h1>
           <p className="text-gray-600">Create and manage loyalty programs across all restaurants</p>
@@ -712,6 +724,24 @@ export const PlatformLoyaltyPrograms: React.FC = () => {
           )}
         </CardContent>
       </Card>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-6">
+          <LoyaltyAnalyticsDashboard />
+        </TabsContent>
+
+        <TabsContent value="ab-testing" className="space-y-6">
+          <ABTestManager />
+        </TabsContent>
+
+        <TabsContent value="integrations" className="space-y-6">
+          <IntegrationManager />
+        </TabsContent>
+
+        <TabsContent value="qr-campaigns" className="space-y-6">
+          <QRCampaignManager restaurants={restaurants} programs={programs} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

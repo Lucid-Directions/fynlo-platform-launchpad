@@ -13,6 +13,7 @@ import Pricing from "./pages/Pricing";
 import Resources from "./pages/Resources";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import LoyaltyScan from "./pages/LoyaltyScan";
 import { Dashboard } from "@/components/Dashboard";
 import { PlatformLayout } from "@/components/platform/PlatformLayout";
 import { PlatformOverview } from "@/components/platform/dashboard/PlatformOverview";
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/solutions" element={<Solutions />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/resources" element={<Resources />} />
+            <Route path="/loyalty/scan" element={<LoyaltyScan />} />
             <Route path="/auth" element={
               <PublicRoute>
                 <Auth />
