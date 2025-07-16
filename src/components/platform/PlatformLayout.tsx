@@ -13,7 +13,8 @@ import {
   MessageSquare,
   ChevronLeft,
   Crown,
-  LogOut
+  LogOut,
+  Heart
 } from 'lucide-react';
 
 interface PlatformLayoutProps {
@@ -52,6 +53,11 @@ const PlatformSidebar = () => {
       title: 'Restaurants',
       href: '/platform/restaurants',
       icon: Building2,
+    },
+    {
+      title: 'Loyalty Programs',
+      href: '/platform/loyalty',
+      icon: Heart,
     },
     {
       title: 'Financial',

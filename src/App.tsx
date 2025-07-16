@@ -20,6 +20,7 @@ import { RestaurantManagement } from "@/components/platform/dashboard/Restaurant
 import FinancialManagement from "@/components/platform/dashboard/FinancialManagement";
 import PlatformConfiguration from "@/components/platform/dashboard/PlatformConfiguration";
 import SupportManagement from "@/components/platform/dashboard/SupportManagement";
+import { PlatformLoyaltyPrograms } from "@/components/platform/dashboard/PlatformLoyaltyPrograms";
 
 const queryClient = new QueryClient();
 
@@ -77,6 +78,13 @@ const App = () => (
               <PlatformRoute>
                 <PlatformLayout>
                   <RestaurantManagement />
+                </PlatformLayout>
+              </PlatformRoute>
+            } />
+            <Route path="/platform/loyalty" element={
+              <PlatformRoute>
+                <PlatformLayout>
+                  <PlatformLoyaltyPrograms />
                 </PlatformLayout>
               </PlatformRoute>
             } />

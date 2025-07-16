@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { CreateRestaurantDialog } from '../dialogs/CreateRestaurantDialog';
 
 interface Restaurant {
   id: string;
@@ -53,6 +54,7 @@ export const RestaurantManagement: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [restaurantStats, setRestaurantStats] = useState<Record<string, RestaurantStats>>({});
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -185,7 +187,7 @@ export const RestaurantManagement: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Restaurant Management</h1>
           <p className="text-gray-600">Manage all restaurants on the platform</p>
         </div>
-        <Button>
+        <Button onClick={() => setIsCreateDialogOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
           Add Restaurant
         </Button>
@@ -454,6 +456,12 @@ export const RestaurantManagement: React.FC = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <CreateRestaurantDialog
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
+        onRestaurantCreated={fetchRestaurants}
+      />
     </div>
   );
 };
