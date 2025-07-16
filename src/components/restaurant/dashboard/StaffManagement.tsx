@@ -105,23 +105,20 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ restaurant }) 
         .from('staff_schedules')
         .select('*')
         .eq('restaurant_id', restaurant.id)
-        .gte('shift_date', new Date().toISOString().split('T')[0])
         .order('shift_date', { ascending: true });
 
-      if (error) {
-        throw error;
-      }
-
+      if (error) throw error;
       setSchedules((data || []) as StaffSchedule[]);
     } catch (error) {
       console.error('Error fetching schedules:', error);
       toast({
         title: "Error",
-        description: "Failed to load schedules",
+        description: "Failed to load staff schedules",
         variant: "destructive",
       });
     }
   };
+
 
   const toggleStaffStatus = async (staffId: string, currentStatus: boolean) => {
     try {
