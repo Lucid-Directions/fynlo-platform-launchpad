@@ -68,112 +68,20 @@ interface IntegrationType {
 const INTEGRATION_TYPES: IntegrationType[] = [
   {
     id: 'pos',
-    name: 'Point of Sale',
-    description: 'Connect with POS systems to track purchases and award points automatically',
-    icon: <ShoppingCart className="w-6 h-6" />,
-    category: 'Sales',
+    name: 'SumUp Payment Integration',
+    description: 'Connect with SumUp to automatically track payments and award loyalty points',
+    icon: <CreditCard className="w-6 h-6" />,
+    category: 'Payment Processing',
     providers: [
-      {
-        id: 'square',
-        name: 'Square',
-        description: 'Connect with Square POS system',
-        fields: [
-          { name: 'api_key', label: 'Application ID', type: 'text', required: true, placeholder: 'sq0idp-...' },
-          { name: 'access_token', label: 'Access Token', type: 'password', required: true, placeholder: 'sq0atp-...' },
-          { name: 'webhook_url', label: 'Webhook URL', type: 'url', required: true, placeholder: 'https://your-domain.com/webhook' }
-        ]
-      },
       {
         id: 'sumup',
         name: 'SumUp',
-        description: 'Connect with SumUp payment system',
+        description: 'Connect with SumUp payment system for automated loyalty tracking',
         fields: [
-          { name: 'client_id', label: 'Client ID', type: 'text', required: true },
-          { name: 'client_secret', label: 'Client Secret', type: 'password', required: true },
-          { name: 'webhook_url', label: 'Webhook URL', type: 'url', required: true }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'ecommerce',
-    name: 'E-commerce',
-    description: 'Integrate with online stores to track digital purchases',
-    icon: <Database className="w-6 h-6" />,
-    category: 'Sales',
-    providers: [
-      {
-        id: 'shopify',
-        name: 'Shopify',
-        description: 'Connect with Shopify store',
-        fields: [
-          { name: 'shop_domain', label: 'Shop Domain', type: 'text', required: true, placeholder: 'your-shop.myshopify.com' },
-          { name: 'access_token', label: 'Private App Access Token', type: 'password', required: true },
-          { name: 'webhook_secret', label: 'Webhook Secret', type: 'password', required: true }
-        ]
-      },
-      {
-        id: 'woocommerce',
-        name: 'WooCommerce',
-        description: 'Connect with WooCommerce store',
-        fields: [
-          { name: 'site_url', label: 'Site URL', type: 'url', required: true, placeholder: 'https://yourstore.com' },
-          { name: 'consumer_key', label: 'Consumer Key', type: 'text', required: true },
-          { name: 'consumer_secret', label: 'Consumer Secret', type: 'password', required: true }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'marketing',
-    name: 'Marketing Automation',
-    description: 'Send loyalty updates and campaigns through marketing platforms',
-    icon: <Mail className="w-6 h-6" />,
-    category: 'Marketing',
-    providers: [
-      {
-        id: 'mailchimp',
-        name: 'Mailchimp',
-        description: 'Send emails through Mailchimp',
-        fields: [
-          { name: 'api_key', label: 'API Key', type: 'password', required: true },
-          { name: 'list_id', label: 'Audience ID', type: 'text', required: true }
-        ]
-      },
-      {
-        id: 'klaviyo',
-        name: 'Klaviyo',
-        description: 'Send personalized marketing emails',
-        fields: [
-          { name: 'private_key', label: 'Private API Key', type: 'password', required: true },
-          { name: 'public_key', label: 'Public API Key', type: 'text', required: true }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'crm',
-    name: 'Customer Relationship Management',
-    description: 'Sync customer data with your CRM system',
-    icon: <MessageSquare className="w-6 h-6" />,
-    category: 'Customer Management',
-    providers: [
-      {
-        id: 'hubspot',
-        name: 'HubSpot',
-        description: 'Sync with HubSpot CRM',
-        fields: [
-          { name: 'api_key', label: 'Private App Access Token', type: 'password', required: true }
-        ]
-      },
-      {
-        id: 'salesforce',
-        name: 'Salesforce',
-        description: 'Connect with Salesforce CRM',
-        fields: [
-          { name: 'instance_url', label: 'Instance URL', type: 'url', required: true },
-          { name: 'client_id', label: 'Consumer Key', type: 'text', required: true },
-          { name: 'client_secret', label: 'Consumer Secret', type: 'password', required: true }
+          { name: 'client_id', label: 'SumUp Client ID', type: 'text', required: true, placeholder: 'Your SumUp Client ID' },
+          { name: 'client_secret', label: 'SumUp Client Secret', type: 'password', required: true, placeholder: 'Your SumUp Client Secret' },
+          { name: 'merchant_code', label: 'Merchant Code', type: 'text', required: true, placeholder: 'Your merchant code' },
+          { name: 'webhook_url', label: 'Webhook URL', type: 'url', required: false, placeholder: 'https://your-domain.com/webhook' }
         ]
       }
     ]
@@ -251,6 +159,34 @@ export const IntegrationManager: React.FC = () => {
       const program = programs.find(p => p.id === formData.program_id);
       if (!program) throw new Error('Program not found');
 
+      // For SumUp, save credentials to platform settings
+      if (formData.provider === 'sumup') {
+        const { client_id, client_secret, merchant_code } = formData.settings;
+        
+        if (!client_id || !client_secret || !merchant_code) {
+          toast({
+            title: "Error",
+            description: "Please fill in all required SumUp credentials",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        // Save SumUp config to platform settings
+        const { error: configError } = await supabase
+          .from('platform_settings')
+          .upsert({
+            setting_key: 'payment_config',
+            setting_value: {
+              sumup_app_id: client_id,
+              sumup_app_secret: client_secret,
+              merchant_code: merchant_code
+            }
+          });
+
+        if (configError) throw configError;
+      }
+
       const { error } = await supabase
         .from('loyalty_integrations')
         .insert({
@@ -273,7 +209,7 @@ export const IntegrationManager: React.FC = () => {
       
       toast({
         title: "Success",
-        description: "Integration created successfully",
+        description: "SumUp integration created successfully",
       });
     } catch (error) {
       console.error('Error creating integration:', error);
@@ -310,19 +246,52 @@ export const IntegrationManager: React.FC = () => {
   };
 
   const testIntegration = async (integrationId: string) => {
-    // Simulate API test
+    const integration = integrations.find(i => i.id === integrationId);
+    if (!integration) return;
+
     toast({
       title: "Testing Integration",
-      description: "Sending test request...",
+      description: "Connecting to SumUp...",
     });
 
-    // Mock delay
-    setTimeout(() => {
+    try {
+      if (integration.provider === 'sumup') {
+        // Test SumUp connection
+        const response = await supabase.functions.invoke('sumup-payments', {
+          body: { action: 'test_connection' }
+        });
+
+        if (response.error) throw response.error;
+
+        toast({
+          title: "Test Successful",
+          description: "SumUp integration is working correctly",
+        });
+
+        // Update sync status
+        await supabase
+          .from('loyalty_integrations')
+          .update({ sync_status: 'success', error_log: null })
+          .eq('id', integrationId);
+
+        await fetchData();
+      }
+    } catch (error) {
+      console.error('Integration test failed:', error);
       toast({
-        title: "Test Successful",
-        description: "Integration is working correctly",
+        title: "Test Failed",
+        description: "Failed to connect to SumUp. Please check your credentials.",
+        variant: "destructive",
       });
-    }, 2000);
+
+      // Update sync status
+      await supabase
+        .from('loyalty_integrations')
+        .update({ sync_status: 'error', error_log: error.message })
+        .eq('id', integrationId);
+
+      await fetchData();
+    }
   };
 
   const resetForm = () => {

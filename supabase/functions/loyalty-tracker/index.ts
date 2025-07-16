@@ -18,23 +18,43 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { action, data } = await req.json()
-    console.log('Loyalty tracker action:', action, data)
+    // Check if this is a SumUp webhook
+    const contentType = req.headers.get('content-type')
+    if (contentType && contentType.includes('application/json')) {
+      const payload = await req.json()
+      console.log('Received payload:', payload)
 
-    switch (action) {
-      case 'track_purchase':
-        return await trackPurchase(supabaseClient, data)
-      case 'award_points':
-        return await awardPoints(supabaseClient, data)
-      case 'redeem_points':
-        return await redeemPoints(supabaseClient, data)
-      case 'process_referral':
-        return await processReferral(supabaseClient, data)
-      case 'update_tier':
-        return await updateCustomerTier(supabaseClient, data)
-      default:
-        throw new Error(`Unknown action: ${action}`)
+      // Handle SumUp webhook events
+      if (payload.event_type === 'PAYMENT' || payload.event_type === 'CHECKOUT_COMPLETED') {
+        return await processSumUpWebhook(supabaseClient, payload)
+      }
+
+      // Handle API actions
+      if (payload.action) {
+        const { action, data } = payload
+        console.log('Loyalty tracker action:', action, data)
+
+        switch (action) {
+          case 'track_purchase':
+            return await trackPurchase(supabaseClient, data)
+          case 'award_points':
+            return await awardPoints(supabaseClient, data)
+          case 'redeem_points':
+            return await redeemPoints(supabaseClient, data)
+          case 'process_referral':
+            return await processReferral(supabaseClient, data)
+          case 'update_tier':
+            return await updateCustomerTier(supabaseClient, data)
+          default:
+            throw new Error(`Unknown action: ${action}`)
+        }
+      }
     }
+
+    return new Response('Invalid request', { 
+      status: 400,
+      headers: corsHeaders 
+    })
   } catch (error) {
     console.error('Error in loyalty tracker:', error)
     return new Response(
@@ -407,6 +427,87 @@ async function updateCustomerTier(supabase: any, data: any) {
     }),
     { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
   )
+}
+
+async function processSumUpWebhook(supabase: any, payload: any) {
+  console.log('Processing SumUp webhook:', payload)
+
+  try {
+    // Extract payment information from SumUp webhook
+    const amount = payload.amount || payload.transaction?.amount
+    const currency = payload.currency || payload.transaction?.currency
+    const customer_email = payload.customer?.email || payload.checkout?.customer_email
+    const checkout_reference = payload.checkout?.checkout_reference || payload.id
+
+    if (!amount || !customer_email) {
+      console.log('Missing required fields:', { amount, customer_email })
+      return new Response(JSON.stringify({ success: true, message: 'Ignored - missing required fields' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    // Find active loyalty programs that have SumUp integration
+    const { data: integrations, error: integrationsError } = await supabase
+      .from('loyalty_integrations')
+      .select(`
+        program_id,
+        restaurant_id,
+        programs:loyalty_programs(*)
+      `)
+      .eq('provider', 'sumup')
+      .eq('is_active', true)
+
+    if (integrationsError) throw integrationsError
+
+    if (!integrations || integrations.length === 0) {
+      console.log('No active SumUp integrations found')
+      return new Response(JSON.stringify({ success: true, message: 'No integrations found' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    // Process payment for each integrated loyalty program
+    const results = []
+    for (const integration of integrations) {
+      try {
+        const trackResult = await trackPurchase(supabase, {
+          program_id: integration.program_id,
+          restaurant_id: integration.restaurant_id,
+          customer_email,
+          order_amount: amount,
+          order_id: checkout_reference,
+        })
+        
+        results.push({
+          program_id: integration.program_id,
+          success: true,
+          result: JSON.parse(trackResult.body)
+        })
+      } catch (error) {
+        console.error(`Error processing payment for program ${integration.program_id}:`, error)
+        results.push({
+          program_id: integration.program_id,
+          success: false,
+          error: error.message
+        })
+      }
+    }
+
+    return new Response(JSON.stringify({ 
+      success: true, 
+      message: 'SumUp webhook processed',
+      results 
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
+
+  } catch (error) {
+    console.error('Error processing SumUp webhook:', error)
+    return new Response(JSON.stringify({ error: error.message }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 400
+    })
+  }
 }
 
 async function updateAnalytics(supabase: any, program_id: string, restaurant_id: string, metrics: any) {
