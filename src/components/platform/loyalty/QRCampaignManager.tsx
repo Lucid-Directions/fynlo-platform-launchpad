@@ -30,61 +30,344 @@ interface QRCampaignManagerProps {
 }
 
 const QR_CAMPAIGN_TEMPLATES = [
+  // 1. Print QR codes on receipts with "Scan for a free coffee!" to drive instant signups
   {
-    id: 'signup_bonus',
-    name: 'Signup Bonus',
-    description: 'Scan QR to join loyalty program and get instant reward',
-    type: 'signup',
-    defaultReward: { type: 'points', value: 100 }
+    id: 'receipt_free_coffee',
+    name: 'Receipt Free Coffee',
+    description: 'Print QR on receipts with "Scan for a free coffee!" to drive instant signups',
+    type: 'receipt_signup',
+    placement: 'receipt',
+    defaultReward: { type: 'free_item', value: 'coffee', message: 'Scan for a free coffee!' }
   },
+  
+  // 2. Offer a one-time discount (like 10% off) for scanning and joining the loyalty program
   {
-    id: 'instant_discount',
-    name: 'Instant Discount',
-    description: 'Scan for immediate discount on current order',
-    type: 'discount',
-    defaultReward: { type: 'percentage', value: 10 }
+    id: 'signup_discount',
+    name: 'One-Time Signup Discount',
+    description: 'Offer 10% off for scanning and joining the loyalty program',
+    type: 'signup_discount',
+    placement: 'any',
+    defaultReward: { type: 'percentage', value: 10, oneTime: true }
   },
+  
+  // 3. Add QR codes to table tents with "Unlock a surprise reward!" to grab attention
   {
-    id: 'mystery_reward',
-    name: 'Mystery Reward',
-    description: 'Scan to reveal a surprise reward',
-    type: 'mystery',
-    defaultReward: { type: 'random', options: ['free_drink', 'free_side', '15_percent_off'] }
+    id: 'table_tent_surprise',
+    name: 'Table Tent Surprise',
+    description: 'QR codes on table tents with "Unlock a surprise reward!" to grab attention',
+    type: 'surprise_reward',
+    placement: 'table_tent',
+    defaultReward: { type: 'mystery', options: ['free_appetizer', 'free_drink', '15_percent_off'], message: 'Unlock a surprise reward!' }
   },
+  
+  // 4. Use a digital loyalty card customers add to Apple or Google Wallet via QR scan
   {
-    id: 'check_in_points',
-    name: 'Check-in Points',
-    description: 'Earn points for visiting without purchase',
-    type: 'checkin',
-    defaultReward: { type: 'points', value: 25 }
+    id: 'digital_wallet_card',
+    name: 'Digital Wallet Loyalty Card',
+    description: 'Digital loyalty card for Apple/Google Wallet via QR scan',
+    type: 'digital_wallet',
+    placement: 'any',
+    defaultReward: { type: 'wallet_integration', platforms: ['apple_wallet', 'google_pay'], points: 100 }
   },
+  
+  // 5. Link QR scans to a gamified wheel-spin for random rewards
   {
-    id: 'referral_bonus',
-    name: 'Bring a Friend',
-    description: 'Refer friends and both get rewards',
-    type: 'referral',
-    defaultReward: { type: 'points', value: 50 }
+    id: 'wheel_spin_game',
+    name: 'Gamified Wheel Spin',
+    description: 'QR scans trigger a wheel-spin game for random rewards',
+    type: 'gamification',
+    placement: 'any',
+    defaultReward: { type: 'wheel_spin', prizes: ['free_side', 'double_points', '20_percent_off', 'free_dessert', 'free_drink'] }
   },
+  
+  // 6. Place QR codes on menus with "Join our loyalty club for exclusive deals!"
   {
-    id: 'birthday_reward',
-    name: 'Birthday Special',
-    description: 'Birthday month exclusive reward',
-    type: 'birthday',
-    defaultReward: { type: 'free_item', value: 'dessert' }
+    id: 'menu_exclusive_deals',
+    name: 'Menu Exclusive Deals',
+    description: 'QR codes on menus with "Join our loyalty club for exclusive deals!"',
+    type: 'exclusive_membership',
+    placement: 'menu',
+    defaultReward: { type: 'membership_perks', benefits: ['exclusive_deals', 'early_access', 'member_pricing'] }
   },
+  
+  // 7. Offer double points for the first purchase after scanning to join
   {
-    id: 'multi_venue',
-    name: 'Multi-Venue Promo',
-    description: 'Visit partner locations for bonus rewards',
-    type: 'cross_venue',
-    defaultReward: { type: 'percentage', value: 20 }
+    id: 'double_points_first_purchase',
+    name: 'First Purchase Double Points',
+    description: 'Double points for the first purchase after scanning to join',
+    type: 'first_purchase_bonus',
+    placement: 'any',
+    defaultReward: { type: 'points_multiplier', value: 2, oneTime: true, duration: '7_days' }
   },
+  
+  // 8. Integrate QR scans with partnered payment processor to link purchase data
   {
-    id: 'streak_bonus',
-    name: 'Visit Streak',
-    description: 'Consecutive visit rewards',
-    type: 'streak',
-    defaultReward: { type: 'multiplier', value: 2 }
+    id: 'payment_integration',
+    name: 'Payment Processor Integration',
+    description: 'QR scans integrate with payment processor to link purchase data',
+    type: 'payment_integration',
+    placement: 'pos_system',
+    defaultReward: { type: 'automatic_points', integration: 'stripe', points_per_dollar: 1 }
+  },
+  
+  // 9. Display QR codes on takeout bags with "Scan to earn points on your next order!"
+  {
+    id: 'takeout_next_order_points',
+    name: 'Takeout Next Order Points',
+    description: 'QR on takeout bags: "Scan to earn points on your next order!"',
+    type: 'next_order_incentive',
+    placement: 'takeout_bag',
+    defaultReward: { type: 'future_points', value: 50, message: 'Scan to earn points on your next order!' }
+  },
+  
+  // 10. Create a "Loyalty Starter" campaign—first QR scan gives 100 bonus points
+  {
+    id: 'loyalty_starter_100',
+    name: 'Loyalty Starter 100',
+    description: 'First QR scan gives 100 bonus points as loyalty starter',
+    type: 'starter_bonus',
+    placement: 'any',
+    defaultReward: { type: 'points', value: 100, firstScanOnly: true }
+  },
+  
+  // 11. Use QR codes at the counter with "Scan to enter a weekly prize draw!"
+  {
+    id: 'weekly_prize_draw',
+    name: 'Weekly Prize Draw',
+    description: 'Counter QR codes: "Scan to enter a weekly prize draw!"',
+    type: 'prize_draw',
+    placement: 'counter',
+    defaultReward: { type: 'contest_entry', frequency: 'weekly', prizes: ['free_meal', 'gift_card', 'merchandise'] }
+  },
+  
+  // 12. Tie QR scans to multi-venue promos like "Visit our sister restaurant for 20% off!"
+  {
+    id: 'sister_restaurant_promo',
+    name: 'Sister Restaurant Promo',
+    description: 'Multi-venue QR: "Visit our sister restaurant for 20% off!"',
+    type: 'cross_venue_promotion',
+    placement: 'any',
+    defaultReward: { type: 'cross_promotion', discount: 20, venues: 'sister_restaurants' }
+  },
+  
+  // 13. Offer a free menu item after three QR-linked purchases
+  {
+    id: 'three_purchase_free_item',
+    name: 'Three Purchase Free Item',
+    description: 'Free menu item after three QR-linked purchases',
+    type: 'purchase_milestone',
+    placement: 'any',
+    defaultReward: { type: 'milestone_reward', purchases_required: 3, reward: 'free_menu_item' }
+  },
+  
+  // 14. Place QR codes on in-store signage with "Join now for a free dessert!"
+  {
+    id: 'signage_free_dessert',
+    name: 'In-Store Signage Free Dessert',
+    description: 'In-store signage QR: "Join now for a free dessert!"',
+    type: 'signage_promotion',
+    placement: 'in_store_signage',
+    defaultReward: { type: 'free_item', value: 'dessert', message: 'Join now for a free dessert!' }
+  },
+  
+  // 15. Link QR scans to a tiered loyalty system—higher tiers unlock bigger rewards
+  {
+    id: 'tiered_loyalty_system',
+    name: 'Tiered Loyalty System',
+    description: 'QR scans linked to tiered system—higher tiers unlock bigger rewards',
+    type: 'tier_progression',
+    placement: 'any',
+    defaultReward: { type: 'tier_benefits', tiers: ['bronze', 'silver', 'gold', 'platinum'], escalating_rewards: true }
+  },
+  
+  // 16. Enable QR-based check-ins at the restaurant to earn points without a purchase
+  {
+    id: 'checkin_no_purchase',
+    name: 'Check-in Without Purchase',
+    description: 'QR-based check-ins earn points without requiring a purchase',
+    type: 'location_checkin',
+    placement: 'entrance',
+    defaultReward: { type: 'checkin_points', value: 25, no_purchase_required: true }
+  },
+  
+  // 17. Offer a "bring a friend" bonus—scan QR to refer someone for shared rewards
+  {
+    id: 'bring_friend_shared_rewards',
+    name: 'Bring a Friend Shared Rewards',
+    description: 'Scan QR to refer someone—both get shared rewards',
+    type: 'referral_program',
+    placement: 'any',
+    defaultReward: { type: 'shared_reward', referrer_points: 75, referee_points: 75 }
+  },
+  
+  // 18. Use QR codes for limited-time campaigns like "Scan for a seasonal taco discount!"
+  {
+    id: 'seasonal_taco_discount',
+    name: 'Seasonal Taco Discount',
+    description: 'Limited-time QR: "Scan for a seasonal taco discount!"',
+    type: 'seasonal_campaign',
+    placement: 'any',
+    defaultReward: { type: 'seasonal_discount', item: 'tacos', discount: 25, time_limited: true }
+  },
+  
+  // 19. Add QR codes to emailed receipts from any payment system for post-purchase signup
+  {
+    id: 'email_receipt_signup',
+    name: 'Email Receipt Signup',
+    description: 'QR codes in emailed receipts for post-purchase signup',
+    type: 'post_purchase_signup',
+    placement: 'email_receipt',
+    defaultReward: { type: 'retroactive_points', value: 50, for_current_purchase: true }
+  },
+  
+  // 20. Create a loyalty app homepage with a QR scanner for in-store deals
+  {
+    id: 'app_scanner_deals',
+    name: 'App QR Scanner Deals',
+    description: 'Loyalty app homepage QR scanner for exclusive in-store deals',
+    type: 'app_integration',
+    placement: 'mobile_app',
+    defaultReward: { type: 'app_exclusive_deals', scanner_required: true, deals: ['daily_specials', 'flash_sales'] }
+  },
+  
+  // 21. Offer a "mystery reward" for scanning, revealed after signup
+  {
+    id: 'mystery_post_signup',
+    name: 'Mystery Reward Post-Signup',
+    description: 'Mystery reward for scanning, revealed after completing signup',
+    type: 'mystery_signup',
+    placement: 'any',
+    defaultReward: { type: 'mystery_reveal', options: ['free_drink', 'free_appetizer', '20_percent_off'], reveal_after_signup: true }
+  },
+  
+  // 22. Place QR codes on to-go cups with "Scan to join and get 10% off next time!"
+  {
+    id: 'cup_next_visit_discount',
+    name: 'To-Go Cup Next Visit Discount',
+    description: 'QR on cups: "Scan to join and get 10% off next time!"',
+    type: 'next_visit_incentive',
+    placement: 'to_go_cup',
+    defaultReward: { type: 'next_visit_discount', discount: 10, expires_in: '30_days' }
+  },
+  
+  // 23. Link QR scans to a points-per-visit system, not tied to purchases
+  {
+    id: 'visit_based_points',
+    name: 'Visit-Based Points System',
+    description: 'QR scans earn points per visit, not tied to purchase amounts',
+    type: 'visit_rewards',
+    placement: 'any',
+    defaultReward: { type: 'visit_points', points_per_visit: 30, purchase_independent: true }
+  },
+  
+  // 24. Use QR codes to unlock exclusive menu items only for loyalty members
+  {
+    id: 'exclusive_menu_items',
+    name: 'Member Exclusive Menu Items',
+    description: 'QR codes unlock exclusive menu items only for loyalty members',
+    type: 'exclusive_menu',
+    placement: 'menu',
+    defaultReward: { type: 'menu_access', exclusive_items: ['secret_burger', 'member_special', 'chef_choice'] }
+  },
+  
+  // 25. Offer a birthday reward—scan QR to input birthdate for a freebie
+  {
+    id: 'birthday_freebie_input',
+    name: 'Birthday Freebie Setup',
+    description: 'Scan QR to input birthdate and set up birthday freebie',
+    type: 'birthday_setup',
+    placement: 'any',
+    defaultReward: { type: 'birthday_program', setup_reward: 'free_appetizer', birthday_reward: 'free_entree' }
+  },
+  
+  // 26. Create QR-linked social media challenges like "Share and scan for bonus points!"
+  {
+    id: 'social_media_challenge',
+    name: 'Social Media Challenge',
+    description: 'QR-linked social challenges: "Share and scan for bonus points!"',
+    type: 'social_engagement',
+    placement: 'any',
+    defaultReward: { type: 'social_points', share_bonus: 50, platforms: ['instagram', 'facebook', 'tiktok'] }
+  },
+  
+  // 27. Place QR codes on loyalty-branded napkins with "Join the taco club now!"
+  {
+    id: 'napkin_taco_club',
+    name: 'Napkin Taco Club',
+    description: 'QR on loyalty-branded napkins: "Join the taco club now!"',
+    type: 'branded_napkin_promo',
+    placement: 'napkin',
+    defaultReward: { type: 'club_membership', club: 'taco_club', benefits: ['exclusive_tacos', 'taco_tuesday_deals'] }
+  },
+  
+  // 28. Offer a "first scan" reward tied to multi-venue deal like "Try our new location!"
+  {
+    id: 'first_scan_new_location',
+    name: 'First Scan New Location',
+    description: 'First scan reward tied to multi-venue: "Try our new location!"',
+    type: 'location_promotion',
+    placement: 'any',
+    defaultReward: { type: 'location_incentive', new_location_discount: 25, first_scan_bonus: 100 }
+  },
+  
+  // 29. Link QR scans to a referral program—existing members get points for new signups
+  {
+    id: 'member_referral_points',
+    name: 'Member Referral Points',
+    description: 'Existing members get points when their QR referrals sign up new people',
+    type: 'member_referral_system',
+    placement: 'any',
+    defaultReward: { type: 'referral_points', existing_member_bonus: 100, new_member_bonus: 50 }
+  },
+  
+  // 30. Use QR codes at events or pop-ups with "Scan for a limited-time offer!"
+  {
+    id: 'event_limited_offer',
+    name: 'Event Limited-Time Offer',
+    description: 'QR at events/pop-ups: "Scan for a limited-time offer!"',
+    type: 'event_promotion',
+    placement: 'event_popup',
+    defaultReward: { type: 'event_exclusive', discount: 30, time_limited: true, event_only: true }
+  },
+  
+  // 31. Enable QR-based feedback surveys that reward loyalty points upon completion
+  {
+    id: 'feedback_survey_points',
+    name: 'Feedback Survey Points',
+    description: 'QR-based feedback surveys reward loyalty points upon completion',
+    type: 'survey_rewards',
+    placement: 'any',
+    defaultReward: { type: 'survey_points', points_for_completion: 40, survey_types: ['experience', 'food_quality', 'service'] }
+  },
+  
+  // 32. Offer a "family plan" loyalty tier—scan QR to link multiple accounts for shared points
+  {
+    id: 'family_plan_shared_points',
+    name: 'Family Plan Shared Points',
+    description: 'Family loyalty tier—QR links multiple accounts for shared points',
+    type: 'family_program',
+    placement: 'any',
+    defaultReward: { type: 'family_tier', shared_points: true, max_accounts: 6, family_bonuses: true }
+  },
+  
+  // 33. Place QR codes on packaging with "Scan to unlock a secret menu item!"
+  {
+    id: 'packaging_secret_menu',
+    name: 'Packaging Secret Menu',
+    description: 'QR on packaging: "Scan to unlock a secret menu item!"',
+    type: 'secret_menu_unlock',
+    placement: 'packaging',
+    defaultReward: { type: 'secret_access', secret_items: ['hidden_burger', 'chef_special', 'off_menu_dessert'] }
+  },
+  
+  // 34. Tie QR scans to a "streak" system—consecutive scans increase rewards
+  {
+    id: 'consecutive_scan_streak',
+    name: 'Consecutive Scan Streak',
+    description: 'Streak system where consecutive QR scans increase reward multipliers',
+    type: 'streak_multiplier',
+    placement: 'any',
+    defaultReward: { type: 'streak_rewards', day_1: 25, day_3: 50, day_7: 100, day_14: 200, multiplier_increase: true }
   }
 ];
 
