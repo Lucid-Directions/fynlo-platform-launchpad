@@ -956,6 +956,117 @@ export type Database = {
         }
         Relationships: []
       }
+      qr_campaign_usage: {
+        Row: {
+          campaign_id: string
+          claimed_at: string
+          customer_data_id: string
+          id: string
+          metadata: Json | null
+          points_awarded: number | null
+          reward_claimed: Json | null
+        }
+        Insert: {
+          campaign_id: string
+          claimed_at?: string
+          customer_data_id: string
+          id?: string
+          metadata?: Json | null
+          points_awarded?: number | null
+          reward_claimed?: Json | null
+        }
+        Update: {
+          campaign_id?: string
+          claimed_at?: string
+          customer_data_id?: string
+          id?: string
+          metadata?: Json | null
+          points_awarded?: number | null
+          reward_claimed?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qr_campaign_usage_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "qr_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qr_campaign_usage_customer_data_id_fkey"
+            columns: ["customer_data_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_customer_data"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      qr_campaigns: {
+        Row: {
+          campaign_type: string
+          created_at: string
+          description: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          program_id: string
+          qr_data: Json
+          restaurant_id: string
+          reward_settings: Json
+          starts_at: string | null
+          updated_at: string
+          usage_limits: Json | null
+        }
+        Insert: {
+          campaign_type?: string
+          created_at?: string
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          program_id: string
+          qr_data?: Json
+          restaurant_id: string
+          reward_settings?: Json
+          starts_at?: string | null
+          updated_at?: string
+          usage_limits?: Json | null
+        }
+        Update: {
+          campaign_type?: string
+          created_at?: string
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          program_id?: string
+          qr_data?: Json
+          restaurant_id?: string
+          reward_settings?: Json
+          starts_at?: string | null
+          updated_at?: string
+          usage_limits?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qr_campaigns_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qr_campaigns_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       restaurant_analytics: {
         Row: {
           avg_order_value: number | null

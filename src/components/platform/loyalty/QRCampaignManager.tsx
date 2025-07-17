@@ -374,22 +374,24 @@ export function QRCampaignManager({ restaurants, programs }: QRCampaignManagerPr
 
   const fetchCampaigns = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
-        .from('platform_settings')
-        .select('*')
-        .eq('setting_key', 'qr_campaigns');
+        .from('qr_campaigns')
+        .select(`
+          *,
+          restaurants(name),
+          loyalty_programs(name)
+        `)
+        .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching campaigns:', error);
+        return;
+      }
 
-      const campaignsData = (data?.[0]?.setting_value as any)?.campaigns || [];
-      setCampaigns(campaignsData);
+      setCampaigns(data || []);
     } catch (error) {
-      console.error('Error fetching QR campaigns:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load QR campaigns",
-        variant: "destructive",
-      });
+      console.error('Error fetching campaigns:', error);
     } finally {
       setLoading(false);
     }
@@ -397,36 +399,73 @@ export function QRCampaignManager({ restaurants, programs }: QRCampaignManagerPr
 
   const createCampaign = async () => {
     try {
-      const campaignData = {
-        id: crypto.randomUUID(),
-        ...formData,
-        qr_data: {
-          url: `${window.location.origin}/loyalty/scan?campaign=${crypto.randomUUID()}`,
-          template: selectedTemplate,
-          reward: formData.reward,
-          placement: formData.placement
-        },
-        is_active: true,
-        created_at: new Date().toISOString()
+      if (!selectedTemplate || !formData.name || !formData.restaurant_id || !formData.program_id) {
+        toast({
+          title: "Error",
+          description: "Please fill in all required fields",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Prepare reward settings based on template
+      const rewardSettings = selectedTemplate.defaultReward || formData.reward;
+
+      const usageLimits = {
+        max_uses_per_customer: formData.max_uses ? parseInt(formData.max_uses) : null,
+        total_max_uses: null,
+        daily_limit: null
       };
 
-      const { data: existing } = await supabase
-        .from('platform_settings')
-        .select('setting_value')
-        .eq('setting_key', 'qr_campaigns')
+      const { data, error } = await supabase
+        .from('qr_campaigns')
+        .insert({
+          name: formData.name,
+          description: formData.description || selectedTemplate.description,
+          campaign_type: selectedTemplate.type,
+          qr_data: {
+            campaignId: null, // Will be updated after insert
+            type: selectedTemplate.type,
+            restaurantId: formData.restaurant_id,
+            programId: formData.program_id,
+            template: selectedTemplate,
+            placement: formData.placement
+          },
+          reward_settings: rewardSettings,
+          usage_limits: usageLimits,
+          is_active: true,
+          starts_at: null,
+          expires_at: formData.expiry_date || null,
+          restaurant_id: formData.restaurant_id,
+          program_id: formData.program_id
+        })
+        .select()
         .single();
 
-      const currentCampaigns = (existing?.setting_value as any)?.campaigns || [];
-      const updatedCampaigns = [...currentCampaigns, campaignData];
-
-      const { error } = await supabase
-        .from('platform_settings')
-        .upsert({
-          setting_key: 'qr_campaigns',
-          setting_value: { campaigns: updatedCampaigns }
+      if (error) {
+        console.error('Error creating campaign:', error);
+        toast({
+          title: "Error",
+          description: "Failed to create campaign",
+          variant: "destructive"
         });
+        return;
+      }
 
-      if (error) throw error;
+      // Update qr_data with the actual campaign ID
+      await supabase
+        .from('qr_campaigns')
+        .update({
+          qr_data: {
+            campaignId: data.id,
+            type: selectedTemplate.type,
+            restaurantId: formData.restaurant_id,
+            programId: formData.program_id,
+            template: selectedTemplate,
+            placement: formData.placement
+          }
+        })
+        .eq('id', data.id);
 
       await fetchCampaigns();
       setShowCreateDialog(false);
@@ -434,53 +473,50 @@ export function QRCampaignManager({ restaurants, programs }: QRCampaignManagerPr
       
       toast({
         title: "Success",
-        description: "QR campaign created successfully",
+        description: "QR campaign created successfully"
       });
     } catch (error) {
-      console.error('Error creating QR campaign:', error);
+      console.error('Error creating campaign:', error);
       toast({
         title: "Error",
-        description: "Failed to create QR campaign",
-        variant: "destructive",
+        description: "Failed to create campaign",
+        variant: "destructive"
       });
     }
   };
 
   const toggleCampaignStatus = async (campaignId: string) => {
     try {
-      const { data: existing } = await supabase
-        .from('platform_settings')
-        .select('setting_value')
-        .eq('setting_key', 'qr_campaigns')
-        .single();
-
-      const currentCampaigns = (existing?.setting_value as any)?.campaigns || [];
-      const updatedCampaigns = currentCampaigns.map((campaign: QRCampaign) =>
-        campaign.id === campaignId 
-          ? { ...campaign, is_active: !campaign.is_active }
-          : campaign
-      );
+      const campaign = campaigns.find(c => c.id === campaignId);
+      if (!campaign) return;
 
       const { error } = await supabase
-        .from('platform_settings')
-        .upsert({
-          setting_key: 'qr_campaigns',
-          setting_value: { campaigns: updatedCampaigns }
-        });
+        .from('qr_campaigns')
+        .update({ is_active: !campaign.is_active })
+        .eq('id', campaignId);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating campaign status:', error);
+        toast({
+          title: "Error",
+          description: "Failed to update campaign status",
+          variant: "destructive"
+        });
+        return;
+      }
 
       await fetchCampaigns();
+
       toast({
         title: "Success",
-        description: "Campaign status updated",
+        description: "Campaign status updated"
       });
     } catch (error) {
-      console.error('Error updating campaign:', error);
+      console.error('Error updating campaign status:', error);
       toast({
         title: "Error",
         description: "Failed to update campaign status",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
