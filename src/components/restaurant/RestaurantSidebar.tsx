@@ -123,7 +123,7 @@ export const RestaurantSidebar: React.FC<RestaurantSidebarProps> = ({
       title: 'Loyalty', 
       href: '/restaurant/loyalty', 
       icon: Star,
-      show: hasFeature('customer_database')
+      show: true // Now available to all restaurant managers
     },
     { 
       title: 'API Access', 

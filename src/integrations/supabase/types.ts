@@ -1356,8 +1356,60 @@ export type Database = {
         }
         Relationships: []
       }
+      staff_invitations: {
+        Row: {
+          accepted_at: string | null
+          created_at: string | null
+          email: string
+          expires_at: string | null
+          id: string
+          invitation_token: string | null
+          invited_by: string
+          restaurant_id: string
+          role: string
+          updated_at: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string | null
+          email: string
+          expires_at?: string | null
+          id?: string
+          invitation_token?: string | null
+          invited_by: string
+          restaurant_id: string
+          role?: string
+          updated_at?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string | null
+          email?: string
+          expires_at?: string | null
+          id?: string
+          invitation_token?: string | null
+          invited_by?: string
+          restaurant_id?: string
+          role?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_invitations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       staff_members: {
         Row: {
+          can_manage_loyalty: boolean | null
+          can_manage_menu: boolean | null
+          can_manage_orders: boolean | null
+          can_manage_staff: boolean | null
+          can_view_analytics: boolean | null
           created_at: string
           hourly_rate: number | null
           id: string
@@ -1369,6 +1421,11 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          can_manage_loyalty?: boolean | null
+          can_manage_menu?: boolean | null
+          can_manage_orders?: boolean | null
+          can_manage_staff?: boolean | null
+          can_view_analytics?: boolean | null
           created_at?: string
           hourly_rate?: number | null
           id?: string
@@ -1380,6 +1437,11 @@ export type Database = {
           user_id: string
         }
         Update: {
+          can_manage_loyalty?: boolean | null
+          can_manage_menu?: boolean | null
+          can_manage_orders?: boolean | null
+          can_manage_staff?: boolean | null
+          can_view_analytics?: boolean | null
           created_at?: string
           hourly_rate?: number | null
           id?: string

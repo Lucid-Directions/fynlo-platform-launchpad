@@ -134,7 +134,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ restaurant }) 
     }
   };
 
-  const createStaff = async () => {
+  const sendStaffInvitation = async () => {
     if (!newStaff.email.trim()) {
       toast({
         title: "Error",
@@ -145,32 +145,39 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ restaurant }) 
     }
 
     try {
-      const { error } = await supabase
-        .from('staff_members')
-        .insert({
-          user_id: newStaff.email, // Using email as user_id for now
-          restaurant_id: restaurant.id,
+      // Get current user for inviter name
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', user?.id)
+        .single();
+
+      // Send invitation email
+      const { error: emailError } = await supabase.functions.invoke('send-staff-invitation', {
+        body: {
+          email: newStaff.email,
           role: newStaff.role,
-          hourly_rate: newStaff.hourly_rate ? parseFloat(newStaff.hourly_rate) : null,
-          permissions: [],
-          is_active: true
-        });
+          restaurant_name: restaurant.name,
+          inviter_name: profile?.full_name || 'Restaurant Manager',
+          restaurant_id: restaurant.id
+        }
+      });
 
-      if (error) throw error;
+      if (emailError) throw emailError;
 
-      await fetchStaffMembers();
       setShowCreateStaff(false);
       setNewStaff({ email: '', role: 'staff', hourly_rate: '' });
       
       toast({
         title: "Success",
-        description: "Staff member added successfully",
+        description: `Invitation sent to ${newStaff.email}`,
       });
     } catch (error) {
-      console.error('Error creating staff member:', error);
+      console.error('Error sending staff invitation:', error);
       toast({
         title: "Error",
-        description: "Failed to add staff member",
+        description: "Failed to send staff invitation",
         variant: "destructive",
       });
     }
@@ -619,7 +626,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ restaurant }) 
               <Button variant="outline" onClick={() => setShowCreateStaff(false)}>
                 Cancel
               </Button>
-              <Button onClick={createStaff}>Create Staff Member</Button>
+              <Button onClick={sendStaffInvitation}>Send Invitation</Button>
             </div>
           </div>
         </DialogContent>
